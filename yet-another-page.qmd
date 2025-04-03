@@ -1,0 +1,7 @@
+
+This is *yet* another page that can be linked! You are not required to include more than just *index.qmd*, but you are welcome to make content on different pages, if desired. This may help with managing GitHub commits, as well. 
+
+## A note {#sec-note} 
+
+Notice that you can also modify the YAML headings at the top of each page as I did in the [first subpage](another-page.qmd) or completely delete them, as I did here.
+

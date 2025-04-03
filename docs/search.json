@@ -1,0 +1,100 @@
+[
+  {
+    "objectID": "another-page.html",
+    "href": "another-page.html",
+    "title": "Another page",
+    "section": "",
+    "text": "This is just another page that can be linked! You are not required to include more than just index.qmd, but you are welcome to make content on different pages, if desired. This may help with managing GitHub commits, as well.\nEach page can have it’s own list of references based on what you cite. For example, did you know that good graphs “have a clear purpose, show the data clearly, and make the message obvious”? (Vandemeulebroecke et al. 2019).\n\n\n\n\nReferences\n\nVandemeulebroecke, M., Baillie, M., Carr, D., Kanitra, L., Margolskee, A., Wright, A., and Magnusson, B. (2019), “How can we make better graphs? An initiative to increase the graphical expertise and productivity of quantitative scientists,” Pharmaceutical Statistics, 18, 106–114. https://doi.org/10.1002/pst.1912."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Title",
+    "section": "",
+    "text": "This is an example of a Quarto website. All the Quarto markdown features we learned for formatting text, adding headings and subheadings, adding code and output, adding labels and captions and whatnot work as usual.\n\n\nThe website project folder/repo will contain the following files, at a minimum:\n\n_quarto.yml: A configuration file that controls the YAML content, similar to what we typically see at the top of our qmd files.\nUse this file to add or remove additional subpages, change the overall website title, customize the navigation bar contents and layout, change the website theme, and set any other default formatting options such as code chunk options.\nindex.qmd: This is the landing page of your website. This file must be called index.qmd and must be located in the root directory of the project.\nUse this page, at a minimum, to introduce your project. From there you can either fully include the contents of the project or use additional qmd files to create subpages of your website (perhaps explaining the structure of the website to the user on this landing page).\nbib folder: Contains the bibliography file, which you should edit to include your resources, and a .csl file that tells Quarto how to format in-text citations and the bibliography list according to the American Statistical Association citation style.\ndocs folder: The rendered content of the website will be located here.\nstyles.css: This file is currently empty, but if you want to modify or replace the default theme, do so here using CSS. Students in the past have used custom color palettes or custom fonts, for example.\nAdditional qmd files: If you want to add subpages with their own content, create new qmd files in your root directory to do so, being sure to include them in the list of contents in your _quarto.yml file.\n\n\n\nSimilar to the Shiny project, you will need to organize your wrangling scripts and data. You may also have other images or figures saved for displaying in your blog that will also need to be organized. Here are recommendations for organization.\n\nscripts: Store wrangling scripts in their own folder\ndata: Store datasets in their own folder, being sure to separate raw data from clean/processed data. You can do this in one of two ways: two separate data folders in the root directory (e.g., raw-data and data) or two subfolders of a single data folder (subfolders called, for example, raw, processed).\nimages: Organize saved images or figures together in their own folder. Make sure you keep track of the source of the images or figures and credit the sources in some way in your page (include source in caption and/or link image to source)\n\n\n\n\n\n\nEdit contents of any files. Each new qmd file is a self-contained environment, so you will need to load any necessary packages and datasets for rendering that particular file at the top of that file.\nAfter updating a qmd file, Render the qmd file. Note that the rendered files (.html etc) are in the docs folder. Keep them there!\nCommit changes to website and PUSH to publish those changes."
+  },
+  {
+    "objectID": "index.html#website-project-structure",
+    "href": "index.html#website-project-structure",
+    "title": "Title",
+    "section": "",
+    "text": "The website project folder/repo will contain the following files, at a minimum:\n\n_quarto.yml: A configuration file that controls the YAML content, similar to what we typically see at the top of our qmd files.\nUse this file to add or remove additional subpages, change the overall website title, customize the navigation bar contents and layout, change the website theme, and set any other default formatting options such as code chunk options.\nindex.qmd: This is the landing page of your website. This file must be called index.qmd and must be located in the root directory of the project.\nUse this page, at a minimum, to introduce your project. From there you can either fully include the contents of the project or use additional qmd files to create subpages of your website (perhaps explaining the structure of the website to the user on this landing page).\nbib folder: Contains the bibliography file, which you should edit to include your resources, and a .csl file that tells Quarto how to format in-text citations and the bibliography list according to the American Statistical Association citation style.\ndocs folder: The rendered content of the website will be located here.\nstyles.css: This file is currently empty, but if you want to modify or replace the default theme, do so here using CSS. Students in the past have used custom color palettes or custom fonts, for example.\nAdditional qmd files: If you want to add subpages with their own content, create new qmd files in your root directory to do so, being sure to include them in the list of contents in your _quarto.yml file.\n\n\n\nSimilar to the Shiny project, you will need to organize your wrangling scripts and data. You may also have other images or figures saved for displaying in your blog that will also need to be organized. Here are recommendations for organization.\n\nscripts: Store wrangling scripts in their own folder\ndata: Store datasets in their own folder, being sure to separate raw data from clean/processed data. You can do this in one of two ways: two separate data folders in the root directory (e.g., raw-data and data) or two subfolders of a single data folder (subfolders called, for example, raw, processed).\nimages: Organize saved images or figures together in their own folder. Make sure you keep track of the source of the images or figures and credit the sources in some way in your page (include source in caption and/or link image to source)"
+  },
+  {
+    "objectID": "index.html#workflow",
+    "href": "index.html#workflow",
+    "title": "Title",
+    "section": "",
+    "text": "Edit contents of any files. Each new qmd file is a self-contained environment, so you will need to load any necessary packages and datasets for rendering that particular file at the top of that file.\nAfter updating a qmd file, Render the qmd file. Note that the rendered files (.html etc) are in the docs folder. Keep them there!\nCommit changes to website and PUSH to publish those changes."
+  },
+  {
+    "objectID": "index.html#cross-referencing",
+    "href": "index.html#cross-referencing",
+    "title": "Title",
+    "section": "Cross-referencing",
+    "text": "Cross-referencing\nYou should use code chunk labels and in-text cross-references for figures and tables (see the Knitr examples at the link).\nQuarto additionally provides similar syntax for creating labels for and cross-referencing equations, creating labels for and cross-referencing sections, and using code chunk options of the form lst-label: lst-your-listing-label and lst-cap: Code chunk caption to be able to cross-reference displayed code chunks (or “listings”) using the syntax @lst-your-listing-label within the text.\nThese are not required for this project but are good practice."
+  },
+  {
+    "objectID": "index.html#creating-and-linking-to-subpages",
+    "href": "index.html#creating-and-linking-to-subpages",
+    "title": "Title",
+    "section": "Creating and linking to subpages",
+    "text": "Creating and linking to subpages\nYou can create subpages by simply creating new qmd files. Any subpage you want to include on the website should be added to the website navigation list in the _quarto.yml file.\nYou can link to another page on the website by using just the filepath to the corresponding qmd file. You can also link directly to a section of a subpage."
+  },
+  {
+    "objectID": "index.html#creating-the-bibliography",
+    "href": "index.html#creating-the-bibliography",
+    "title": "Title",
+    "section": "Creating the bibliography",
+    "text": "Creating the bibliography\nOne of the new challenges of Quarto, relative to a Word or Google doc, is learning how to build a bibliography and use the specified citation keys to write in-text citations.\nAll items you plan to cite should be added to the library.bib bibliography file, which you can open from within RStudio and edit just like any other text file. You should use standard bibtex syntax for each entry, following the examples provided. If the resource you are using doesn’t already provide a way to generate a bibtex entry, I recommend using zoterobib to generate the appropriate syntax (must change the Bibliography style to “BibTeX generic citation style”). The entries currently in library.bib are intended to provide syntax examples that capture the range of entries you are most likely to use. You will need to delete and replace the contents of library.bib with your own citation entries.\n\n\n\n\n\n\nNote\n\n\n\nThe examples in library.bib are nicely formatted so you can read and follow the patterns, but formatting and order of the library.bib file doesn’t actually matter and will not be assessed. Just be sure the citations are as complete as possible (authors, titles, dates, urls, dois, etc.).\n\n\n@book{hadley2016,\n  author = {Hadley, Wickham}, \n  title = {ggplot2: Elegant Graphics for Data Analysis}, \n  url  = {https://ggplot2-book.org},\n  publisher = {Springer},\n  address = {New York, NY},\n  type = {Online book},\n  year = {2016},\n  edition = {3}\n}"
+  },
+  {
+    "objectID": "index.html#creating-in-text-citations",
+    "href": "index.html#creating-in-text-citations",
+    "title": "Title",
+    "section": "Creating in-text citations",
+    "text": "Creating in-text citations\nItems you cite in the text will be automatically added to a list of References at the bottom of the corresponding page. To cite a reference in the text, use the corresponding citation key (the first item in each bibtex entry—it shouldn’t have any spaces or special characters) and format the citation using the appropriate quarto format for in-text citations. This is similar to how we cross-reference tables and figures from code chunk labels. For example, the syntax\n@hadley2016 provides excellent examples of customizing our visualizations using **ggplot2**.\nproduces the following text:\n\nHadley (2016) provides excellent examples of customizing our visualizations using ggplot2.\n\nAnd the corresponding reference is listed in full at the bottom of this page."
+  },
+  {
+    "objectID": "index.html#including-images-or-gifs",
+    "href": "index.html#including-images-or-gifs",
+    "title": "Title",
+    "section": "Including images or gifs",
+    "text": "Including images or gifs\nI would strongly recommend using knitr’s include_graphics() functions within code chunks to include images or gifs within your blog. This makes it easier to modify figures, add captions and links, and visually find the code for figures quickly if you need to modify something about the output. There is also markdown syntax to display or embed images, but I would typically not recommend it.\n\n\n\n\n\nImage courtesy of giphy.com\n\n\n\n\nEither approach will take either a filepath to a stored file or a URL to an image or gif. Width can be specified as a percentage of the width of the page (0% to 100%; my preferred approach) or as a fixed number of units (e.g. 400px, 3in, 10cm).\nI can’t imagine a scenario where students should or would include videos within their blog, but Quarto provides guidance on embedding videos, as well.\n\n\n\n\n\n\nNote\n\n\n\nThe first figure of your blog will be used as the display image on our course’s landing page!"
+  },
+  {
+    "objectID": "index.html#panel-tabsets",
+    "href": "index.html#panel-tabsets",
+    "title": "Title",
+    "section": "Panel tabsets",
+    "text": "Panel tabsets\nUse the following format to add information or tables or visualizations in tabset panels.\n\nTab 1Tab 2\n\n\nSome information in one tab\n\n\nSome information in a different tab"
+  },
+  {
+    "objectID": "index.html#panel-layouts-for-content",
+    "href": "index.html#panel-layouts-for-content",
+    "title": "Title",
+    "section": "Panel layouts for content",
+    "text": "Panel layouts for content\nUse the following format to have more control over the panel layout of various components.\nThe syntax “[ [1], [1,1] ]” indicates that we have three pieces of content that we want to spread across two rows. The first piece of content will be in its own row, and then the next two components will be split across two columns of equal width in a second row.\n\n\n\nRow 1 with only one output\nSome content\n\n\n\n\nFirst column of row 2\nSome other content\n\n\nSecond column of row 2\nSome additional content.\n\n\n\nThe values provided within each row specify the relative widths of the content within that row. For example “[1,2,1]” would create a row with 3 columns where the first and third columns are the same width and the middle column is twice as wide."
+  },
+  {
+    "objectID": "index.html#layouts-for-tables-and-visualizations-produced-by-code-chunks",
+    "href": "index.html#layouts-for-tables-and-visualizations-produced-by-code-chunks",
+    "title": "Title",
+    "section": "Layouts for tables and visualizations produced by code chunks",
+    "text": "Layouts for tables and visualizations produced by code chunks\nFor details on how to layout subfigures from multiple graphs produced by the same code chunk, see the examples in the Knitr tabs of the sections on figure layouts, subcaptions, and custom layouts.\nThe same syntax shown across the linked examples can be used to create subtables by replacing fig-cap and fig-subcap with tbl-cap and tbl-subcap.\nTwo examples in Table 1 and Figure 1 below are borrowed and slightly modified from the linked sections.\n\n\nTable 1: Two tables side-by-side\n\n\n\n\n(a) First three rows of cars dataset\n\n\nspeed\ndist\n\n\n\n\n4\n2\n\n\n4\n10\n\n\n7\n4\n\n\n\n\n\n\n(b) First three rows of pressure dataset\n\n\ntemperature\npressure\n\n\n\n\n0\n0.0002\n\n\n20\n0.0012\n\n\n40\n0.0060\n\n\n\n\n\n\n\n\n\n\n\n\n\n(a) cars\n\n\n\n\n \n\n\n\n\n\n(b) pressure\n\n\n\n\n\n\n\n\n\n(c) mtcars\n\n\n\n\nFigure 1: Three figures in a complex layout"
+  },
+  {
+    "objectID": "yet-another-page.html",
+    "href": "yet-another-page.html",
+    "title": "Website title",
+    "section": "",
+    "text": "This is yet another page that can be linked! You are not required to include more than just index.qmd, but you are welcome to make content on different pages, if desired. This may help with managing GitHub commits, as well."
+  },
+  {
+    "objectID": "yet-another-page.html#sec-note",
+    "href": "yet-another-page.html#sec-note",
+    "title": "Website title",
+    "section": "A note",
+    "text": "A note\nNotice that you can also modify the YAML headings at the top of each page as I did in the first subpage or completely delete them, as I did here."
+  }
+]

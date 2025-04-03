@@ -1,0 +1,52 @@
+project:
+  type: website
+  output-dir: docs
+
+# Can customize this section with options from the following page:
+# https://quarto.org/docs/websites/website-navigation.html
+website:
+  title: "Website title"
+  navbar:
+    left:
+      - href: index.qmd # Must be included as index.qmd
+        text: "Home"
+        icon: house # Get icon names: https://icons.getbootstrap.com/?q=home
+      # Add or remove additional pages below in desired order of appearance
+      - another-page.qmd
+      - href: yet-another-page.qmd
+        text: "Yet another page with a custom label and icon"
+        icon: arrow-through-heart-fill
+        
+format:
+  html:
+    date: last-modified
+    published-title: "Last updated"
+    date-format: "MMMM D, YYYY"
+    toc: true
+    toc-expand: true
+    crossrefs-hover: false
+    code-line-numbers: true
+    bibliography: "bib/library.bib" # Edit the contents of this file
+    csl: "bib/american-statistical-association.csl"
+    # Uncomment the next line if you want *all* entries in library.bib to be 
+    # listed in a reference list that appears on every page, regardless of
+    # whether the entried are cited in the text (NOT recommended).
+    # nocite: "@*" 
+    # Update any of the following options to modify the theme
+    # See https://quarto.org/docs/output-formats/html-code.html#highlighting
+    highlight-style: arrow
+    # See https://quarto.org/docs/output-formats/html-themes.html
+    theme: 
+      light: minty
+      dark: superhero
+    fontsize: 13pt
+    # If you want to customize beyond a built-in theme, you can add content to
+    # styles.css (currently empty). See the following page for more info:
+    # https://quarto.org/docs/output-formats/html-themes.html#custom-themes
+    css: styles.css 
+
+# Add default code chunk execution options here
+execute:
+  echo: false
+
+  
