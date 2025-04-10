@@ -1,6 +1,6 @@
 ---
-title: "Title"
-subtitle: "Optional subtitle"
+title: "Before (and After) Roe v. Wade: A Content Analysis of Conservative and Liberal Media on Abortion Legislation in the United States, 2009–2024"
+subtitle: "Exploring Sentiment, Framing, and State-Level Policy Intersections in U.S. News Coverage"
 author: 
 - "Erika Salvador"
 - "Emilie Ward"
