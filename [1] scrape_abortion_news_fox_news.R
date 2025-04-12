@@ -13,6 +13,7 @@ library(stringr)
 library(lubridate)
 library(purrr)
 library(RSelenium)
+library(progress)
 
 # ==============================================================================
 # Check scraping permissions
@@ -145,8 +146,20 @@ cat("Starting Fox News abortion archive scrape...\n")
 fox_links <- get_fox_article_links_dynamic(scroll_limit = 20)
 
 cat("Collected", length(fox_links), "article URLs\n")
-abortion_articles_fox <- purrr::map_dfr(fox_links, scrape_article_direct)
 
+# Initialize progress bar
+pb <- progress_bar$new(
+  format = "  Scraping [:bar] :percent in :elapsed",
+  total = length(fox_links), clear = FALSE, width = 60
+)
+
+# Apply scraping with progress
+abortion_articles_fox <- purrr::map_dfr(fox_links, function(link) {
+  pb$tick()
+  scrape_article_direct(link)
+})
+
+# Save output
 write.csv(abortion_articles_fox, "abortion_articles_fox.csv", row.names = FALSE)
 
 cat("\nDone! ", nrow(abortion_articles_fox), "Fox News articles saved to abortion_articles_fox.csv\n")
