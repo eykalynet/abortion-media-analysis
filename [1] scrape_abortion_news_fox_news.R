@@ -6,14 +6,13 @@
 # ==============================================================================
 
 # Load libraries
-library(robotstxt)
 library(rvest)
-library(httr)
-library(jsonlite)
+library(robotstxt)
 library(dplyr)
 library(stringr)
 library(lubridate)
 library(purrr)
+library(RSelenium)
 
 # ==============================================================================
 # Check scraping permissions
@@ -22,18 +21,22 @@ library(purrr)
 paths_allowed("https://www.foxnews.com/?msockid=1f6d91ae1b076b4d3b0d85791a9a6afe")
 
 # ==============================================================================
-# Load SerpApi key securely
+# HELPER FUNCTION: Automatically find a free port for RSelenium
 # ==============================================================================
+find_free_port <- function(start = 4567L, max_tries = 20) {
+  for (port in start:(start + max_tries)) {
+    con <- try(suppressWarnings(socketConnection("localhost", 
+                                                 port = port, 
+                                                 server = TRUE, 
+                                                 blocking = TRUE, 
+                                                 open = "r+")), 
+                                                silent = TRUE)
+    if (!inherits(con, "try-error")) {
+      close(con)
+      return(port)
+    }
+  }
+  stop("No free port found after trying", max_tries, "ports.")
+}
 
-api_key <- Sys.getenv("SERPAPI_KEY")
-if (api_key == "") stop("Missing API key! Please set SERPAPI_KEY in your .Renviron file.")
-
-  # Check README.md for set-up instructions
-
-# ==============================================================================
-# Define Queries and News Sites
-# ==============================================================================
-
-queries <- c("abortion", "abortion rights", "roe v. wade", "planned parenthood", "pro-life")
-sites <- c("msnbc.com", "foxnews.com")
 
