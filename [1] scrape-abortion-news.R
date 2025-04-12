@@ -29,3 +29,10 @@ if (api_key == "") stop("Missing API key! Please set SERPAPI_KEY in your .Renvir
 
   # Check README.md for set-up instructions
 
+# ==============================================================================
+# Define Queries and News Sites
+# ==============================================================================
+
+queries <- c("abortion", "abortion rights", "roe v. wade", "planned parenthood", "pro-life")
+sites <- c("msnbc.com", "foxnews.com")
+
