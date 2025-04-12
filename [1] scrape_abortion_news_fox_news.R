@@ -156,6 +156,7 @@ pb <- progress_bar$new(
 # Prep result storage
 abortion_articles_fox <- tibble()
 failed_urls <- c()
+skipped_date_count <- 0
 
 # Loop with safety + retries + filtering
 for (i in seq_along(fox_links)) {
@@ -179,6 +180,7 @@ for (i in seq_along(fox_links)) {
   # Date filter: keep only 2009–2024 articles
   parsed_date <- suppressWarnings(ymd(article$article_date))
   if (is.na(parsed_date) || parsed_date < ymd("2009-01-01") || parsed_date > ymd("2024-12-31")) {
+    skipped_date_count <- skipped_date_count + 1
     next
   }
   
@@ -196,3 +198,4 @@ write.csv(abortion_articles_fox, "abortion_articles_fox.csv", row.names = FALSE)
 
 cat("\nDone! ", nrow(abortion_articles_fox), " articles saved to abortion_articles_fox.csv\n")
 cat("\nUnfortunately,", length(failed_urls), " failed URLs logged to failed_urls.txt\n")
+cat("\nSkipped", skipped_date_count, "articles due to out-of-range publish dates.\n")
