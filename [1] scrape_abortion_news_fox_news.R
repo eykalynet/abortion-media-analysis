@@ -39,4 +39,100 @@ find_free_port <- function(start = 4567L, max_tries = 20) {
   stop("No free port found after trying", max_tries, "ports.")
 }
 
+# ==============================================================================
+# Dynamic Scraper for Fox News Abortion Archive with Load More Handling
+# ==============================================================================
+get_fox_article_links_dynamic <- function(scroll_limit = 20) {
+  port <- find_free_port()
+  rD <- rsDriver(
+    browser = "chrome",
+    chromever = NULL,
+    chromeverpath = "drivers/chromedriver-win64/chromedriver.exe",
+    port = port,
+    verbose = FALSE
+  )
+  
+  remDr <- rD$client
+  remDr$navigate("https://www.foxnews.com/category/politics/judiciary/abortion")
+  Sys.sleep(3)
+  
+  for (i in 1:scroll_limit) {
+    cat("Show more click:", i, "\n")
+    tryCatch({
+      load_more <- remDr$findElement(using = "css selector", value = ".button.load-more.js-load-more")
+      load_more$clickElement()
+      Sys.sleep(2.5)
+    }, error = function(e) {
+      cat("No more 'Show More' button after", i, "clicks.\n")
+      break
+    })
+  }
+  
+  html_source <- remDr$getPageSource()[[1]]
+  page <- read_html(html_source)
+  
+  remDr$close()
+  rD$server$stop()
+  
+  links <- page |>
+    html_elements("div.content.article-list article.article h4.title a") %>%
+    html_attr("href")|>
+    unique()
+  
+  links <- ifelse(startsWith(links, "/"), paste0("https://www.foxnews.com", links), links)
+  return(unique(links))
+}
+
+# ==============================================================================
+# Scrape full article content and filter by abortion mentions
+# ==============================================================================
+scrape_article_direct <- function(url) {
+  Sys.sleep(runif(1, 1.5, 2.5))
+  page <- tryCatch(read_html(url), error = function(e) return(NULL))
+  if (is.null(page)) return(NULL)
+  
+  text <- page |>
+    html_elements("p") |>
+    html_text2() |>
+    paste(collapse = " ")
+  
+  count <- str_count(str_to_lower(text), "\\babortion\\b")
+  if (count < 5) return(NULL)
+  
+  title <- page |>
+    html_element("h1.headline.speakable") |>
+    html_text2()
+  
+  author <- page |>
+    html_elements("meta[name='author'], .byline, .author, div.author-byline") |>
+    html_attr("content") |>
+    na.omit()
+  
+  if (length(author) == 0) {
+    author <- page |>
+      html_elements("p") |>
+      html_text2() |>
+      .[str_detect(., "^By \\w")] |>
+      str_remove("^By ")
+  }
+  
+  author <- paste(unique(author), collapse = "; ")
+  
+  date <- page |>
+    html_elements("meta[property='article:published_time'], time") |>
+    html_attr("content") |>
+    str_extract("\\d{4}-\\d{2}-\\d{2}") |>
+    na.omit() |>
+    .[1]
+  
+  return(tibble(
+    url = url,
+    title = title,
+    author = author,
+    article_date = date,
+    abortion_mentions = count,
+    full_text = text
+  ))
+}
+
 
