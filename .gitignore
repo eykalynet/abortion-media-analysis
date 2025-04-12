@@ -39,6 +39,9 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
+# Chrome Driver
+drivers/
+
 # translation temp files
 po/*~
 
