@@ -8,6 +8,8 @@
 # Load libraries
 library(robotstxt)
 library(rvest)
+library(httr)
+library(jsonlite)
 library(dplyr)
 library(stringr)
 library(lubridate)
