@@ -14,11 +14,11 @@ library(lubridate)
 library(purrr)
 library(RSelenium)
 library(progress)
+library(readr)
 
 # ==============================================================================
 # Check scraping permissions
 # ==============================================================================
-
 paths_allowed("https://www.foxnews.com/?msockid=1f6d91ae1b076b4d3b0d85791a9a6afe")
 
 # ==============================================================================
@@ -39,6 +39,7 @@ find_free_port <- function(start = 4567L, max_tries = 20) {
   }
   stop("No free port found after trying", max_tries, "ports.")
 }
+
 # ==============================================================================
 # Dynamic Scraper for Fox News Abortion Archive with Load More Handling
 # ==============================================================================
@@ -127,7 +128,6 @@ scrape_article_direct <- function(url) {
   
   date <- date[1]
   
-  
   return(tibble(
     url = url,
     title = title,
@@ -139,7 +139,7 @@ scrape_article_direct <- function(url) {
 }
 
 # ==============================================================================
-# Run Fox News Dynamic Pipeline and Save Output
+# Run Fox News Dynamic Pipeline and Save Output with Safety and Logging
 # ==============================================================================
 cat("Starting Fox News abortion archive scrape...\n")
 
@@ -153,13 +153,46 @@ pb <- progress_bar$new(
   total = length(fox_links), clear = FALSE, width = 60
 )
 
-# Apply scraping with progress
-abortion_articles_fox <- purrr::map_dfr(fox_links, function(link) {
-  pb$tick()
-  scrape_article_direct(link)
-})
+# Prep result storage
+abortion_articles_fox <- tibble()
+failed_urls <- c()
 
-# Save output
+# Loop with safety + retries + filtering
+for (i in seq_along(fox_links)) {
+  pb$tick()
+  url <- fox_links[i]
+  
+  # Try scraping with retry logic
+  article <- tryCatch(scrape_article_direct(url), error = function(e) NULL)
+  if (is.null(article)) {
+    Sys.sleep(2)
+    article <- tryCatch(scrape_article_direct(url), error = function(e) NULL)
+  }
+  
+  # Skip and log if still NULL
+  if (is.null(article)) {
+    failed_urls <- c(failed_urls, url)
+    write_lines(url, "failed_urls.txt", append = TRUE)
+    next
+  }
+  
+  # Date filter: keep only 2009–2024 articles
+  parsed_date <- suppressWarnings(ymd(article$article_date))
+  if (is.na(parsed_date) || parsed_date < ymd("2009-01-01") || parsed_date > ymd("2024-12-31")) {
+    next
+  }
+  
+  # Append to master tibble
+  abortion_articles_fox <- bind_rows(abortion_articles_fox, article)
+  
+  # Save partial results every 10 valid articles
+  if (nrow(abortion_articles_fox) %% 10 == 0) {
+    write.csv(abortion_articles_fox, "abortion_articles_fox_temp.csv", row.names = FALSE)
+  }
+}
+
+# Final save
 write.csv(abortion_articles_fox, "abortion_articles_fox.csv", row.names = FALSE)
 
-cat("\nDone! ", nrow(abortion_articles_fox), "Fox News articles saved to abortion_articles_fox.csv\n")
+cat("\nDone! ", nrow(abortion_articles_fox), " articles saved to abortion_articles_fox.csv\n")
+cat("\nUnfortunately,", length(failed_urls), " failed URLs logged to failed_urls.txt\n")
