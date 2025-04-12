@@ -135,4 +135,28 @@ scrape_article_direct <- function(url) {
   ))
 }
 
+# ==============================================================================
+# Run Fox News Dynamic Pipeline and Save Output
+# ==============================================================================
+cat("Starting Fox News abortion archive scrape...\n")
+
+fox_links <- get_fox_article_links_dynamic(scroll_limit = 20)
+
+cat("Collected", length(fox_links), "article URLs\n")
+abortion_articles_fox <- purrr::map_dfr(fox_links, scrape_article_direct)
+
+write.csv(abortion_articles_fox, "abortion_articles_fox.csv", row.names = FALSE)
+
+cat("\ndone!", nrow(abortion_articles_fox), "Fox News articles saved to abortion_articles_fox.csv\n")
+
+
+
+
+
+
+
+
+
+
+
 
