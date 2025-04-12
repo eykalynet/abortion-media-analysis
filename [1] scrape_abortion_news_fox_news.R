@@ -30,7 +30,7 @@ find_free_port <- function(start = 4567L, max_tries = 20) {
                                                  server = TRUE, 
                                                  blocking = TRUE, 
                                                  open = "r+")), 
-                                                silent = TRUE)
+               silent = TRUE)
     if (!inherits(con, "try-error")) {
       close(con)
       return(port)
@@ -38,7 +38,6 @@ find_free_port <- function(start = 4567L, max_tries = 20) {
   }
   stop("No free port found after trying", max_tries, "ports.")
 }
-
 # ==============================================================================
 # Dynamic Scraper for Fox News Abortion Archive with Load More Handling
 # ==============================================================================
@@ -75,8 +74,8 @@ get_fox_article_links_dynamic <- function(scroll_limit = 20) {
   rD$server$stop()
   
   links <- page |>
-    html_elements("div.content.article-list article.article h4.title a") %>%
-    html_attr("href")|>
+    html_elements("div.content.article-list article.article h4.title a") |>
+    html_attr("href") |>
     unique()
   
   links <- ifelse(startsWith(links, "/"), paste0("https://www.foxnews.com", links), links)
@@ -109,10 +108,11 @@ scrape_article_direct <- function(url) {
     na.omit()
   
   if (length(author) == 0) {
-    author <- page |>
+    p_text <- page |>
       html_elements("p") |>
-      html_text2() |>
-      .[str_detect(., "^By \\w")] |>
+      html_text2()
+    
+    author <- p_text[str_detect(p_text, "^By \\w")] |>
       str_remove("^By ")
   }
   
@@ -122,8 +122,10 @@ scrape_article_direct <- function(url) {
     html_elements("meta[property='article:published_time'], time") |>
     html_attr("content") |>
     str_extract("\\d{4}-\\d{2}-\\d{2}") |>
-    na.omit() |>
-    .[1]
+    na.omit()
+  
+  date <- date[1]
+  
   
   return(tibble(
     url = url,
@@ -147,16 +149,4 @@ abortion_articles_fox <- purrr::map_dfr(fox_links, scrape_article_direct)
 
 write.csv(abortion_articles_fox, "abortion_articles_fox.csv", row.names = FALSE)
 
-cat("\ndone!", nrow(abortion_articles_fox), "Fox News articles saved to abortion_articles_fox.csv\n")
-
-
-
-
-
-
-
-
-
-
-
-
+cat("\nDone! ", nrow(abortion_articles_fox), "Fox News articles saved to abortion_articles_fox.csv\n")
