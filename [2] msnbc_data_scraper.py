@@ -9,6 +9,10 @@
 # ABOUT
 # ==============================================================================
 
+# ==============================================================================
+# ABOUT
+# ==============================================================================
+
 # This script collects abortion-related articles from NBC News, specifically from
 # its Politics section. It performs the following:
 
@@ -17,31 +21,31 @@
 #     the world. This helps prevent websites from tracking your IP address or location.
 #   - Connects via a SOCKS5 proxy, which acts as a secure tunnel for sending 
 #     requests through Tor.
-#   - Intercepts and uses Fox News’s internal API to collect article metadata 
-#     (like titles and URLs).
+#   - Loads the NBC News abortion politics page, scrolls through additional results,
+#     and extracts article links dynamically using XPath.
 #   - Visits each article page to extract the full text, any images, and all internal 
 #     hyperlinks.
-#   - Analyzes the content by counting how often each word appears.
+#   - Analyzes the article content by counting how often each word appears.
 #   - Saves the results in a clean, structured JSON file.
 
 # Why this is written in Python (not R):
 
-# While this course primarily uses RStudio, we found that scraping websites 
-# especially those with dynamic JavaScript content and strict robot protections
+# While this course primarily uses RStudio, we found that scraping websites—
+# especially those with dynamic JavaScript content and strict robot protections—
 # was significantly slower and less flexible in R. After exploring multiple R-based 
 # solutions, we shifted to Python, which offered better tooling and much faster 
 # performance for this kind of task.
 
-# All of the data we collected is publicly available and the Fox News website does 
-# not prohibit automated access to this content (robots are allowed). So while the 
-# scraping itself is entirely legal, R’s available tools simply weren’t fast or 
-# flexible enough to handle the scale we needed.
+# All of the data we collected is publicly available and NBC News does not prohibit 
+# automated access to this content (robots are allowed). So while the scraping itself 
+# is entirely legal, R’s available tools simply weren’t fast or flexible enough to 
+# handle the scale we needed.
 
-# Python supports asynchronous programming, and allowed us to download many articles 
+# Python supports asynchronous programming, which allowed us to download many articles 
 # at once without waiting for each to finish sequentially.
 # Furthermore, essential libraries like `curl_cffi` (for stealthy web requests), 
-#`selenium_driverless` (for controlling a browser without launching a window), and 
-#`stem` (for working with the Tor network) are only available in Python.
+# `selenium_driverless` (for controlling a browser without launching a window), and 
+# `stem` (for working with the Tor network) are only available in Python.
 
 # ==============================================================================
 # Install Libraries
