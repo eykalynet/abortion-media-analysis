@@ -153,7 +153,7 @@ class AsyncTorController:
 class HttpClient:
     def __init__(self, proxy_port, impersonate, headers=None, params=None, timeout=30):
         self.client = curl_cffi.requests.AsyncSession(
-            proxies={'http': f'socks5://{HOST}:{proxy_port}', 'https': f'socks5://{HOST}:{proxy_port}'},
+            proxies={'http': f'socks5h://{HOST}:{proxy_port}', 'https': f'socks5h://{HOST}:{proxy_port}'},
             impersonate=impersonate,
             headers=headers or {},
             params=params or {},

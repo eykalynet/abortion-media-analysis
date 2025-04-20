@@ -174,10 +174,7 @@ class NBCNewsScraper:
         self.session = AsyncHTMLSession()
 
     async def fetch_url(self, url):
-        proxies = {
-            'http': f'socks5://{HOST}:{TOR_PORT}',
-            'https': f'socks5://{HOST}:{TOR_PORT}'
-        }
+      proxies={'http': f'socks5h://{HOST}:{proxy_port}', 'https': f'socks5h://{HOST}:{proxy_port}'}
         response = await self.session.get(url, proxies=proxies)
         return response
 
