@@ -1,0 +1,6 @@
+selenium-driverless==0.2.4
+requests-html
+stem
+curl-cffi
+lxml
+nltk
