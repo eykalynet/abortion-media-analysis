@@ -48,15 +48,15 @@ REM RUN SELECTED SCRAPER(S)
 REM ============================================================================
 if "%choice%"=="1" (
     echo [INFO] Running Fox News scraper...
-    python ../src/[1] fox_news_data_scraper.py
+    python ../src/fox_news_data_scraper.py
 ) else if "%choice%"=="2" (
     echo [INFO] Running MSNBC scraper...
-    python ../src/[2] msnbc_data_scraper.py
+    python ../src/msnbc_data_scraper.py
 ) else if "%choice%"=="3" (
     echo [INFO] Running Fox News scraper...
-    python ../src/[1] fox_news_data_scraper.py
+    python ../src/fox_news_data_scraper.py
     echo [INFO] Running MSNBC scraper...
-    python ../src/[2] msnbc_data_scraper.py
+    python ../src/msnbc_data_scraper.py
 ) else (
     echo [ERROR] Invalid choice. Please enter 1, 2, or 3.
 )
