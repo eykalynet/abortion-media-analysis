@@ -1,22 +1,38 @@
 @echo off
-title Launch Tor + Run Fox News Scraper
+title MSNBC + Fox News Scraper Launcher (via Tor)
 
-set "TOR_PATH=tor\tor\tor.exe"
+echo.
+echo ============================================
+echo   Select which scraper(s) to run:
+echo ============================================
+echo   1. Fox News
+echo   2. MSNBC
+echo   3. BOTH
+echo ============================================
+set /p choice="Enter choice [1-3]: "
+
+REM Launch Tor if not already running
+set "TOR_PATH=tor\\tor.exe"
 
 if not exist "%TOR_PATH%" (
-    echo [ERROR] Tor binary not found in /tor directory.
-    echo Please ensure you cloned the full repo with the /tor folder.
+    echo [ERROR] Tor not found at expected path: %TOR_PATH%
     pause
     exit /b
 )
 
-echo [INFO] Starting Tor on ControlPort 8999 and SocksPort 9001...
-start "" "%TOR_PATH%" --ControlPort 8999 --SocksPort 9001
+echo [INFO] Launching Tor...
+start "" /B "%TOR_PATH%" --ControlPort 8999 --SocksPort 9001
+timeout /T 10 /NOBREAK > NUL
 
-echo [INFO] Waiting 10 seconds for Tor to fully start...
-timeout /t 10 > nul
-
-echo [INFO] Launching scraper...
-python "[1] fox_news_data_scraper.py"
+if "%choice%"=="1" (
+    python "[1] fox_news_data_scraper.py"
+) else if "%choice%"=="2" (
+    python "[2] msnbc_data_scraper.py"
+) else if "%choice%"=="3" (
+    python "[1] fox_news_data_scraper.py"
+    python "[2] msnbc_data_scraper.py"
+) else (
+    echo [ERROR] Invalid choice. Please enter 1, 2, or 3.
+)
 
 pause
