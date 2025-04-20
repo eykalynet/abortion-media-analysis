@@ -331,7 +331,7 @@ async def datagatherer(store: DataStore, queue: TaskQueue):
     enriched = await get_articles(flattened, queue,
                                    headers=context["headers"], params=context["params"],
                                    proxy_port=TOR_PORT, impersonate="chrome124")
-    with open("fox_news_data.json", "w") as f:
+    with open("../data/fox_news_data.json", "w") as f::
         json.dump(enriched, f, indent=2)
     print("Data saved to file.")
 
