@@ -17,6 +17,6 @@ echo [INFO] Waiting 10 seconds for Tor to fully start...
 timeout /t 10 > nul
 
 echo [INFO] Launching scraper...
-python fox_news_data_scraper.py
+python "[1] fox_news_data_scraper.py"
 
 pause
