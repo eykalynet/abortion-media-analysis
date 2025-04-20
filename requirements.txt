@@ -1,4 +1,4 @@
-selenium-driverless==0.2.4
+selenium-driverless>=1.2.5
 requests-html
 stem
 curl-cffi
