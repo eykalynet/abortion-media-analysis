@@ -254,7 +254,7 @@ async def gather_article_data(cookies, queue: TaskQueue, store: DataStore):
                 except Exception as e:
                     logger.error(f"Failed to process article: {e}")
 
-    with open("data_articles_nbcnewsfull.json", "w") as f:
+    with open("msnbc_news_data.json", "w") as f:
         json.dump(results, f, indent=2)
 
 # ==============================================================================
