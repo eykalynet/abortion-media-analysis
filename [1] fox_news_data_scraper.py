@@ -1,5 +1,5 @@
 # ==============================================================================
-# Purpose: Scrape and extract abortion news data from Fox News (2019-2025)
+# Purpose: Scrape and extract abortion news data from Fox News (2020-2024)
 # Main Author: Erika Salvador
 # Contributors: Maigan Lafontant, Emilie Ward
 # Date modified: 2025-03-25
