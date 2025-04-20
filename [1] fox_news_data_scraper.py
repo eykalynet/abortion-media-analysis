@@ -153,6 +153,7 @@ class AsyncTorController:
 class HttpClient:
     def __init__(self, proxy_port, impersonate, headers=None, params=None, timeout=30):
         self.client = curl_cffi.requests.AsyncSession(
+          
             proxies={'http': f'socks5h://{HOST}:{proxy_port}', 'https': f'socks5h://{HOST}:{proxy_port}'},
             impersonate=impersonate,
             headers=headers or {},
@@ -350,7 +351,7 @@ async def main():
             await driver.set_single_proxy(proxy="socks5://127.0.0.1:9001")
             async with NetworkInterceptor(driver, on_request=InterceptRequest(shared_data),
                                           patterns=[RequestPattern.AnyRequest]):
-                await driver.get(URL, wait_load=True)
+                await driver.get(URL, wait_load=True, timeout = 90)
                 await asyncio.gather(
                     datagatherer(shared_data, queue),
                     driver.sleep(5)
