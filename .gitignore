@@ -1,51 +1,70 @@
-# History files
+# ------------------------------------------------------------------------------
+# R-related files
+# ------------------------------------------------------------------------------
+
+# History and session files
 .Rhistory
 .Rapp.history
-
-# Session Data files
 .RData
 .RDataTmp
-
-# User-specific files
 .Ruserdata
 
-# Example code in package build process
-*-Ex.R
-
-# Output files from R CMD build
-/*.tar.gz
-
-# Output files from R CMD check
-/*.Rcheck/
-
-# RStudio files
+# RStudio project/user files
 .Rproj.user/
 
-# produced vignettes
-vignettes/*.html
-vignettes/*.pdf
+# R CMD build/check outputs
+/*.tar.gz
+/*.Rcheck/
 
-# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
+# Package build/test artifacts
+*-Ex.R
+
+# Environment and OAuth tokens
+.Renviron
 .httr-oauth
 
-# knitr and R markdown default cache directories
+# knitr and R Markdown caches
 *_cache/
 /cache/
-
-# Temporary files created by R markdown
 *.utf8.md
 *.knit.md
-
-# R Environment Variables
-.Renviron
-
-# Chrome Driver
-drivers/
-
-# translation temp files
-po/*~
 
 # RStudio Connect folder
 rsconnect/
 
+# Vignettes
+vignettes/*.html
+vignettes/*.pdf
+
+# Quarto output folder
 /.quarto/
+
+# ------------------------------------------------------------------------------
+# Python-related files
+# ------------------------------------------------------------------------------
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+*.log
+
+# ------------------------------------------------------------------------------
+# Editor and system files
+# ------------------------------------------------------------------------------
+
+.vscode/
+*.code-workspace
+.DS_Store
+Thumbs.db
+
