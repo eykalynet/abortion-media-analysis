@@ -170,11 +170,15 @@ class HtmlDataExtractor:
 # ==============================================================================
 
 class NBCNewsScraper:
-    def __init__(self):
+    def __init__(self, proxy_port=TOR_PORT):
+        self.proxy_port = proxy_port
         self.session = AsyncHTMLSession()
 
     async def fetch_url(self, url):
-      proxies={'http': f'socks5h://{HOST}:{proxy_port}', 'https': f'socks5h://{HOST}:{proxy_port}'}
+        proxies = {
+            'http': f'socks5h://{HOST}:{self.proxy_port}',
+            'https': f'socks5h://{HOST}:{self.proxy_port}'
+        }
         response = await self.session.get(url, proxies=proxies)
         return response
 
@@ -187,7 +191,6 @@ class NBCNewsScraper:
     async def __aexit__(self, *args):
         await self.session.close()
         
-
 # ==============================================================================
 # TASK MANAGEMENT & TEXT UTILITIES
 # ------------------------------------------------------------------------------
