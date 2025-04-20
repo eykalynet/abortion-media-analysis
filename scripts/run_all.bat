@@ -5,7 +5,7 @@ REM ============================================================================
 REM INSTALL DEPENDENCIES
 REM ============================================================================
 echo [INFO] Installing Python packages...
-pip install -r requirements.txt > nul 2>&1
+pip install -r requirements.txt
 
 if errorlevel 1 (
     echo [ERROR] Failed to install packages. Check requirements.txt.
@@ -27,9 +27,9 @@ echo ============================================
 set /p choice="Enter choice [1-3]: "
 
 REM ============================================================================
-REM START TOR
+REM START TOR (Relative Path)
 REM ============================================================================
-set "TOR_PATH=tor\\tor.exe"
+set "TOR_PATH=tor/tor/tor.exe"
 
 if not exist "%TOR_PATH%" (
     echo [ERROR] Tor not found at: %TOR_PATH%
@@ -38,7 +38,7 @@ if not exist "%TOR_PATH%" (
 )
 
 echo [INFO] Launching Tor in background...
-start "" /B "%TOR_PATH%" --ControlPort 8999 --SocksPort 9001
+start "" /B "%TOR_PATH%" --ControlPort 8999 --SocksPolicy "accept 127.0.0.1" --SocksPort 9001
 
 echo [INFO] Waiting 10 seconds for Tor to initialize...
 timeout /T 10 /NOBREAK > NUL
