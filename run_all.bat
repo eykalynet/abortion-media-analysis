@@ -12,7 +12,7 @@ echo ============================================
 set /p choice="Enter choice [1-3]: "
 
 REM Launch Tor if not already running
-set "TOR_PATH=tor\\tor.exe"
+set "TOR_PATH=tor/tor/tor.exe"
 
 if not exist "%TOR_PATH%" (
     echo [ERROR] Tor not found at expected path: %TOR_PATH%
