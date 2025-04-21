@@ -33,6 +33,7 @@ library(tibble)
 library(kableExtra)
 library(colorspace)
 library(jsonlite)
+library(lubridate)
 ```
 
 ## 1. Read and Prepare Raw JSON
@@ -40,7 +41,7 @@ library(jsonlite)
 The JSON file `fox_news_data.json` was scraped from Fox News using a Python-based Tor-enabled web scraper. It includes article-level information such as titles, dates, body text, links, and images.
 
 ```{r}
-#| label: load-preview
+#| label: step-1
 
 # =================================================================
 # Step 1: Read and Prepare Raw JSON (flatten = FALSE)
@@ -61,7 +62,7 @@ glimpse(fox_news)
 In this step, we subset and clean the raw Fox News data to retain only the important metadata fields needed for our analysis. Specifically, we extract the article title, description, full text, publication date, URL, and author information. The `publicationDate` field is simplified by selecting only the first timestamp per article. Because the original `url` values are relative paths, we prepend the full domain (`https://www.foxnews.com`) to make them complete. The `authors` column is nested and occasionally malformed, so we use safety checks to extract and collapse the authors' names into a single string or return `NA` if no valid data is found.
 
 ```{r}
-#| label: Subset Metadata
+#| label: step-2
 
 # =================================================================
 # Step 2: Subset Metadata
@@ -90,7 +91,31 @@ fox_meta <- fox_news |>
   )
 ```
 
+## 3. Filter Articles by Publication Year (2020-2024)
+
+In this step, we subset the dataset to include only articles published between 2020 and 2024. We first convert the `publicationDate` string into a proper datetime object using `lubridate::ymd_hms()`, then retain only those entries whose year falls within our desired range.
+
 ```{r}
-# Write to a temporary CSV file (not saving permanently)
-write_csv(fox_meta, "fox_meta_preview.csv")
+#| label: step-3
+
+# =================================================================
+# Filter Articles by Publication Year (2020-2024)
+# =================================================================
+
+# Filter to articles published between 2020 and 2024
+fox_meta2 <- fox_meta |> 
+  
+  # Parse publication date
+  mutate(pub_date = lubridate::ymd_hms(publicationDate)) |>  
+  
+  # Keep 2020-2024
+  filter(lubridate::year(pub_date) >= 2020, 
+         lubridate::year(pub_date) <= 2024) |> 
+  
+  # Drop original unparsed column
+  select(-publicationDate)  
 ```
+
+## 3. Clean Article Text
+
+sadasdasd
