@@ -32,5 +32,65 @@ library(stringr)
 library(tibble)
 library(kableExtra)
 library(colorspace)
+library(jsonlite)
 ```
 
+## 1. Read and Prepare Raw JSON
+
+The JSON file `fox_news_data.json` was scraped from Fox News using a Python-based Tor-enabled web scraper. It includes article-level information such as titles, dates, body text, links, and images.
+
+```{r}
+#| label: load-preview
+
+# =================================================================
+# Step 1: Read and Prepare Raw JSON (flatten = FALSE)
+# =================================================================
+# Note: Setting flatten = FALSE is important here.
+#       It preserves nested structure and prevents JSON explosion,
+#       which allows for faster and more manageable parsing downstream.
+
+# Load JSON scraped from Python
+fox_news <- fromJSON("../data/fox_news_data.json", flatten = FALSE)
+
+# Preview structure
+glimpse(fox_news)
+```
+
+## 2. Subset Metadata
+
+In this step, we subset and clean the raw Fox News data to retain only the important metadata fields needed for our analysis. Specifically, we extract the article title, description, full text, publication date, URL, and author information. The `publicationDate` field is simplified by selecting only the first timestamp per article. Because the original `url` values are relative paths, we prepend the full domain (`https://www.foxnews.com`) to make them complete. The `authors` column is nested and occasionally malformed, so we use safety checks to extract and collapse the authors' names into a single string or return `NA` if no valid data is found.
+
+```{r}
+#| label: Subset Metadata
+
+# =================================================================
+# Step 2: Subset Metadata
+# =================================================================
+
+fox_meta <- fox_news |>
+  # Convert to tibble for easier manipulation
+  as_tibble() |>
+  transmute(
+    title,  # Article headline
+
+    authors = map_chr(authors, ~ {  # Safely extract author names
+      if (is.null(.x) || !is.data.frame(.x) || ncol(.x) == 0) {
+        NA_character_
+      } else {
+        paste(unlist(.x), collapse = ", ")
+      }
+    }),
+    
+    # Use the first timestamp
+    publicationDate = map_chr(publicationDate, ~ .x[1]),  
+    # Convert relative to absolute URLs
+    url = paste0("https://www.foxnews.com", url),         
+    description,  # Short summary
+    text          # Full article body
+  )
+```
+
+```{r}
+# Write to a temporary CSV file (not saving permanently)
+write_csv(fox_meta, "fox_meta_preview.csv")
+```
