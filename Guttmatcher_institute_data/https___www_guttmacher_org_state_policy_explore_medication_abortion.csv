@@ -1,0 +1,31 @@
+Jurisdiction,Physician-only provision explicitly required,Telehealth use explicitly prohibited,In-person visit required...4,In-person visit required...5,In-person visit required...6,Mailing pills explicitly prohibited,Information on reversal required,Follow-up appointment required,Gestational duration limit for use specified
+Jurisdiction,Physician-only provision explicitly required,Telehealth use explicitly prohibited,Initial in-person exam required,Pills must be dispensed in person,First dose must be taken in person,Mailing pills explicitly prohibited,Information on reversal required,Follow-up appointment required,Gestational duration limit for use specified
+Alabama (total ban),X,,X,,,,,,
+Alaska*,,,,,,,,,
+Arizona,X,X,X,,,X,,X,
+Arkansas (total ban),X,X,X,,X,,X,X,
+Florida,X,X,,X,,X,,,
+Georgia,X,,,,,,,,
+Idaho (total ban),X,,X,,,,X,X,
+Indiana (total ban),X,X,,X,X,,X,,X (not after 8 weeks)
+Iowa,X,,,,,,,,
+Kansas,X,,,,,,,,
+Kentucky (total ban),X,X,X,X,,,X,X,
+Louisiana (total ban),X,,,X,,,X,,
+Mississippi (total ban),X,,X,,X,,,X,
+Missouri,X,,X,,,,,X,
+Nebraska,X,,,,X,,X,,
+Nevada,X,,,,,,,,
+North Carolina,,,X,,,,,,
+North Dakota,X,,,,X,,,,
+Oklahoma (total ban),X,,,,X,X,,,
+Pennsylvania,X,,,,,,,,
+South Carolina,X,X,,,,,,,
+South Dakota (total ban),X,,X,,X (both doses),,X,X,X (until 9 weeks)
+Tennessee (total ban),X,,X,,,,,X,
+Texas (total ban),X,,X,,,X,,X,X (up to 49 days)
+Utah,X,,,,,,X,,
+West Virginia (total ban),X,X,,,,,X,,
+Wisconsin,X,,X,X,,,,X,
+Wyoming,X,,X †,,,,,,
+TOTAL (28),26,7,13,5,7,4,9,10,3

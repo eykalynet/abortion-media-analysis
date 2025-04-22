@@ -1,0 +1,50 @@
+Jurisdiction,Reporting required,Reporting required on:...3,Reporting required on:...4,Reporting required on:...5,Reporting required on:...6,Reporting required on:...7,Reporting required on:...8,Reporting required on:...9,Reporting required on:...10,Reporting required on:...11
+Jurisdiction,Reporting required,Method of payment,Complications,Reason (patient’s health/life),Reason (rape/incest),Reason (fetal anomaly),Other reasons,Viability of fetus,Provider’s fulfillment of patient counseling mandates,Provider’s fulfillment of parental involvement mandates
+Alabama(total ban),X,,,X*,,,,,,X
+Alaska,X,X,,,,X,,,X,
+Arizona,X,,X,X,X,X,X,X†,,X
+Arkansas(total ban),X,,X,X,X,,,,X (required if mandated counseling not performed due to medical emergency),X
+Colorado,X,,,,,,,,,
+Connecticut,X,,X,,,,,,,
+Delaware,X,,,,,,,,,
+District ofColumbia,X,,,,,,,,,
+Florida,X,,,X,X,X,X,,,
+Georgia,X,,,,,,,,X,X
+Hawaii,X,,,,,,,,,
+Idaho(total ban),X,,X,X,X (required for care provided to minors),,,,X,X
+Illinois,X,,X,,,,X (reason must be specified as: patient request or other),,,
+Indiana(total ban),X,,X,X*,,,,X*,X,X
+Iowa,X,,,X*,,,,,,
+Kansas,X,,,X*,,,,X*,,X
+Kentucky(total ban),X,X,X,X*,,,"X (reason, if known, must be specified as: abuse, coercion, harassment, or trafficking)",X,,
+Louisiana(total ban),X,,X,X,X,X,X,,X,X
+Maine,X,,,,,,,,,
+Massachusetts,X,,,X (facility report required for provision under health/life exceptions past 24 weeks),,X (facility report required for provision under health/life exceptions past 24 weeks),,,,
+Minnesota,X,,X,,,,,,,
+Mississippi (total ban),X,,X,,,,,,,
+Missouri,X,,X,X,,,,X,,
+Montana,X,,X,X,,,,X,X,
+Nebraska,X,,X,X,X,X,X,,,
+Nevada,X,,X (required for hospital patients admitted with complications),,,,,,,
+New Hampshire,X*,,,X*,,,,,,
+New Mexico,X,,,,,,,,,
+New York,X,X,X,X,,X,X,,,
+North Carolina,X,X,X,,,,,,,
+North Dakota,X,,X,X,X,,,,,
+Ohio,X,,X,X,,,,X*,,
+Oklahoma(total ban),X,X,X,X,X,X,X,X†,X,X
+Oregon,X,,X,,,,,,,
+Pennsylvania,X,,X,X*,,,,,,
+Rhode Island,X,,,,,,,,,
+South Carolina,X,,X,X,X,X,,X†,X,X
+South Dakota(total ban),X,X,X,X,X,X,X,X†,X,X
+Tennessee(total ban),X,,,,,,,,,
+Texas(total ban),X,,X,X,,,,,X,X
+Utah,X,,X,X,X,X,X,X,X,
+Vermont,X,,,,,,,,,
+Virginia,X,,,,,,,,,
+Washington,X,,X,,,,,,,
+West Virginia,X,X,,X,,X,,,X,X
+Wisconsin,X,,X,,,,,,,X
+Wyoming,X,,X,,,,,,,
+TOTAL,46 + DC,7,28,25,11,12,10,11,13,14
