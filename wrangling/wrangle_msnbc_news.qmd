@@ -1,0 +1,41 @@
+---
+title: "Wrangling Fox News Articles"
+subtitle: "STAT 231: Blog App"
+author: "Maigan Lafontant, Emilie Ward, and Erika Salvador"
+format: 
+  pdf
+header-includes: |
+  \usepackage{fvextra}
+  \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+# set code chunk option defaults
+knitr::opts_chunk$set(
+  # display code as types
+  tidy = FALSE, 
+  # slightly smaller code font
+  size = "small",
+  # do not display messages in PDF
+  message = FALSE,
+# improve digit and NA display 
+  options(scipen = 1, knitr.kable.NA = ''))
+
+# Load required libraries
+library(tidyverse)
+library(httr)
+library(readr)
+library(stringr)
+library(tibble)
+library(kableExtra)
+library(colorspace)
+library(jsonlite)
+library(lubridate)
+```
+
+## 1. Read and Prepare Raw JSON
+
+The JSON file `nbc_news_data.json` was scraped from Fox News using a Python-based Tor-enabled web scraper. It includes article-level information such as titles, dates, body text, links, and images.
