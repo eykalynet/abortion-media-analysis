@@ -387,22 +387,85 @@ class AsyncTorController:
         else:
             print("Controller is not initialized.")
 
+# ==============================================================================
+# TOR SIGNAL RATE LIMITER + TASK QUEUE
+# ------------------------------------------------------------------------------
+# `limit_nym_signals` prevents sending too many NEWNYM signals in a short time.
+# `TaskQueue` manages tasks and rotates identity between them using NEWNYM.
+# ==============================================================================
+
+def limit_nym_signals(max_nym_signals: int = 1, time_period: int = 40):
+    """
+    Decorator that limits the number of times a NEWNYM signal can be sent
+    within a specified time window to avoid overwhelming the Tor network.
+
+    Parameters:
+    - max_nym_signals (int): Maximum NEWNYM signals allowed.
+    - time_period (int): Time window in seconds to enforce the limit.
+    """
+    def decorator(func):
+        nym_signals = []              # List of timestamps when NEWNYM was called
+        lock = asyncio.Lock()         # For thread-safe updates to timestamps
+
+        @wraps(func)
+        async def wrapper(*args, **kwargs):
+            async with lock:
+                current_time = asyncio.get_running_loop().time()
+                # Keep only timestamps within the time window
+                nym_signals[:] = [t for t in nym_signals if current_time - t < time_period]
+
+                if len(nym_signals) < max_nym_signals:
+                    result = await func(*args, **kwargs)
+                    nym_signals.append(current_time)
+                    return result
+                else:
+                    raise Exception("Max NEWNYM signals reached")
+
+        return wrapper
+    return decorator
+
+
 class TaskQueue:
-    def __init__(self, controller: AsyncTorController):
-        self.queue = asyncio.Queue()
-        self.controller = controller
+    """
+    A simple task queue that executes asynchronous tasks one at a time.
+    After each task, it sends a Tor NEWNYM signal to rotate identities.
+    """
+
+    def __init__(self, connector: AsyncTorController):
+        self.queue = asyncio.Queue() # Async queue to hold tasks
+        self.connector = connector  # Tor controller to manage identity rotation
 
     async def put(self, task):
+        """
+        Add a new coroutine task to the queue and trigger execution.
+        """
         await self.queue.put(task)
         await self.launch_task()
 
+    # You can uncomment the decorator below to activate rate limiting on NEWNYM.
+    # Personally, we did not find the need to do it since we did not scrape
+    # articles since 2009. 
+    
+    # @limit_nym_signals(max_nym_signals=3, time_period=20)
+    async def send_nym_signal(self):
+        """
+        Send a NEWNYM signal to request a new Tor identity.
+        """
+        await self.connector.signal_newnym()
+
     async def launch_task(self):
+        """
+        Run the next task in the queue and rotate Tor identity afterwards.
+        """
         if not self.queue.empty():
-            task = await self.queue.get()
-            logger.error("New task started")
-            await task()
-            await self.queue.task_done()
-            await self.controller.signal_newnym()
+            try:
+                task = await self.queue.get()
+                logger.error("New task detected")
+                await task()
+                await self.queue.task_done()
+            except Exception as e:
+                # Fail silently; you can enable logging here for debugging
+                pass
 
 # ==============================================================================
 # REQUEST INTERCEPTION
