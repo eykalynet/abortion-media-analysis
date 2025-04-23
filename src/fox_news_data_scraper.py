@@ -550,3 +550,92 @@ class HtmlDataExtractor_IO:
 class RateLimit(Exception):
     """Custom exception raised when rate limiting is detected."""
     pass
+  
+# ==============================================================================
+# DATA FETCHING + CLEANING UTILITIES
+# ------------------------------------------------------------------------------
+# These functions handle article text extraction and cleanup, word frequency 
+# analysis, and resilient GET requests with Tor circuit rotation on failure
+# ==============================================================================
+
+async def create_word_count_dict(text):
+    """
+    Create a dictionary of lowercase word frequencies from the given text.
+    Filters out non-alphabetic tokens.
+    """
+    return dict(Counter([word.lower() for word in word_tokenize(text) if word.isalpha()]))
+
+async def extract_text(html):
+    """
+    Use the HtmlDataExtractor_IO class to extract:
+    - Main body text
+    - Internal links
+    - Image sources
+    """
+    try:
+        return HtmlDataExtractor_IO(html=html)()
+    except Exception as e:
+        print(e, "in filtering")
+
+async def get_data(c: HttpClient, url: str, task_queue: TaskQueue, dict_DATA=None, 
+sleep: float = 0.5) -> curl_cffi.requests.Response:
+    """
+    Fetch a URL using the provided HttpClient and parse the result if dict_DATA is provided.
+
+    - If the request fails or returns a non-200 status, a RateLimit is raised.
+    - On success, extracts and cleans HTML content, populates dict_DATA with:
+        - 'text': cleaned article body
+        - 'urls': internal anchor links
+        - 'imgs': image sources
+        - 'world count' [sic]: frequency of each word
+
+    On failure, it triggers a NEWNYM signal via TaskQueue and retries the request.
+    """
+    try:
+        response = await c.get(url)
+        if response.status_code != 200:
+            logger.error(f"{response.status_code}       {url}")
+            raise RateLimit()
+
+        logger.info(f"{response.status_code}              {url}")
+
+        if dict_DATA is not None:
+            # Extract HTML content
+            html_r, html_u, iimg = await extract_text(response.text)
+
+            # Clean unwanted JS logic from the article body
+            pattern_if = r'if\s*$[^)]*$'
+            pattern_brackets = r'{[^}]*}'
+            pattern_else = r'else\s*{[^}]*}'
+            pattern = r'if.*?}.*?else'
+
+            clean_text = re.sub(pattern_if, '', html_r, flags=re.DOTALL)
+            clean_text = re.sub(pattern_brackets, '', clean_text, flags=re.DOTALL)
+            clean_text = re.sub(pattern_else, '', clean_text, flags=re.DOTALL)
+            new_text = re.sub(pattern, '', clean_text, flags=re.DOTALL)
+
+            clean_text1 = re.sub(r'[\n\xa0]', '', new_text)
+            clean_text = re.sub(r'\s+', ' ', clean_text1)
+
+            # Populate the metadata dictionary
+            dict_DATA["text"] = clean_text
+            dict_DATA["urls"] = html_u
+            dict_DATA["imgs"] = iimg
+            dict_DATA["world count"] = await create_word_count_dict(new_text)  
+
+            return dict_DATA
+
+        return response
+
+    except Exception as e:
+        print("err in get_data:", e, url)
+        try:
+            # Trigger a NEWNYM and retry the request
+            await asyncio.create_task(task_queue.put(task_queue.send_nym_signal))
+            await asyncio.sleep(sleep)
+            return await asyncio.create_task(get_data(c=c, 
+          task_queue=task_queue, url=url, dict_DATA=dict_DATA))
+        except Exception as e:
+            print("Critical failure in get_data retry loop:", e)
+
+
