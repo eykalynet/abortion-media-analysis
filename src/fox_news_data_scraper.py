@@ -323,6 +323,70 @@ class TorLauncher:
                     print(f"Error killing process: {e}")
         return False  # Prevents suppressing any exception that occurred
 
+# ==============================================================================
+# ASYNC TOR CONTROLLER
+# ------------------------------------------------------------------------------
+# This class provides asynchronous access to Tor's control interface using `stem`.
+# It allows us to authenticate and manage a Tor controller instance, send NEWNYM 
+# signals to request a new Tor identity (new circuit), send RELOAD signals to 
+# refresh Tor configuration, and, lastly, use in an async context with automatic 
+# setup/teardown
+# ==============================================================================
+
+class AsyncTorController:
+    def __init__(self, host='127.0.0.1', port=None):
+        self.host = host                 # Tor control host (usually localhost)
+        self.port = port                 # Tor control port (e.g., 8999)
+        self.controller = None           # Controller instance from `stem`
+
+    async def __aenter__(self):
+        """
+        Connect and authenticate with the Tor controller when entering context.
+        """
+        try:
+            self.controller = await asyncio.to_thread(
+                Controller.from_port,
+                address=self.host,
+                port=self.port
+            )
+            if self.controller is None:
+                raise RuntimeError("Failed to create a Tor controller.")
+            await asyncio.to_thread(self.controller.authenticate)
+            return self
+        except Exception as e:
+            print(f"Error during entering context: {e}")
+            raise
+
+    async def __aexit__(self, exc_type, exc, tb):
+        """
+        Cleanly close the controller connection when exiting context.
+        """
+        if self.controller is not None:
+            await asyncio.to_thread(self.controller.close)
+            self.controller = None
+        else:
+            print("Controller was not initialized, nothing to close.")
+
+    async def signal_newnym(self):
+        """
+        Send a NEWNYM signal to Tor to request a new identity (rotate circuit).
+        """
+        if self.controller is not None:
+            await asyncio.to_thread(self.controller.signal, Signal.NEWNYM)
+            print("newnym received")
+        else:
+            print("Controller is not initialized.")
+
+    async def reload(self):
+        """
+        Send a RELOAD signal to Tor to reload its configuration (e.g., torrc changes).
+        """
+        if self.controller is not None:
+            await asyncio.to_thread(self.controller.signal, Signal.RELOAD)
+            print("Reload signal received.")
+        else:
+            print("Controller is not initialized.")
+
 class TaskQueue:
     def __init__(self, controller: AsyncTorController):
         self.queue = asyncio.Queue()
