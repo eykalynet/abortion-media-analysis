@@ -1,5 +1,5 @@
 ---
-title: "Wrangling Fox News Articles"
+title: "Wrangling NBC News Articles"
 subtitle: "STAT 231: Blog App"
 author: "Maigan Lafontant, Emilie Ward, and Erika Salvador"
 format: 
@@ -38,4 +38,187 @@ library(lubridate)
 
 ## 1. Read and Prepare Raw JSON
 
-The JSON file `nbc_news_data.json` was scraped from Fox News using a Python-based Tor-enabled web scraper. It includes article-level information such as titles, dates, body text, links, and images.
+The JSON file `fox_news_data.json` was scraped from Fox News using a Python-based Tor-enabled web scraper. It includes article-level information such as titles, dates, body text, links, and images.
+
+```{r}
+#| label: step-1
+
+## =================================================================
+# Step 1: Read and Prepare Raw JSON (flatten = FALSE)
+# =================================================================
+# Note: Setting flatten = FALSE is important here.
+#       It preserves nested structure and prevents JSON explosion,
+#       which allows for faster and more manageable parsing downstream.
+
+# Load JSON scraped from Python
+nbc_news <- fromJSON("../data/nbc_news_data.json", flatten = FALSE)
+
+# Preview structure
+glimpse(nbc_news)
+```
+
+## 2. Subset Metadata
+
+In this step, we subset and clean the raw Fox News data to retain only the important metadata fields needed for our analysis. Specifically, we extract the article title, description, full text, publication date, URL, and author information. The `publicationDate` field is simplified by selecting only the first timestamp per article. Because the original `url` values are relative paths, we prepend the full domain (`https://www.nbcnews.com`) to make them complete. The `authors` column is nested and occasionally malformed, so we use safety checks to extract and collapse the authors' names into a single string or return `NA` if no valid data is found.
+
+```{r}
+#| label: step-2
+
+# =================================================================
+# Step 2: Subset Metadata
+# =================================================================
+
+nbc_meta <- nbc_news |>
+  # Convert to tibble for easier manipulation
+  as_tibble() |>
+  transmute(
+    title,  # Article headline
+
+    authors = map_chr(authors, ~ {  # Safely extract author names
+      if (is.null(.x) || !is.data.frame(.x) || ncol(.x) == 0) {
+        NA_character_
+      } else {
+        paste(unlist(.x), collapse = ", ")
+      }
+    }),
+    
+    # Use the first timestamp
+    publicationDate = map_chr(publicationDate, ~ .x[1]),  
+    # Convert relative to absolute URLs
+    url = paste0("https://www.nbcnews.com", url),         
+    description,  # Short summary
+    text          # Full article body
+  )
+```
+
+## 3. Filter Articles by Publication Year (2020-2024)
+
+In this step, we subset the dataset to include only articles published between 2020 and 2024. We first convert the `publicationDate` string into a proper datetime object using `lubridate::ymd_hms()`, then retain only those entries whose year falls within our desired range.
+
+```{r}
+#| label: step-3
+
+# =================================================================
+# Step 3: Filter Articles by Publication Year (2020-2024)
+# =================================================================
+
+# Filter to articles published between 2020 and 2024
+nbc_meta2 <- nbc_meta |> 
+  
+  # Parse publication date
+  mutate(pub_date = lubridate::ymd_hms(publicationDate)) |>  
+  
+  # Keep 2020–2024
+  filter(lubridate::year(pub_date) >= 2020, 
+         lubridate::year(pub_date) <= 2024) |> 
+  
+  # Add Roe v. Wade overturning label
+  mutate(roe_status = if_else(pub_date < as_datetime("2022-06-24"), 
+                              "Pre-Roe", "Post-Roe")) |> 
+  
+  # Drop original unparsed column
+  select(-publicationDate)
+```
+
+## 4. Clean Article Text
+
+To prepare the NBC dataset for text analysis, we implemented a custom cleaning function that systematically removes non-informative and repetitive patterns from article bodies. These include promotional banners (e.g., “NBC News Flash headlines” and “Click here to get the NBC NEWS app”), social media prompts, author bylines, timestamps, and recurring sections like “Related Topics” or “More from Politics” that often appear at the end of articles. We also removed visual clutter and interface references such as “Read more” links, multimedia labels (e.g., “video” or “photo”), and typographic inconsistencies like curly quotes, em dashes, non-breaking spaces, and excessive whitespace.
+
+This cleaning process, however, was only a preliminary step. Due to the inconsistent and fragmented formatting of the original articles, full automation was not possible. As a result, we exported the cleaned dataset and manually corrected the remaining irregularities in Google Sheets as a team.
+
+```{r}
+#| label: step-4
+
+# =================================================================
+# Step 4: Clean Article Text
+# =================================================================
+
+clean_text_column <- function(text) {
+  text |>
+    # Remove promotional section headers 
+    str_remove_all("(?i)NBC News Flash.*?headlines") |>
+    
+    # Remove call-to-action lines 
+    str_remove_all("(?i)CLICK HERE TO GET THE NBC NEWS APP") |>
+    
+    # Remove newsletter subscription prompts
+    str_remove_all("(?i)Subscribe.*?newsletter") |>
+    
+    # Remove confirmation blurbs like 
+    str_remove_all("(?i)You(’|')ve successfully subscribed.*?newsletter") |>
+    
+    # Remove social media buttons and UI text
+    str_remove_all("(?i)Facebook Twitter Flipboard Comments Print Email") |>
+    
+    # Remove stray "close" buttons or labels from modal windows
+    str_remove_all("(?i)close") |>
+    
+    # Remove "Related Topics" blurbs typically found at the end of articles
+    str_remove_all("(?i)Related Topics.*?(?=\\b[A-Z])") |>
+    
+    # Remove "More from [section]" banners (e.g., More from Politics)
+    str_remove_all("(?i)More from [A-Z][a-z]+") |>
+    
+    # Remove "Read more" links or references
+    str_remove_all("(?i)Read more") |>
+    
+    # Remove author bylines like "By John Doe NBC News"
+    str_remove_all("(?i)By\\s+[A-Z][a-z]+(?:\\s+[A-Z][a-z]+)*\\s+NBC News") |>
+    
+    # Remove publication dates 
+    str_remove_all("(?i)Published\\s+[A-Z][a-z]+\\s+\\d{1,2},\\s+\\d{4}.*?(AM|PM|EST|EDT)?") |>
+    
+    # Remove embedded media labels like video, photo, image, etc.
+    str_remove_all("(?i)video|photo|image|email|print") |>
+    
+    # Normalize curly single quotes to straight quotes
+    str_replace_all("‘|’", "'") |>
+    
+    # Normalize curly double quotes to straight quotes
+    str_replace_all("“|”", "\"") |>
+    
+    # Normalize long/em dashes to regular dashes
+    str_replace_all("–|—", "-") |>
+    
+    # Normalize ellipses to three dots
+    str_replace_all("…", "...") |>
+    
+    # Replace non-breaking spaces with regular spaces
+    str_replace_all("\u00A0", " ") |>
+    
+    # Collapse multiple spaces/tabs/newlines into a single space
+    str_replace_all("\\s+", " ") |>
+    
+    # Remove any leftover bracketed content (e.g., [Advertisement])
+    str_remove_all("\\[.*?\\]") |>
+    
+    # Remove any leftover brace-enclosed artifacts
+    str_remove_all("\\{.*?\\}") |>
+    
+    # Trim leading and trailing whitespace
+    str_trim()
+}
+
+# Apply the cleaning function to the filtered dataset
+nbc_meta3 <- nbc_meta2 |> 
+  mutate(
+    # Create new column with cleaned text
+    text_cleaned = clean_text_column(text)  
+  )
+
+# Save the cleaned version to CSV for further manual correction
+write_csv(
+  nbc_meta3,
+  "nbc_meta_raw_texts.csv"
+)
+
+```
+
+## 5. Include only articles with \>=5 abortion mentions
+
+```{r}
+#| label: step-5
+s
+
+
+```
