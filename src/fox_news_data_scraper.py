@@ -287,6 +287,41 @@ class InterceptRequest:
         except Exception as e:
             logger.error(f"Failed to get data: {e}")
 
+# ==============================================================================
+# TOR LAUNCHER
+# ------------------------------------------------------------------------------
+# This class allows us to programmatically launch a Tor process using a custom
+# bash command. It can be used with an async context manager (`async with`)
+# to ensure that Tor runs during scraping and terminates cleanly afterward.
+# ==============================================================================
+
+class TorLauncher:
+    def __init__(self, bash_script: str):
+        self.bash_script = bash_script  # Bash command to launch Tor
+        self.process = None             # Reference to the subprocess
+
+    async def __aenter__(self):
+        """
+        Start the Tor process asynchronously when entering the context.
+        """
+        self.process = await asyncio.create_subprocess_shell(cmd=self.bash_script)
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        """
+        Guarantee the Tor process is terminated when exiting the context.
+        Handles both graceful shutdown and forced termination if needed.
+        """
+        if self.process:
+            try:
+                await self.process.wait()  # Wait for Tor to finish (usually never)
+            except Exception as e:
+                print(f"Error waiting for process: {e}")
+                try:
+                    self.process.kill()  # Attempt to kill process if wait fails
+                except Exception as e:
+                    print(f"Error killing process: {e}")
+        return False  # Prevents suppressing any exception that occurred
 
 class TaskQueue:
     def __init__(self, controller: AsyncTorController):
