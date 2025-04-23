@@ -756,5 +756,73 @@ async def trigger_API_call(driver: webdriver, xpath: str = "//div[@class = 'butt
     except Exception as e:
         logger.error(f"Error triggering API call: {e}")
 
+# ==============================================================================
+# MAIN EXECUTION FUNCTION
+# ------------------------------------------------------------------------------
+# This function initializes a Tor controller (to rotate identities), a headless 
+# SeleniumDriverless browser instance, a network interceptor to capture API 
+# request headers, then loads the Fox News abortion page, triggers the internal 
+# API call via simulated click, and launches data extraction using captured headers
+# ==============================================================================
 
+async def main(proxy: str = None):
+    # Setup browser options
+    options = webdriver.ChromeOptions()
+    options.user_data_dir = "Profile 3"  # Use a separate browser profile
+    options.headless = True              # Run without UI
+
+    shared_access_values = DataStore()   # Shared headers/params from intercepted request
+
+    # Launch Tor controller for circuit rotation
+    async with AsyncTorController(port=8999) as ATC:
+        task_queue = TaskQueue(connector=ATC)
+
+        # Launch headless Chrome with large WebSocket buffer
+        async with webdriver.Chrome(max_ws_size=2 ** 30, options=options) as driver:
+            if proxy is not None:
+                await driver.set_single_proxy(proxy=proxy)
+
+            # Attach network interceptor to capture API headers and params
+            async with NetworkInterceptor(
+                driver,
+                on_request=InterceptRequest(shared_dict=shared_access_values),
+                patterns=[RequestPattern.AnyRequest],
+                intercept_auth=True
+            ) as interceptor:
+                try:
+                    logger.info("Chrome started + Network interceptor initialized.")
+
+                    # Load the Fox News abortion politics page
+                    await asyncio.ensure_future(driver.get(url=URL, wait_load=True))
+                    logger.info("Chrome loaded target URL.")
+
+                    # Simulate Load More button click + begin data scraping
+                    await asyncio.gather(*[
+                        asyncio.create_task(f()) for f in [
+                            lambda: datagaderer(shared_aces_walues=shared_access_values, task_queue=task_queue),
+                            lambda: trigger_API_call(driver=driver)
+                        ]
+                    ])
+
+                    await driver.quit()  # Cleanup driver after work completes
+
+                except Exception as e:
+                    logger.error(f"Error in main: {e}")
+                except KeyboardInterrupt:
+                    await driver.quit()
+
+# ==============================================================================
+# ENTRY POINT
+# ------------------------------------------------------------------------------
+# This block runs the async main() function if the script is executed directly.
+# It uses a local Tor SOCKS5 proxy and measures execution time.
+# ==============================================================================
+
+if __name__ == "__main__":
+    s = time.perf_counter()  # Start timing
+    asyncio.run(main(proxy="socks5://127.0.0.1:9001"))
+    e = time.perf_counter()  # End timing
+
+    execution_time = e - s
+    print(f"Execution time: {execution_time:.2f} seconds")
 
