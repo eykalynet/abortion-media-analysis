@@ -87,7 +87,8 @@ from cdp_socket.exceptions import CDPError
 # and U.S. exit nodes.
 # HOST: The localhost IP address where the Tor proxy runs.
 # RED / RESET: Terminal color codes for formatting error messages in red.
-# POST_URL_CONTENT_mesages: Base URL for Fox News's internal search API (used to extract abortion articles).
+# POST_URL_CONTENT_mesages: Base URL for Fox News's internal search API (used to 
+# extract abortion articles).
 # URL: The main page for judiciary-related abortion news on the Fox News website.
 # ==============================================================================
 
@@ -102,106 +103,143 @@ print(POST_URL_CONTENT_mesages)
 URL = 'https://www.foxnews.com/category/politics/judiciary/abortion'
 
 # ==============================================================================
-# LOGGING SETUP
+# LOGGING CONFIGURATION
 # ------------------------------------------------------------------------------
-# Logging is color-coded: errors show in red to help debugging.
-# This sets up a global logger with stream output to terminal.
+# This setup customizes terminal logging behavior to improve visibility.
+# Errors are highlighted in red using ANSI escape codes.
+# Logs include level, logger name, and message.
 # ==============================================================================
 
 class ColoredFormatter(logging.Formatter):
+    """
+    Custom log formatter that highlights ERROR-level messages in red.
+    """
     def format(self, record):
-      if record.levelno == logging.ERROR:
-        record.msg = f"{RED}{record.msg}{RESET}"
-      elif record.levelno == logging.INFO:
-        record.msg = f"{record.msg}"
-      return super().format(record)
+        if record.levelno == logging.ERROR:
+            # Add red color to error messages
+            record.msg = f"{RED}{record.msg}{RESET}"
+        elif record.levelno == logging.INFO:
+            # INFO messages are left unstyled
+            record.msg = f"{record.msg}"
+        return super().format(record)
 
+# Create a logger for this module
 logger = logging.getLogger(__name__)
+
+# StreamHandler directs logs to the terminal/console
 handler = logging.StreamHandler()
-handler.setFormatter(ColoredFormatter('%(levelname)s - %(name)s - %(message)s'))
+
+# Use the custom formatter for colored output
+formatter = ColoredFormatter('%(levelname)s - %(name)s - %(message)s')
+handler.setFormatter(formatter)
+
+# Attach the handler to the logger
 logger.addHandler(handler)
+
+# Set the minimum log level to INFO
 logger.setLevel(logging.INFO)
-
-# ==============================================================================
-# TOR CONTROL
-# ------------------------------------------------------------------------------
-# This class wraps `stem` Tor controller logic for programmatic control.
-# We use it to request new circuits (NEWNYM) to rotate identities.
-# Useful for avoiding IP-based rate limits or bans.
-# ==============================================================================
-
-class AsyncTorController:
-    def __init__(self, host='127.0.0.1', port=None):
-        self.host = host
-        self.port = port
-        self.controller = None
-
-    async def __aenter__(self):
-        self.controller = await asyncio.to_thread(Controller.from_port, address=self.host, port=self.port)
-        await asyncio.to_thread(self.controller.authenticate)
-        return self
-
-    async def __aexit__(self, *args):
-        if self.controller:
-            await asyncio.to_thread(self.controller.close)
-
-    async def signal_newnym(self):
-        await asyncio.to_thread(self.controller.signal, Signal.NEWNYM)
-        print("TOR: Circuit refreshed.")
 
 # ==============================================================================
 # HTTP CLIENT
 # ------------------------------------------------------------------------------
-# curl_cffi is used here for stealthy, high-performance requests.
-# It allows SOCKS5 proxy routing and Chrome user-agent impersonation.
-# This helps avoid detection when accessing APIs at scale.
+# This class wraps curl_cffi's AsyncSession to send async HTTP(S) requests
+# through a SOCKS5 proxy (Tor), impersonate a real browser user-agent (e.g., 
+# Chrome), and support use in an async context (with async `with`)
 # ==============================================================================
 
 class HttpClient:
-    def __init__(self, proxy_port, impersonate, headers=None, params=None, timeout=30):
+    def __init__(self, proxy_port: int, impersonate: str, 
+                  headers: dict, params: dict, 
+                  timeout: float = 30.0):
+        self.timeout = timeout
+
+        # Initialize an async HTTP session with Tor routing and impersonation
         self.client = curl_cffi.requests.AsyncSession(
-          
-            proxies={'http': f'socks5h://{HOST}:{proxy_port}', 'https': f'socks5h://{HOST}:{proxy_port}'},
-            impersonate=impersonate,
-            headers=headers or {},
-            params=params or {},
-            timeout=timeout,
-            max_clients=10,
+            max_clients = 10,            # Limit concurrent requests
+            timeout = self.timeout,      # Request timeout
+            http_version = 1,            # Use HTTP/1.1
+            allow_redirects = True,      # Follow redirects
+            max_redirects = 10,          # Max allowed redirects
+            proxies = {                  # SOCKS5 proxy through Tor
+                'http': f'socks5://{HOST}:{proxy_port}',
+                'https': f'socks5://{HOST}:{proxy_port}'
+            },
+            impersonate = impersonate,   # Browser impersonation (e.g., chrome124)
+            headers = headers or {},     # Custom headers
+            params = params or {}        # Query parameters
         )
 
-    async def get(self, url):
+    async def get(self, url: str) -> curl_cffi.requests.Response:
+        """
+        Asynchronously send a GET request to the specified URL.
+        """
         return await self.client.get(url)
 
-    async def close(self):
-        await self.client.aclose()
+    async def post(self, url: str, **kawrgs) -> curl_cffi.requests.Response:
+        """
+        Asynchronously send a POST request to the specified URL with optional kwargs.
+        """
+        return await self.client.post(url, **kawrgs)
 
-    async def __aenter__(self):
+    async def close(self):
+        """
+        Close the asynchronous HTTP session.
+        """
+        await self.client.close()
+
+    async def __aenter__(self) -> 'HttpClient':
+        """
+        Enable use of this class in an async context manager (`async with`).
+        """
         return self
 
-    async def __aexit__(self, *args):
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+        """
+        Ensure session is closed on exiting the async context manager.
+        """
         await self.close()
-
-
-
+        
 # ==============================================================================
-# DATA SHARING & TASK MANAGEMENT
+# DATASTORE
 # ------------------------------------------------------------------------------
-# DataStore manages shared headers and cookies between browser and API fetches.
-# TaskQueue lets us schedule async tasks and trigger NEWNYM after each.
+# This class handle a shared dictionary (`self.data`) to store headers, cookies, 
+# etc., an asyncio queue to pass updates to dependent components, and thread-safe 
+# access using asyncio locks
 # ==============================================================================
 
 class DataStore:
     def __init__(self):
-        self.data = {}
-        self.lock = asyncio.Lock()
-        self.queue = asyncio.Queue()
+        self.data = {}                    # Internal shared dictionary
+        self.lock = asyncio.Lock()        # Lock for safe concurrent access
+        self.queue = asyncio.Queue()      # Queue to notify when data is updated
+
+    async def get(self, key):
+        """
+        Safely retrieve a value by key from the shared dictionary.
+        """
+        async with self.lock:
+            return self.data.get(key)
+
+    async def delete(self, key):
+        """
+        Safely delete a key-value pair from the shared dictionary.
+        """
+        async with self.lock:
+            if key in self.data:
+                del self.data[key]
 
     async def update(self, other_dict):
+        """
+        Safely update the shared dictionary and notify via the queue.
+        """
         async with self.lock:
-            self.data.update(other_dict)
-            await self.queue.put(other_dict)
+            self.data.update(other_dict)         # Merge in new values
+            await self.queue.put(other_dict)     # Notify listeners
 
     async def wait_for_add(self):
+        """
+        Wait for and retrieve the next update from the queue.
+        """
         return await self.queue.get()
 
 class TaskQueue:
