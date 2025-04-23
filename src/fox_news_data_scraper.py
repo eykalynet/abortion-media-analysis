@@ -639,3 +639,76 @@ sleep: float = 0.5) -> curl_cffi.requests.Response:
             print("Critical failure in get_data retry loop:", e)
 
 
+# ==============================================================================
+# ARTICLE + API FETCHERS
+# ------------------------------------------------------------------------------
+# These functions retrieve lists of article metadata or full content, use 
+# HttpClient through Tor, and coordinate with the TaskQueue for identity rotation
+# ==============================================================================
+
+async def get_articles(data: list[dict], task_queue: TaskQueue, **args) -> list[dict]:
+    """
+    Given a list of article metadata (from API), fetch full article content.
+    
+    Parameters:
+    - data: list of dictionaries with 'url' keys
+    - task_queue: used for circuit rotation if rate-limited
+    - args: forwarded to HttpClient (e.g., proxy_port, headers)
+
+    Returns:
+    - A list of enriched article dictionaries with full text, links, images, and word counts
+    """
+    print(data) 
+
+    async with HttpClient(**args) as client:
+        try:
+            return await asyncio.gather(*[
+                asyncio.create_task(
+                    get_data(
+                        task_queue=task_queue,
+                        url=f"https://www.foxnews.com{article['url']}",
+                        c=client,
+                        dict_DATA=article
+                    )
+                )
+                for article in data if "https" not in article['url']
+            ])
+        except Exception as e:
+            print("Error in get_articles:", e)
+
+
+async def get_api(task_queue: TaskQueue, size: int = 30, **args):
+    """
+    Fetch raw article metadata from the Fox News abortion-related article API.
+    
+    Parameters:
+    - task_queue: used for identity rotation on failure
+    - size: number of articles per API call (pagination)
+    - args: forwarded to HttpClient (e.g., proxy_port, headers)
+
+    Returns:
+    - A list of response objects from the API
+    """
+    try:
+        async with HttpClient(**args) as client:
+            return await asyncio.gather(*[
+                asyncio.create_task(
+                    get_data(
+                        task_queue=task_queue,
+                        url=(
+                            f"https://www.foxnews.com/api/article-search"
+                            f"?searchBy=tags&values=fox-news%2Fpolitics%2Fjudiciary%2Fabortion"
+                            f"&excludeBy=tags&excludeValues=&size={size}&from={30*i}"
+                            f"&mediaTags=politics%7Cjudiciary%7Cabortion"
+                        ),
+                        c=client
+                    )
+                )
+                for i in range(0, 151)  # 151 * 30 = 4530 results (our last run got
+                # 3,000 results) 
+            ])
+    except Exception as e:
+        print("Error in get_api:", e)
+        
+        
+
