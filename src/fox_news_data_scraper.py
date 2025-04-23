@@ -47,54 +47,59 @@
 # Install Libraries
 # ==============================================================================
 
+# --- Standard Library ---
 import asyncio
 import json
+import logging
 import re
 import time
-import logging
 from collections import Counter
 from functools import wraps
 
+# --- NLP ---
 import nltk
 from nltk.tokenize import word_tokenize
+
+# --- HTML Parsing ---
 import lxml.html
+
+# --- Tor (via stem) ---
 from stem import Signal
 from stem.control import Controller
 
+# --- Web Scraping and Automation ---
+import curl_cffi.requests
 from selenium_driverless import webdriver
 from selenium_driverless.scripts.network_interceptor import (
-    NetworkInterceptor, InterceptedRequest, RequestPattern
+    InterceptedRequest, NetworkInterceptor, Request, RequestPattern, RequestStages
 )
 from selenium_driverless.types.by import By
-import curl_cffi.requests
+from selenium.webdriver.remote.webelement import WebElement
+
+# --- WebSocket Communication Errors ---
+from cdp_socket.exceptions import CDPError
 
 # ==============================================================================
 # CONFIGURATION
 # ------------------------------------------------------------------------------
-# These are the core values used across the script.
-# HOST is the localhost IP used by the Tor proxy.
-# TOR_PORT is the port used by SOCKS5 proxy for routing traffic anonymously.
-# CONTROL_PORT is the port that lets us control Tor (e.g., request a new identity).
-# URL is the starting point for scraping Fox News abortion politics section.
-# API_BASE is the base URL for Fox News's internal article API.
-# RED/RESET is used to color error logs red in the terminal.
-# PATTERN_* are regex patterns to clean up JavaScript junk from article text.
+# This section defines core constants used across the scraper:
+# BASH_SCRIPT: Command used to launch a custom Tor instance with specific ports 
+# and U.S. exit nodes.
+# HOST: The localhost IP address where the Tor proxy runs.
+# RED / RESET: Terminal color codes for formatting error messages in red.
+# POST_URL_CONTENT_mesages: Base URL for Fox News's internal search API (used to extract abortion articles).
+# URL: The main page for judiciary-related abortion news on the Fox News website.
 # ==============================================================================
 
+BASH_SCRIPT = """   tor --ControlPort 8999 --SocksPolicy "accept 127.0.0.1"    --SocksPort 9001 --ExitNodes "{us}"   """
 HOST = "127.0.0.1"
-TOR_PORT = 9001
-CONTROL_PORT = 8999
-
-URL = "https://www.foxnews.com/category/politics/judiciary/abortion"
-API_BASE = "https://www.foxnews.com/api/article-search?"
-
 RED = "\033[91m"
 RESET = "\033[0m"
+POST_URL_CONTENT_mesages = "https://www.foxnews.com/api/article-search?" 
 
-PATTERN_IF = r'if\s*$[^)]*$'
-PATTERN_BRACKETS = r'{[^}]*}'
-PATTERN_ELSE = r'else\s*{[^}]*}'
-PATTERN_IF_ELSE = r'if.*?}.*?else'
+print(POST_URL_CONTENT_mesages)
+
+URL = 'https://www.foxnews.com/category/politics/judiciary/abortion'
 
 # ==============================================================================
 # LOGGING SETUP
@@ -105,9 +110,11 @@ PATTERN_IF_ELSE = r'if.*?}.*?else'
 
 class ColoredFormatter(logging.Formatter):
     def format(self, record):
-        if record.levelno == logging.ERROR:
-            record.msg = f"{RED}{record.msg}{RESET}"
-        return super().format(record)
+      if record.levelno == logging.ERROR:
+        record.msg = f"{RED}{record.msg}{RESET}"
+      elif record.levelno == logging.INFO:
+        record.msg = f"{record.msg}"
+      return super().format(record)
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()
@@ -173,6 +180,8 @@ class HttpClient:
 
     async def __aexit__(self, *args):
         await self.close()
+
+
 
 # ==============================================================================
 # DATA SHARING & TASK MANAGEMENT
