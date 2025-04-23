@@ -464,8 +464,80 @@ class TaskQueue:
                 await task()
                 await self.queue.task_done()
             except Exception as e:
-                # Fail silently; you can enable logging here for debugging
+                # Fail silently
                 pass
+
+# ==============================================================================
+# HTML DATA EXTRACTOR
+# ------------------------------------------------------------------------------
+# This class parses the HTML content of an article using lxml.
+# It extracts cleaned text from <p> tags within the article body (excluding 
+# <a><strong>), all internal anchor links inside the article container, and 
+# all image sources from the same article container
+# Designed to be used like a function: extractor() returns (text, links, images)
+# ==============================================================================
+
+class HtmlDataExtractor_IO:
+    def __init__(self, html: str) -> None:
+        """
+        Initialize the HTML parser and validate input type.
+        """
+        if not isinstance(html, str):
+            raise ValueError("Invalid input type: Expected string containing HTML.")
+
+        # Create lxml HTML tree with error recovery mode enabled
+        self.tree = lxml.html.fromstring(html, parser=lxml.html.HTMLParser(recover=True))
+
+    def __call__(self, xpath: str = "//article[contains(@class, 'article-wrap')]") -> list:
+        """
+        Extract article content, anchor links, and image sources from the given HTML.
+        Parameters:
+        - xpath: The XPath root for searching <a> and <img> elements (defaults to article-wrap container)
+        
+        Returns:
+        - Tuple of (cleaned article text, list of links, list of image URLs)
+        """
+        try:
+            # 1. Main text: extract <p> tags under .article-body, skip <p> with <a><strong>
+            text = ' '.join([
+                p.text_content()
+                for p in self.tree.xpath("//div[@class='article-body']/p")
+                if not p.xpath("./a/strong")
+            ])
+
+            # 2. Extract all internal anchor links under the provided article XPath
+            links = [
+                a.get('href')
+                for a in self.tree.xpath(f"{xpath}//a")
+                if a.get('href') is not None
+            ]
+
+            # 3. Extract all image URLs under the same article XPath
+            images = [
+                img.get('src')
+                for img in self.tree.xpath(f"{xpath}//img")
+                if img.get('src') is not None
+            ]
+
+            return text, links, images
+
+        except lxml.etree.XPathError as e:
+            raise ValueError(f"Invalid XPath expression: {e}")
+        except lxml.etree.XMLSyntaxError as e:
+            raise ValueError(f"XML syntax error: {e}")
+        except lxml.etree.ParserError as e:
+            raise ValueError(f"XML parser error: {e}")
+        except Exception as e:
+            raise ValueError(f"An unexpected error occurred: {e}")
+
+    def __del__(self):
+        """
+        Clean up the lxml tree object.
+        """
+        try:
+            del self.tree
+        except AttributeError:
+            pass
 
 # ==============================================================================
 # REQUEST INTERCEPTION
