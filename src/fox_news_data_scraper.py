@@ -710,5 +710,51 @@ async def get_api(task_queue: TaskQueue, size: int = 30, **args):
     except Exception as e:
         print("Error in get_api:", e)
         
-        
+# ==============================================================================
+# SELENIUM INTERACTIONS (Driverless)
+# ------------------------------------------------------------------------------
+# These helper functions automate user actions. It locates elements via XPath, 
+# simulates a click, and triggers the API call by interacting with the "Load 
+# More" button
+# ==============================================================================
+
+async def get_elem(driver: webdriver, xpath: str, timeout: float = 10) -> WebElement:
+    """
+    Locate a single DOM element using XPath within a given timeout period.
+    
+    Parameters:
+    - driver: active SeleniumDriverless browser instance
+    - xpath: XPath string to locate the element
+    - timeout: how long to wait before timing out
+
+    Returns:
+    - WebElement: the element found
+    """
+    return await driver.find_element(By.XPATH, xpath, timeout=timeout)
+
+
+async def click(elem: WebElement) -> None:
+    """
+    Click the given element, moving the virtual cursor to it first (helps with visibility checks).
+    """
+    await elem.click(move_to=True)
+
+
+async def trigger_API_call(driver: webdriver, xpath: str = "//div[@class = 'button load-more js-load-more']/a"):
+    """
+    Attempts to click the 'Load More' button on the article page to initiate
+    the network call that loads abortion-related articles.
+
+    Parameters:
+    - driver: active SeleniumDriverless browser instance
+    - xpath: XPath of the load more button (default matches known Fox layout)
+    """
+    try:
+        e = await get_elem(driver=driver, xpath=xpath)
+        await click(elem=e)
+        logger.info("Triggered initial API call via Load More button")
+    except Exception as e:
+        logger.error(f"Error triggering API call: {e}")
+
+
 
