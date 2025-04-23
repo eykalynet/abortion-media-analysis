@@ -242,6 +242,52 @@ class DataStore:
         """
         return await self.queue.get()
 
+# ==============================================================================
+# INTERCEPT REQUEST
+# ------------------------------------------------------------------------------
+# This class is passed to `NetworkInterceptor` and handles intercepted browser
+# requests. When the Fox News API endpoint is detected, it logs request details 
+# (URL, method, headers, params), saves them into the shared DataStore, and 
+# continues the request to allow page loading
+# ==============================================================================
+
+class InterceptRequest:
+    def __init__(self, shared_dict: DataStore):
+        self.shared_dict = shared_dict  # Shared storage for intercepted request data
+
+    async def __call__(self, data: InterceptedRequest):
+        try:
+            # Always continue the request so there is response interception
+            await data.continue_request(
+                url=data.request.url,
+                intercept_response=True
+            )
+
+            # Filter for the specific Fox News API request we care about
+            if POST_URL_CONTENT_mesages in data.request.url and data.request.method == "GET":
+                logger.info(
+                    f"\nurl:\n{data.request.url}\n"
+                    f"method\n{data.request.method}\n"
+                    f"headers\n{data.request.headers}\n"
+                    f"params\n{data.request.params}"
+                )
+
+                # Update shared data store with request metadata
+                await self.shared_dict.update({
+                    "url": data.request.url,
+                    "params": data.request.params,
+                    "headers": data.request.headers
+                })
+
+                print("data adet ")
+
+                # Optionally intercept response (e.g., to debug)
+                await data.continue_request(url=None, intercept_response=True)
+
+        except Exception as e:
+            logger.error(f"Failed to get data: {e}")
+
+
 class TaskQueue:
     def __init__(self, controller: AsyncTorController):
         self.queue = asyncio.Queue()
