@@ -252,4 +252,55 @@ class DataStore:
         Wait for and retrieve the next added dictionary from the queue.
         """
         return await self.queue.get()
+      
+# ==============================================================================
+# INTERCEPT REQUEST HANDLER
+# ------------------------------------------------------------------------------
+# This callable class is used with NetworkInterceptor.
+# It listens for matching request URLs (e.g., API calls to NBC or Fox), captures 
+# headers and parameters, and updates a shared DataStore for downstream scraping 
+# functions
+# ==============================================================================
+
+class InterceptRequest:
+    def __init__(self, shared_dict: DataStore):
+        """
+        Initialize with a shared DataStore instance to store intercepted data.
+        """
+        self.shared_dict = shared_dict
+
+    async def __call__(self, data: InterceptedRequest):
+        """
+        Handle intercepted requests:
+        - If the URL contains the configured pattern (e.g., NBC API),
+          extract headers and params and update the shared data store.
+        - Continue the request so the page can still load normally.
+        """
+        try:
+            # Continue the request and allow response interception
+            await data.continue_request(
+                url=data.request.url,
+                intercept_response=True
+            )
+
+            # Check if the request URL matches our target API endpoint
+            if POST_URL_CONTENT_mesages in data.request.url:
+                # Optionally log request info for debugging
+                # logger.info(f"Intercepted: {data.request.url}")
+
+                # Save the intercepted metadata to shared storage
+                await self.shared_dict.update({
+                    "url": data.request.url,
+                    "params": data.request.params,
+                    "headers": data.request.headers
+                })
+
+                print("data adet")  # Debug print — replace with logger if needed
+
+                # Continue the request again for completeness (may be redundant)
+                await data.continue_request(url=None, intercept_response=True)
+
+        except Exception as e:
+            logger.error(f"Failed to get data: {e}")
+
 
