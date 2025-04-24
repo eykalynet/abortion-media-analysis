@@ -353,5 +353,115 @@ async def click(elem: WebElement) -> None:
     to simulate more human-like interaction.
     """
     await elem.click(move_to=True)
+  
+# ==============================================================================
+# NBCNEWS SCRAPER (ASYNCHTMLSESSION + TOR PROXY)
+# ------------------------------------------------------------------------------
+# This class uses `requests_html.AsyncHTMLSession` to asynchronously fetch
+# pages from NBC News via a SOCKS5 proxy (Tor). It supports asynchronous URL 
+# fetching with proxy support and context-managed session lifecycle
+# ==============================================================================
+
+class NBCNewsScraper:
+    def __init__(self):
+        """
+        Initialize an asynchronous HTML session for scraping.
+        """
+        self.session = AsyncHTMLSession()
+
+    async def fetch_url(self, url):
+        """
+        Fetch a given URL asynchronously using the Tor proxy.
+
+        Parameters:
+        - url (str): The webpage URL to fetch
+
+        Returns:
+        - response: The HTML response from the server
+        """
+        proxies = {
+            'http': 'socks5://127.0.0.1:9001',
+            'https': 'socks5://127.0.0.1:9001'
+        }
+        response = await self.session.get(url, proxies=proxies)
+        return response
+
+    async def run(self, url_list):
+        """
+        Fetch a list of URLs concurrently.
+
+        Parameters:
+        - url_list (list[str]): A list of webpage URLs to fetch
+
+        Returns:
+        - list of responses
+        """
+        tasks = [self.fetch_url(url) for url in url_list]
+        return await asyncio.gather(*tasks)
+
+    async def __aenter__(self):
+        """
+        Enable use of `async with` for resource management.
+        """
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        """
+        Close the asynchronous session on exit.
+        """
+        await self.session.close()
+
+
+# ==============================================================================
+# ARTICLE FORMATTER + WORD COUNT HELPER
+# ------------------------------------------------------------------------------
+# `create_word_count_dict` tokenizes text and counts word frequencies
+# format_adat` cleans scraped article content
+# ==============================================================================
+
+# Global store 
+data_ola = []
+
+async def create_word_count_dict(text: str) -> dict:
+    """
+    Create a frequency dictionary of all alphabetic words in the given text.
+
+    Parameters:
+    - text (str): The input text to tokenize and count
+
+    Returns:
+    - dict: Word frequency dictionary
+    """
+    return dict(Counter([word.lower() for word in word_tokenize(text) if word.isalpha()]))
+
+async def format_adat(dd: dict) -> dict:
+    """
+    Format and enrich raw JSON response from NBC News API or page scrape.
+
+    Extracts:
+    - Main article text
+    - Word frequency dictionary
+    - Cleans line breaks from the text
+
+    Parameters:
+    - dd (dict): Nested article dictionary from scraped data
+
+    Returns:
+    - dict: Enriched article data with cleaned text and word count
+    """
+    data = dd["props"]["initialState"]["article"]["content"][0]
+
+    # Extract and join raw paragraph segments
+    txt = data["content"]["text"]
+    text_c = ''.join([s for s in txt])
+
+    # Add word count dictionary
+    data["world_count"] = await create_word_count_dict(text_c)
+
+    # Clean line breaks
+    clean_text = re.sub(r'[\n\r]', '', text_c)
+    data["content"]["text"] = clean_text
+
+    return data
 
 
