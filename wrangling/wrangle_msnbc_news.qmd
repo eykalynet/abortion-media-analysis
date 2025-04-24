@@ -98,33 +98,10 @@ In this step, we subset the dataset to include only articles published between 2
 ```{r}
 #| label: step-3
 
-# =================================================================
-# Step 3: Filter Articles by Publication Year (2020-2024)
-# =================================================================
-
-# Filter to articles published between 2020 and 2024
-nbc_meta2 <- nbc_meta |> 
-  
-  # Parse publication date
-  mutate(pub_date = lubridate::ymd_hms(publicationDate)) |>  
-  
-  # Keep 2020–2024
-  filter(lubridate::year(pub_date) >= 2020, 
-         lubridate::year(pub_date) <= 2024) |> 
-  
-  # Add Roe v. Wade overturning label
-  mutate(roe_status = if_else(pub_date < as_datetime("2022-06-24"), 
-                              "Pre-Roe", "Post-Roe")) |> 
-  
-  # Drop original unparsed column
-  select(-publicationDate)
 ```
 
 ## 4. Clean Article Text
 
-To prepare the NBC dataset for text analysis, we implemented a custom cleaning function that systematically removes non-informative and repetitive patterns from article bodies. These include promotional banners (e.g., “NBC News Flash headlines” and “Click here to get the NBC NEWS app”), social media prompts, author bylines, timestamps, and recurring sections like “Related Topics” or “More from Politics” that often appear at the end of articles. We also removed visual clutter and interface references such as “Read more” links, multimedia labels (e.g., “video” or “photo”), and typographic inconsistencies like curly quotes, em dashes, non-breaking spaces, and excessive whitespace.
-
-This cleaning process, however, was only a preliminary step. Due to the inconsistent and fragmented formatting of the original articles, full automation was not possible. As a result, we exported the cleaned dataset and manually corrected the remaining irregularities in Google Sheets as a team.
 
 ```{r}
 #| label: step-4
@@ -133,92 +110,7 @@ This cleaning process, however, was only a preliminary step. Due to the inconsis
 # Step 4: Clean Article Text
 # =================================================================
 
-clean_text_column <- function(text) {
-  text |>
-    # Remove promotional section headers 
-    str_remove_all("(?i)NBC News Flash.*?headlines") |>
-    
-    # Remove call-to-action lines 
-    str_remove_all("(?i)CLICK HERE TO GET THE NBC NEWS APP") |>
-    
-    # Remove newsletter subscription prompts
-    str_remove_all("(?i)Subscribe.*?newsletter") |>
-    
-    # Remove confirmation blurbs like 
-    str_remove_all("(?i)You(’|')ve successfully subscribed.*?newsletter") |>
-    
-    # Remove social media buttons and UI text
-    str_remove_all("(?i)Facebook Twitter Flipboard Comments Print Email") |>
-    
-    # Remove stray "close" buttons or labels from modal windows
-    str_remove_all("(?i)close") |>
-    
-    # Remove "Related Topics" blurbs typically found at the end of articles
-    str_remove_all("(?i)Related Topics.*?(?=\\b[A-Z])") |>
-    
-    # Remove "More from [section]" banners (e.g., More from Politics)
-    str_remove_all("(?i)More from [A-Z][a-z]+") |>
-    
-    # Remove "Read more" links or references
-    str_remove_all("(?i)Read more") |>
-    
-    # Remove author bylines like "By John Doe NBC News"
-    str_remove_all("(?i)By\\s+[A-Z][a-z]+(?:\\s+[A-Z][a-z]+)*\\s+NBC News") |>
-    
-    # Remove publication dates 
-    str_remove_all("(?i)Published\\s+[A-Z][a-z]+\\s+\\d{1,2},\\s+\\d{4}.*?(AM|PM|EST|EDT)?") |>
-    
-    # Remove embedded media labels like video, photo, image, etc.
-    str_remove_all("(?i)video|photo|image|email|print") |>
-    
-    # Normalize curly single quotes to straight quotes
-    str_replace_all("‘|’", "'") |>
-    
-    # Normalize curly double quotes to straight quotes
-    str_replace_all("“|”", "\"") |>
-    
-    # Normalize long/em dashes to regular dashes
-    str_replace_all("–|—", "-") |>
-    
-    # Normalize ellipses to three dots
-    str_replace_all("…", "...") |>
-    
-    # Replace non-breaking spaces with regular spaces
-    str_replace_all("\u00A0", " ") |>
-    
-    # Collapse multiple spaces/tabs/newlines into a single space
-    str_replace_all("\\s+", " ") |>
-    
-    # Remove any leftover bracketed content (e.g., [Advertisement])
-    str_remove_all("\\[.*?\\]") |>
-    
-    # Remove any leftover brace-enclosed artifacts
-    str_remove_all("\\{.*?\\}") |>
-    
-    # Trim leading and trailing whitespace
-    str_trim()
-}
-
-# Apply the cleaning function to the filtered dataset
-nbc_meta3 <- nbc_meta2 |> 
-  mutate(
-    # Create new column with cleaned text
-    text_cleaned = clean_text_column(text)  
-  )
-
-# Save the cleaned version to CSV for further manual correction
-write_csv(
-  nbc_meta3,
-  "nbc_meta_raw_texts.csv"
-)
 
 ```
-
-## 5. Include only articles with \>=5 abortion mentions
-
-```{r}
-#| label: step-5
-s
-
 
 ```
