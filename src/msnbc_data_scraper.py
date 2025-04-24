@@ -465,3 +465,53 @@ async def format_adat(dd: dict) -> dict:
     return data
 
 
+# ==============================================================================
+# NBC NEWS DATA GATHERER
+# ------------------------------------------------------------------------------
+# This function waits for captured headers/params from browser interception, 
+# uses `NBCNewsScraper` to fetch full article pages through Tor, extracts and 
+# cleans article content using `format_adat`, then accumulates results into the 
+# global `data_ola` list
+# ==============================================================================
+
+async def datagatherer(cookies, task_queue: TaskQueue, shared_aces_walues: DataStore):
+    """
+    Gather and process NBC News articles using previously captured headers and URLs.
+
+    Parameters:
+    - cookies: Placeholder for session continuity (currently unused)
+    - task_queue: Queue of URL lists to fetch
+    - shared_aces_walues: DataStore with headers/params from network interception
+    """
+    data = await asyncio.create_task(shared_aces_walues.wait_for_add())
+    logger.error(data)  # Debug log of captured metadata
+
+    async with NBCNewsScraper() as s:
+        while True:
+            try:
+                task = await task_queue.get()
+
+                if "exit" in task:
+                    break  # Exit loop gracefully if signaled
+
+                print(f"Fetched task with {len(task)} URLs")
+
+                # Fetch article pages concurrently through Tor proxy
+                responses = await s.run(task)
+                print([r.status_code for r in responses])
+
+                # Parse embedded JSON from each page and format content
+                parsed_articles = [
+                    await format_adat(json.loads(
+                        lxml.html.fromstring(r.html.html)
+                        .xpath('//script[@id="__NEXT_DATA__"]/text()')[0]
+                    )) for r in responses
+                ]
+
+                print(parsed_articles)
+                data_ola.extend(parsed_articles)  # Add parsed articles to global list
+
+            except Exception as e:
+                print(f"Error in datagatherer loop: {e}")
+                
+      
