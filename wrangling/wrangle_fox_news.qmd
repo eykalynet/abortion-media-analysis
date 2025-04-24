@@ -33,6 +33,7 @@ library(tibble)
 library(kableExtra)
 library(colorspace)
 library(jsonlite)
+library(tidytext)
 library(lubridate)
 ```
 
@@ -152,29 +153,60 @@ fox_meta3 <- fox_meta2 |>
 ## 5. Text Analysis
 
 ```{r}
-#| label: step-5
+#| label: top-words
 
-# =================================================================
-# Step 4: Clean and Filter Article Text
-# =================================================================
-# This step removes articles with empty or missing body text,
-# and retains only those that mention 'abortion' at least 5 times.
+fox_meta3 |>
+  unnest_tokens(word, text_clean) |>
+  filter(!word %in% stop_words$word, str_detect(word, "^[a-z]+$")) |>
+  count(word, sort = TRUE) |>
+  slice_max(n, n = 15) |>
+  ggplot(aes(n, reorder(word, n))) +
+  geom_col(fill = "steelblue") +
+  labs(title = "Most Frequent Words", x = "Count", y = "")
+```
 
-fox_meta2 <- fox_meta2 |>
-  # Remove rows with missing or blank text
-  filter(!is.na(text), str_trim(text) != "") |>
+```{r}
+#| label: bigrams
 
-  # Count abortion mentions (case-insensitive) and filter for ≥ 5
-  mutate(abortion_mentions = str_count(str_to_lower(text), 
-                                       "\\babortion\\b")) |>
-  filter(abortion_mentions >= 5) |>
+fox_meta3 |>
+  unnest_tokens(bigram, text_clean, token = "ngrams", n = 2) |>
+  separate(bigram, c("word1", "word2"), sep = " ") |>
+  filter(!word1 %in% stop_words$word, !word2 %in% stop_words$word) |>
+  unite(bigram, word1, word2, sep = " ") |>
+  count(bigram, sort = TRUE) |>
+  slice_max(n, n = 15) |>
+  ggplot(aes(n, reorder(bigram, n))) +
+  geom_col(fill = "darkorange") +
+  labs(title = "Top Bigrams", x = "Count", y = "")
+```
 
-  # Minimal cleaning
-  mutate(
-    text_clean = text |> 
-      str_replace_all("[\r\n\t]", " ") |>     # Normalize whitespace
-      str_replace_all(" +", " ") |>           # Collapse multiple spaces
-      str_trim()                              # Remove trailing/leading spaces
-  )
+```{r}
+#| label: tf-idf
+
+
+```
+
+
+```{r}
+#| label: afinn
+afinn <- get_sentiments("afinn")
+
+```
+
+```{r}
+#| label: custom-stopwords
+fox_meta3 |>
+  unnest_tokens(word, text_clean) |>
+  count(word, sort = TRUE) |>
+  filter(!word %in% stop_words$word) |>
+  slice_max(n, n = 50)  # look at common terms that weren't removed
+
+# Top frequent words not already removed
+top_junk <- c("news", "said", "people", "mr", "fox", "u.s", "including", "justice")
+
+# Bind to standard stop word list
+custom_stop <- tibble(word = top_junk)
+all_stops <- bind_rows(stop_words, custom_stop)
+
 ```
 
