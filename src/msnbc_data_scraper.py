@@ -560,5 +560,71 @@ async def load_articles_links(task_queue: TaskQueue, driver: webdriver, xpath: s
 
     # Signal completion to downstream consumers
     await task_queue.put("exit")
+    
+# ==============================================================================
+# MAIN ENTRYPOINT (NBC NEWS SCRAPER)
+# ------------------------------------------------------------------------------
+# This function launches a headless SeleniumDriverless browser, sets up a 
+# network interceptor to capture request headers, loads the NBC News politics/
+# abortion page, clicks "Load More" to reveal articles and collect links, and 
+# launches a scraping pipeline that extracts and saves cleaned content
+# ==============================================================================
+
+async def main(proxy: str = None):
+    # Setup ChromeDriverless browser options
+    options = webdriver.ChromeOptions()
+    options.user_data_dir = "Profile 3"  # Uses a persistent profile 
+    options.headless = True              # Runs browser in headless mode
+
+    # Shared resources for coordination
+    shared_access_values = DataStore()
+    task_queue = TaskQueue()
+
+    async with webdriver.Chrome(max_ws_size=2 ** 30, options=options) as driver:
+        if proxy is not None:
+            await driver.set_single_proxy(proxy=proxy)
+
+        async with NetworkInterceptor(
+            driver,
+            on_request=InterceptRequest(shared_dict=shared_access_values),
+            patterns=[RequestPattern.AnyRequest],
+            intercept_auth=True
+        ) as interceptor:
+            try:
+                # Step 1: Navigate to the NBC politics page
+                await asyncio.ensure_future(driver.get(url=URL, wait_load=True))
+
+                # Step 2: Capture session cookies
+                cookies = await driver.get_cookies()
+                print("Cookies:", cookies)
+
+                # Step 3: Concurrently load links and extract article content
+                await asyncio.gather(*[
+                    asyncio.create_task(f()) for f in [
+                        lambda: load_articles_links(task_queue=task_queue, driver=driver),
+                        lambda: datagatherer(cookies=cookies, task_queue=task_queue, shared_aces_walues=shared_access_values)
+                    ]
+                ])
+
+                print("Data scraping completed. Saving to file...")
+
+                # Step 4: Save results to file
+                with open("../data/nbc_news_data.json", "a", encoding="utf-8") as f:
+                    json.dump(data_ola, f, ensure_ascii=False, indent=2)
+
+            except Exception as e:
+                logger.error(f"Error in main: {e}")
+            except KeyboardInterrupt:
+                await driver.quit()
+
+
+# ==============================================================================
+# ENTRY POINT
+# ------------------------------------------------------------------------------
+# Launches the main scraper using Tor proxy 
+# ==============================================================================
+
+if __name__ == "__main__":
+    asyncio.run(main("socks5://127.0.0.1:9001"))
 
 
