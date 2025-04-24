@@ -118,238 +118,138 @@ print(POST_URL_CONTENT_MESSAGES)
 URL = "https://www.nbcnews.com/politics/abortion-news" 
 
 # ==============================================================================
-# LOGGING SETUP
+# LOGGING CONFIGURATION
 # ------------------------------------------------------------------------------
-# Logging is color-coded: errors show in red to help debugging.
-# This sets up a global logger with stream output to terminal.
+# This configures the logging behavior for the script. It uses a custom formatter 
+# to highlight error messages in red. Logs include the log level, module name, 
+# and the message itself.
 # ==============================================================================
 
 class ColoredFormatter(logging.Formatter):
+    """
+    Custom log formatter to colorize ERROR messages in red.
+    """
     def format(self, record):
         if record.levelno == logging.ERROR:
-            record.msg = f"{RED}{record.msg}{RESET}"
+            record.msg = f"{RED}{record.msg}{RESET}"  # Apply red color
+        elif record.levelno == logging.INFO:
+            record.msg = f"{record.msg}"              # Leave INFO unchanged
         return super().format(record)
 
+# Initialize the logger for the current module
 logger = logging.getLogger(__name__)
+
+# Create a stream handler to output logs to the console
 handler = logging.StreamHandler()
-handler.setFormatter(ColoredFormatter('%(levelname)s - %(name)s - %(message)s'))
+
+# Apply the custom formatter to the handler
+formatter = ColoredFormatter('%(levelname)s - %(name)s - %(message)s')
+handler.setFormatter(formatter)
+
+# Attach the handler to the logger
 logger.addHandler(handler)
+
+# Set the minimum log level to INFO 
 logger.setLevel(logging.INFO)
 
 # ==============================================================================
-# DATA SHARING & REQUEST INTERCEPTION
+# HTML DATA EXTRACTOR (NBC)
 # ------------------------------------------------------------------------------
-# DataStore is used to share headers and cookies across tasks.
-# InterceptRequest captures browser requests to replicate API headers.
+# This class is designed to extract article links from dynamically rendered
+# HTML pages on NBC News using lxml. It targets `div` blocks styled for article
+# teasers within the politics section.
+# ==============================================================================
+
+class HtmlDataExtractor_IO:
+    def __init__(self, html: str) -> None:
+        """
+        Initialize the parser and validate input.
+        """
+        if not isinstance(html, str):
+            raise ValueError("Invalid input type: expected HTML string.")
+
+        # Parse the HTML using a forgiving parser to handle malformed content
+        self.tree = lxml.html.fromstring(html, parser=lxml.html.HTMLParser(recover=True))
+
+    def __call__(self, xpath: str = "//script[@id='__NEXT_DATA__']") -> list[str]:
+        """
+        Extracts internal article links from the NBC news listing layout.
+
+        Returns:
+        - A list of href URLs from teaser blocks within politics section.
+
+        Note:
+        - Ignores None values and only returns valid `href` attributes.
+        """
+        try:
+            return [
+                a.get('href')
+                for a in self.tree.xpath(
+                    '//div[contains(@class, "styles_itemsContainer")]'
+                    '//div[contains(@class, "wide-tease-item__wrapper ")]'
+                    '//div[contains(@class, "wide-tease-item__info-wrapper")]/a'
+                )
+                if a.get('href') is not None
+            ]
+        except lxml.etree.XPathError as e:
+            raise ValueError(f"Invalid XPath expression: {e}")
+        except lxml.etree.XMLSyntaxError as e:
+            raise ValueError(f"XML syntax error: {e}")
+        except lxml.etree.ParserError as e:
+            raise ValueError(f"XML parser error: {e}")
+        except Exception as e:
+            raise ValueError(f"An unexpected error occurred: {e}")
+
+    def __del__(self):
+        """
+        Clean up the lxml tree reference on deletion.
+        """
+        try:
+            del self.tree
+        except AttributeError:
+            pass
+          
+# ==============================================================================
+# DATASTORE: Shared Asynchronous Dictionary
+# ------------------------------------------------------------------------------
+# This class serves as a shared data store for managing request metadata
+# (like headers and params) captured from browser interception.
+# It supports thread-safe updates using asyncio locks and an internal queue to 
+# notify other components of new additions
 # ==============================================================================
 
 class DataStore:
     def __init__(self):
-        self.data = {}
-        self.lock = asyncio.Lock()
-        self.queue = asyncio.Queue()
+        self.data = {}                    # Internal shared dictionary
+        self.lock = asyncio.Lock()        # Lock to ensure safe concurrent access
+        self.queue = asyncio.Queue()      # Queue to signal when new data is added
 
-    async def update(self, new_data):
+    async def get(self, key):
+        """
+        Safely retrieve a value from the store by key.
+        """
         async with self.lock:
-            self.data.update(new_data)
-            await self.queue.put(new_data)
+            return self.data.get(key)
+
+    async def delete(self, key):
+        """
+        Safely delete a key-value pair from the store.
+        """
+        async with self.lock:
+            if key in self.data:
+                del self.data[key]
+
+    async def update(self, other_dict):
+        """
+        Safely update the store with a new dictionary and notify listeners via the queue.
+        """
+        async with self.lock:
+            self.data.update(other_dict)
+            await self.queue.put(other_dict)  # Push the update into the queue
 
     async def wait_for_add(self):
+        """
+        Wait for and retrieve the next added dictionary from the queue.
+        """
         return await self.queue.get()
 
-
-class InterceptRequest:
-    def __init__(self, store: DataStore):
-        self.store = store
-
-    async def __call__(self, data: InterceptedRequest):
-        try:
-            if POST_URL_CONTENT_MATCH in data.request.url:
-                await self.store.update({
-                    "url": data.request.url,
-                    "params": data.request.params,
-                    "headers": data.request.headers
-                })
-                logger.info(f"Intercepted: {data.request.url}")
-            await data.continue_request(intercept_response=True)
-        except Exception as e:
-            logger.error(f"Intercept error: {e}")
-
-
-# ==============================================================================
-# HTML PARSER
-# ------------------------------------------------------------------------------
-# Extracts article URLs from the main MSNBC container by XPath.
-# ==============================================================================
-
-class HtmlDataExtractor:
-    def __init__(self, html: str):
-        self.tree = lxml.html.fromstring(html, parser=lxml.html.HTMLParser(recover=True))
-
-    def extract_links(self):
-        return [
-            a.get("href")
-            for a in self.tree.xpath('//div[contains(@class, "styles_itemsContainer")]'
-                                     '//div[contains(@class, "wide-tease-item__wrapper ")]'
-                                     '//div[contains(@class, "wide-tease-item__info-wrapper")]/a')
-            if a.get("href")
-        ]
-
-
-# ==============================================================================
-# ARTICLE SCRAPER
-# ------------------------------------------------------------------------------
-# Uses AsyncHTMLSession to visit each article using a Tor-routed proxy session.
-# ==============================================================================
-
-class NBCNewsScraper:
-    def __init__(self, proxy_port=TOR_PORT):
-        self.proxy_port = proxy_port
-        self.session = AsyncHTMLSession()
-
-    async def fetch_url(self, url):
-        proxies = {
-            'http': f'socks5h://{HOST}:{self.proxy_port}',
-            'https': f'socks5h://{HOST}:{self.proxy_port}'
-        }
-        response = await self.session.get(url, proxies=proxies)
-        return response
-
-    async def run(self, url_list):
-        return await asyncio.gather(*[self.fetch_url(url) for url in url_list])
-
-    async def __aenter__(self):
-        return self
-
-    async def __aexit__(self, *args):
-        await self.session.close()
-        
-# ==============================================================================
-# TASK MANAGEMENT & TEXT UTILITIES
-# ------------------------------------------------------------------------------
-# TaskQueue schedules scraping jobs.
-# Text utilities clean and tokenize HTML content from articles.
-# ==============================================================================
-
-from nltk.tokenize import word_tokenize
-from collections import Counter
-
-class TaskQueue:
-    def __init__(self):
-        self.queue = asyncio.Queue()
-
-    async def put(self, task):
-        await self.queue.put(task)
-
-    async def get(self):
-        return await self.queue.get()
-
-
-async def create_word_count_dict(text):
-    return dict(Counter([
-        word.lower() for word in word_tokenize(text) if word.isalpha()
-    ]))
-
-
-async def extract_article_data(script_json: dict) -> dict:
-    content = script_json["props"]["initialState"]["article"]["content"][0]
-    raw_text = ''.join(content["content"]["text"])
-    content["word_count"] = await create_word_count_dict(raw_text)
-    return content
-
-# ==============================================================================
-# SCRAPER ROUTINES
-# ------------------------------------------------------------------------------
-# Loads article links from scrolling container and fetches HTML for each.
-# ==============================================================================
-
-async def gather_article_data(cookies, queue: TaskQueue, store: DataStore):
-    results = []
-    shared_data = await store.wait_for_add()
-
-    async with NBCNewsScraper() as scraper:
-        while True:
-            task = await queue.get()
-            if task == "exit":
-                break
-
-            responses = await scraper.run(task)
-            for response in responses:
-                try:
-                    html = response.html.html
-                    script = lxml.html.fromstring(html).xpath('//script[@id="__NEXT_DATA__"]/text()')[0]
-                    structured = await extract_article_data(json.loads(script))
-                    results.append(structured)
-                except Exception as e:
-                    logger.error(f"Failed to process article: {e}")
-
-    with open("../data/nbc_news_data.json", "w") as f::
-        json.dump(results, f, indent=2)
-
-# ==============================================================================
-# ARTICLE LINK SCROLLER
-# ------------------------------------------------------------------------------
-# Scrolls through MSNBC Politics page and queues article links.
-# ==============================================================================
-async def load_more_and_queue(driver, queue: TaskQueue):
-    extractor = HtmlDataExtractor(await driver.page_source)
-    seen_links = set()
-
-    for _ in range(8):  # Scroll + click loop
-        try:
-            button = await driver.find_element(By.XPATH, "//button[contains(@class, 'animated-ghost-button')]")
-            await driver.sleep(1)
-            await button.click()
-            new_links = extractor.extract_links()
-            unique = list(set(new_links) - seen_links)
-            await queue.put(unique)
-            seen_links.update(new_links)
-            logger.info(f"Queued {len(unique)} new links")
-        except Exception as e:
-            logger.error(f"Error loading more articles: {e}")
-
-    await queue.put("exit")
-
-
-# ==============================================================================
-# MAIN ENTRYPOINT
-# ------------------------------------------------------------------------------
-# Launches headless browser, connects Tor proxy, starts scraping flow.
-# ==============================================================================
-async def main():
-    store = DataStore()
-    queue = TaskQueue()
-
-    options = webdriver.ChromeOptions()
-    options.headless = True  # Optional: change to False for debugging
-
-    async with webdriver.Chrome(options=options) as driver:
-        await driver.set_single_proxy(proxy=f"socks5://{HOST}:{TOR_PORT}")
-
-        async with NetworkInterceptor(driver, on_request=InterceptRequest(store),
-                                      patterns=[RequestPattern.AnyRequest], intercept_auth=True):
-            try:
-                await driver.get(URL, wait_load=True)
-                cookies = await driver.get_cookies()
-                await asyncio.gather(
-                    load_more_and_queue(driver, queue),
-                    gather_article_data(cookies, queue, store)
-                )
-                logger.info("Scraping complete. Data saved.")
-            except Exception as e:
-                logger.error(f"Main flow error: {e}")
-
-
-# ==============================================================================
-# EXECUTION WRAPPER
-# ==============================================================================
-if __name__ == "__main__":
-    import time
-    import nltk
-    nltk.download("punkt")
-
-    print("Starting MSNBC Scraper via Tor...")
-    start = time.perf_counter()
-    asyncio.run(main())
-    end = time.perf_counter()
-    print(f"Done in {end - start:.2f} seconds")
