@@ -303,4 +303,55 @@ class InterceptRequest:
         except Exception as e:
             logger.error(f"Failed to get data: {e}")
 
+# ==============================================================================
+# TASK QUEUE + SELENIUM HELPERS
+# ------------------------------------------------------------------------------
+# TaskQueue is a simple async queue for deferring and retrieving coroutine tasks.
+# get_elem finds a WebElement on the page using XPath.
+# click, well, as the name suggests, clicks on the WebElement with cursor 
+# movement to simulate human behavior.
+# ==============================================================================
+
+class TaskQueue:
+    """
+    Lightweight asynchronous queue for managing coroutine tasks.
+    """
+    def __init__(self):
+        self.queue = asyncio.Queue()  # Internal task queue
+
+    async def put(self, task):
+        """
+        Add a coroutine task to the queue.
+        """
+        await self.queue.put(task)
+
+    async def get(self):
+        """
+        Retrieve the next task from the queue.
+        """
+        return await self.queue.get()
+
+
+async def get_elem(driver: webdriver, xpath: str, timeout: float = 10) -> WebElement:
+    """
+    Locate a DOM element on the page using the provided XPath.
+    
+    Parameters:
+    - driver: An active SeleniumDriverless instance
+    - xpath: XPath string to locate the element
+    - timeout: Max time to wait for the element to appear
+
+    Returns:
+    - WebElement if found within the timeout
+    """
+    return await driver.find_element(By.XPATH, xpath, timeout=timeout)
+
+
+async def click(elem: WebElement) -> None:
+    """
+    Click the given WebElement. Moves cursor to the element before clicking
+    to simulate more human-like interaction.
+    """
+    await elem.click(move_to=True)
+
 
