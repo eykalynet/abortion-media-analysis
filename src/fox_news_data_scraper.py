@@ -719,7 +719,7 @@ async def get_api(task_queue: TaskQueue, size: int = 30, **args):
 # images, word count) to ../data/fox_news_data.json
 # ==============================================================================
 
-async def datagaderer(shared_aces_walues: DataStore, task_queue: TaskQueue):
+async def datagatherer(shared_aces_walues: DataStore, task_queue: TaskQueue):
     """
     Orchestrates API scraping using captured headers/params and saves full article content.
 
@@ -858,7 +858,7 @@ async def main(proxy: str = None):
                     # Simulate Load More button click + begin data scraping
                     await asyncio.gather(*[
                         asyncio.create_task(f()) for f in [
-                            lambda: datagaderer(shared_aces_walues=shared_access_values, task_queue=task_queue),
+                            lambda: datagatherer(shared_aces_walues=shared_access_values, task_queue=task_queue),
                             lambda: trigger_API_call(driver=driver)
                         ]
                     ])
