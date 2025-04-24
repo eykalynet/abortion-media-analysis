@@ -122,93 +122,59 @@ fox_meta2 <- fox_meta |>
 
 ## 4. Clean Article Text
 
-To prepare the dataset for text analysis, we implemented a custom cleaning function that systematically removes non-informative and repetitive patterns from the article body. These include promotional banners (e.g., “Fox News Flash headlines” and “Click here to get the FOX NEWS app”), social media prompts, author bylines, timestamps, and sections like “Related Topics” or “More from Politics” that often appear at the end of articles. We also stripped out visual clutter and interface references such as “Read more” links, multimedia mentions (e.g., “video” or “photo”), and special characters like curly quotes, em dashes, non-breaking spaces, and excess whitespace.
-
-That said, this is unfortunately just a preliminary cleaning step. Despite our efforts to regularize the text in R, the original formatting was too inconsistent and fragmented for full automation. As a result, we had to export the cleaned dataset and manually correct remaining irregularities in Google Sheets as a team.
+Our first trial of scraping returned a cluttered dataset filled with interface fragments such as “Subscribe Now” prompts, author bylines like “Written by,” and unrelated navigation blocks. Many entries pointed to videos or other media content that had no accompanying article text. After reviewing the structure of the site, we found the correct CSS selector for isolating full article bodies. This allowed us to extract only the article content and avoid the noise embedded in other page elements. At this point, we only needed to remove articles with missing or empty text fields, most of which corresponded to media-only items such as videos or photo galleries tagged with “abortion” but without any written content. We also limited our dataset to articles with at least five mentions of the word “abortion” to ensure that each piece contributed meaningfully to the topic.
 
 ```{r}
-#| label: step 4a
+#| label: step-4
 
 # =================================================================
-# Step 4: Clean Article Text
+# Step 4: Clean and Filter Article Text
 # =================================================================
 
-clean_text_column <- function(text) {
-  text |>
-    # Remove promotional section headers 
-    str_remove_all("(?i)Fox News Flash.*?headlines") |>
-    
-    # Remove call-to-action lines 
-    str_remove_all("(?i)CLICK HERE TO GET THE FOX NEWS APP") |>
-    
-    # Remove newsletter subscription prompts
-    str_remove_all("(?i)Subscribe.*?newsletter") |>
-    
-    # Remove confirmation blurbs like 
-    str_remove_all("(?i)You(’|')ve successfully subscribed.*?newsletter") |>
-    
-    # Remove social media buttons and UI text
-    str_remove_all("(?i)Facebook Twitter Flipboard Comments Print Email") |>
-    
-    # Remove stray "close" buttons or labels from modal windows
-    str_remove_all("(?i)close") |>
-    
-    # Remove "Related Topics" blurbs typically found at the end of articles
-    str_remove_all("(?i)Related Topics.*?(?=\\b[A-Z])") |>
-    
-    # Remove "More from [section]" banners (e.g., More from Politics)
-    str_remove_all("(?i)More from [A-Z][a-z]+") |>
-    
-    # Remove "Read more" links or references
-    str_remove_all("(?i)Read more") |>
-    
-    # Remove author bylines like "By John Doe Fox News"
-    str_remove_all("(?i)By\\s+[A-Z][a-z]+(?:\\s+[A-Z][a-z]+)*\\s+Fox News") |>
-    
-    # Remove publication dates 
-    str_remove_all("(?i)Published\\s+[A-Z][a-z]+\\s+\\d{1,2},\\s+\\d{4}.*?(AM|PM|EST|EDT)?") |>
-    
-    # Remove embedded media labels like video, photo, image, etc.
-    str_remove_all("(?i)video|photo|image|email|print") |>
-    
-    # Normalize curly single quotes to straight quotes
-    str_replace_all("‘|’", "'") |>
-    
-    # Normalize curly double quotes to straight quotes
-    str_replace_all("“|”", "\"") |>
-    
-    # Normalize long/em dashes to regular dashes
-    str_replace_all("–|—", "-") |>
-    
-    # Normalize ellipses to three dots
-    str_replace_all("…", "...") |>
-    
-    # Replace non-breaking spaces with regular spaces
-    str_replace_all("\u00A0", " ") |>
-    
-    # Collapse multiple spaces/tabs/newlines into a single space
-    str_replace_all("\\s+", " ") |>
-    
-    # Remove any leftover bracketed content (e.g., [Advertisement])
-    str_remove_all("\\[.*?\\]") |>
-    
-    # Remove any leftover brace-enclosed artifacts
-    str_remove_all("\\{.*?\\}") |>
-    
-    # Trim leading and trailing whitespace
-    str_trim()
-}
+fox_meta3 <- fox_meta2 |>
+  # Remove rows with missing or blank text
+  filter(!is.na(text), str_trim(text) != "") |>
 
-# Apply the cleaning function to the filtered dataset
-fox_meta3 <- fox_meta2 |> 
+  # Count abortion mentions (case-insensitive) and filter for ≥ 5
+  mutate(abortion_mentions = str_count(str_to_lower(text), 
+                                       "\\babortion\\b")) |>
+  filter(abortion_mentions >= 5) |>
+
+  # Minimal cleaning
   mutate(
-    # Create new column with cleaned text
-    text_cleaned = clean_text_column(text)  
-  ) 
-
-# Save the cleaned version to CSV for further manual correction
-write_csv(
-  fox_meta3,
-  "fox_meta_raw_texts.csv"
-)
+    text_clean = text |> 
+      str_replace_all("[\r\n\t]", " ") |>     # Normalize whitespace
+      str_replace_all(" +", " ") |>           # Collapse multiple spaces
+      str_trim()                              # Remove trailing/leading spaces
+  )
 ```
+
+## 5. Text Analysis
+
+```{r}
+#| label: step-5
+
+# =================================================================
+# Step 4: Clean and Filter Article Text
+# =================================================================
+# This step removes articles with empty or missing body text,
+# and retains only those that mention 'abortion' at least 5 times.
+
+fox_meta2 <- fox_meta2 |>
+  # Remove rows with missing or blank text
+  filter(!is.na(text), str_trim(text) != "") |>
+
+  # Count abortion mentions (case-insensitive) and filter for ≥ 5
+  mutate(abortion_mentions = str_count(str_to_lower(text), 
+                                       "\\babortion\\b")) |>
+  filter(abortion_mentions >= 5) |>
+
+  # Minimal cleaning
+  mutate(
+    text_clean = text |> 
+      str_replace_all("[\r\n\t]", " ") |>     # Normalize whitespace
+      str_replace_all(" +", " ") |>           # Collapse multiple spaces
+      str_trim()                              # Remove trailing/leading spaces
+  )
+```
+
