@@ -514,4 +514,51 @@ async def datagatherer(cookies, task_queue: TaskQueue, shared_aces_walues: DataS
             except Exception as e:
                 print(f"Error in datagatherer loop: {e}")
                 
-      
+# ==============================================================================
+# LOAD ARTICLE LINKS (NBC INTERFACE)
+# ------------------------------------------------------------------------------
+# This function: clicks "Load More" on NBC News repeatedly to reveal more 
+# articles, extracts article links after each click using HtmlDataExtractor_IO, 
+# deduplicates new links before pushing them to a task queue, and signals 
+# completion by sending an "exit" message to the queue
+# ==============================================================================
+
+async def load_articles_links(task_queue: TaskQueue, driver: webdriver, xpath: str = "//button[contains(@class, 'animated-ghost-button')]"):
+    """
+    Iteratively clicks the "Load More" button on NBC News and collects article links.
+
+    Parameters:
+    - task_queue: A TaskQueue instance to push new article URL lists
+    - driver: A SeleniumDriverless instance
+    - xpath: The XPath to the "Load More" button
+    """
+    list2 = []  # Tracks previously seen links to avoid duplicates
+
+    for _ in range(8):  # Repeat click-extract process 8 times
+        try:
+            # Find and click the "Load More" button
+            e = await get_elem(driver=driver, xpath=xpath)
+            await driver.sleep(1)
+            await click(elem=e)
+            logger.info("Triggered Load More button")
+
+            # Extract article links after the click
+            data = HtmlDataExtractor_IO(await driver.page_source)()
+
+            # Only push new links not already seen
+            if list2:
+                new_links = list(set(data) - set(list2))
+                await task_queue.put(new_links)
+            else:
+                await task_queue.put(data)
+
+            list2 = data  # Update seen links
+            print(f"Collected {len(data)} links")
+
+        except Exception as e:
+            logger.error(f"Error during Load More interaction: {e}")
+
+    # Signal completion to downstream consumers
+    await task_queue.put("exit")
+
+
