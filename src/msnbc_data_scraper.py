@@ -51,21 +51,49 @@
 # Install Libraries
 # ==============================================================================
 
-import logging
+# ==============================================================================
+# IMPORTS
+# ------------------------------------------------------------------------------
+# Organized by category: standard library, third-party libraries, and scraping tools
+# ==============================================================================
+
+# --- Standard Library ---
 import asyncio
 import json
-import lxml.html
+import logging
+import re
+import time
 from collections import Counter
+from functools import wraps
+
+# --- Natural Language Processing ---
+import nltk
 from nltk.tokenize import word_tokenize
 
+# --- HTML Parsing ---
+import lxml.html
+
+# --- Tor Controller (Stem) ---
 from stem import Signal
 from stem.control import Controller
+
+# --- Web Scraping + Async Rendering ---
+from requests_html import AsyncHTMLSession  # Optional: useful for JS-rendered content
+
+# --- Selenium Driverless + Automation ---
 from selenium_driverless import webdriver
 from selenium_driverless.types.by import By
 from selenium_driverless.scripts.network_interceptor import (
-    NetworkInterceptor, InterceptedRequest, RequestPattern
+    InterceptedRequest,
+    NetworkInterceptor,
+    Request,
+    RequestPattern,
+    RequestStages
 )
-from requests_html import AsyncHTMLSession
+from selenium.webdriver.remote.webelement import WebElement
+
+# --- WebSocket Communication Exceptions ---
+from cdp_socket.exceptions import CDPError
 
 # ==============================================================================
 # CONFIGURATION
