@@ -148,6 +148,8 @@ fox_meta3 <- fox_meta2 |>
       str_replace_all(" +", " ") |>           # Collapse multiple spaces
       str_trim()                              # Remove trailing/leading spaces
   )
+
+write_csv(fox_meta3, "../data/wrangled/fox_news_data_wrangled.csv")
 ```
 
 ## 5. Text Analysis
