@@ -37,18 +37,12 @@ format:
     # See https://quarto.org/docs/output-formats/html-code.html#highlighting
     highlight-style: arrow
     # See https://quarto.org/docs/output-formats/html-themes.html
-    theme: 
-      light: journal
-      dark: superhero
+    theme: journal
     fontsize: 13pt
     # If you want to customize beyond a built-in theme, you can add content to
     # styles.css (currently empty). See the following page for more info:
     # https://quarto.org/docs/output-formats/html-themes.html#custom-themes
-    css: styles.css 
-format:
-  html:
-    css: styles.css
-    theme: none
+    css: none
 
 # Add default code chunk execution options here
 execute:
