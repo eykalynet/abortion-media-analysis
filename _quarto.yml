@@ -8,14 +8,14 @@ website:
   title: "Website title"
   navbar:
     left:
-      - href: index.qmd # Must be included as index.qmd
+      - href: quarto/index.qmd # Must be included as index.qmd
         text: "Home"
         icon: house # Get icon names: https://icons.getbootstrap.com/?q=home
       # Add or remove additional pages below in desired order of appearance
       - another-page.qmd
-      - href: yet-another-page.qmd
+      - href: quarto/yet-another-page.qmd
         text: "Yet another page with a custom label and icon"
-        icon: arrow-through-heart-fill
+        icon: quarto/arrow-through-heart-fill
         
         
 format:
