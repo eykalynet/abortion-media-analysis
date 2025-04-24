@@ -98,23 +98,24 @@ from cdp_socket.exceptions import CDPError
 # ==============================================================================
 # CONFIGURATION
 # ------------------------------------------------------------------------------
-# These are the core values used across the script.
-# HOST is the localhost IP used by the Tor proxy.
-# TOR_PORT is the port used by SOCKS5 proxy for routing traffic anonymously.
-# CONTROL_PORT is the port that lets us control Tor (e.g., request a new identity).
-# URL is the starting point for scraping NBC News abortion politics section.
-# RED/RESET is used to color error logs red in the terminal.
-# POST_URL_CONTENT_MATCH is used to filter intercepted requests for valid articles.
+# Core constants used throughout the script:
+# BASH_SCRIPT: Command to launch a Tor instance with specific ports and U.S. 
+# exit nodes
+# HOST: Localhost IP used for SOCKS5 proxy routing
+# RED / RESET: Terminal ANSI escape codes for colorized error logging
+# POST_URL_CONTENT_MESSAGES: Substring to identify intercepted NBC API requests
+# URL: Target NBC News politics page for abortion-related news
 # ==============================================================================
+
+BASH_SCRIPT = """tor --ControlPort 8999 --SocksPolicy "accept 127.0.0.1" --SocksPort 9001 --ExitNodes "{us}" """
 HOST = "127.0.0.1"
-TOR_PORT = 9001
-CONTROL_PORT = 8999
+RED = "\033[91m"      
+RESET = "\033[0m"    
+POST_URL_CONTENT_MESSAGES = "www.nbcnews.com/politics/" 
 
-URL = "https://www.nbcnews.com/politics/abortion-news"
-POST_URL_CONTENT_MATCH = "www.nbcnews.com/politics/"
+print(POST_URL_CONTENT_MESSAGES)
 
-RED = "\033[91m"
-RESET = "\033[0m"
+URL = "https://www.nbcnews.com/politics/abortion-news" 
 
 # ==============================================================================
 # LOGGING SETUP
