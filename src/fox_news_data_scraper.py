@@ -711,6 +711,65 @@ async def get_api(task_queue: TaskQueue, size: int = 30, **args):
         print("Error in get_api:", e)
         
 # ==============================================================================
+# DATA GATHERER
+# ------------------------------------------------------------------------------
+# This function waits for intercepted request headers/params from the browser,
+# calls the internal Fox News API using those headers, collects article metadata 
+# and then fetches full article content, and saves the enriched results (text, 
+# images, word count) to ../data/fox_news_data.json
+# ==============================================================================
+
+async def datagaderer(shared_aces_walues: DataStore, task_queue: TaskQueue):
+    """
+    Orchestrates API scraping using captured headers/params and saves full article content.
+
+    Parameters:
+    - shared_aces_walues: DataStore instance containing captured request data
+    - task_queue: TaskQueue for identity rotation and retry management
+    """
+    data = await asyncio.create_task(shared_aces_walues.wait_for_add())
+    print("#" * 100, "\nCaptured headers and params:\n", data, "\n", "#" * 100)
+
+    try:
+        # Step 1: Call Fox News internal article API using captured headers
+        res1 = await asyncio.create_task(get_api(
+            task_queue=task_queue,
+            params=data["params"],
+            headers=data["headers"],
+            proxy_port=9001,
+            impersonate="chrome124"
+        ))
+        print(f"Number of API responses: {len(res1)}")
+
+        # Step 2: Flatten and parse JSON article metadata
+        dd = [item for sublist in [json.loads(res.text) for res in res1] for item in sublist]
+        print(f"Total articles to fetch: {len(dd)}")
+
+        # Step 3: Fetch and enrich each article with full content
+        res2 = await asyncio.create_task(get_articles(
+            data=dd,
+            task_quete=task_queue, 
+            params=data["params"],
+            headers=data["headers"],
+            proxy_port=9001,
+            impersonate="chrome124"
+        ))
+        print(f"Fetched and enriched articles: {len(res2)}")
+
+        # Step 4: Save the results to ../data/fox_news_data.json
+        with open("../data/fox_news_data.json", "a", encoding="utf-8") as f:
+            json.dump(res2, f, ensure_ascii=False, indent=2)
+
+        print("#" * 100)
+        print("Sample article:", res2[0])  # Preview the first article
+        print("#" * 100)
+
+    except json.JSONDecodeError as e:
+        print(f"Invalid JSON: {e}")
+    except Exception as e:
+        print("Error during data gathering:", e)
+
+# ==============================================================================
 # SELENIUM INTERACTIONS (Driverless)
 # ------------------------------------------------------------------------------
 # These helper functions automate user actions. It locates elements via XPath, 
