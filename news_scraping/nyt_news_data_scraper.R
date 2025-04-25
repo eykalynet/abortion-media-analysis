@@ -1,3 +1,40 @@
+# ==============================================================================
+# Purpose: Scrape and extract abortion news articles from the New York Times 
+# (2020–2024)
+# Main Author: Erika Salvador
+# Contributors: Maigan Lafontant, Emilie Ward
+# Date modified: 2025-04-25
+# ==============================================================================
+
+# ==============================================================================
+# ABOUT
+# ==============================================================================
+
+# This script collects articles related to abortion from the New York Times 
+# Archive API for the years 2020 to 2024. It does the following:
+
+#   - Connects to the NYT Archive API, which provides all articles published 
+#     in a given month.
+#   - Filters articles whose headline, snippet, or lead paragraph mention 
+#     abortion (case-insensitive match).
+#   - Extracts structured metadata including title, description, URL, 
+#     publication date, category, authors, and article text.
+#   - Respects the NYT API rate limit of 5 requests per minute by inserting 
+#     a 12-second delay between requests.
+#   - Allows for appending to a previous run (helpful in case of interruptions).
+#   - Saves the final cleaned dataset as a CSV file.
+
+# While our Fox News scraping pipeline was implemented in Python due to 
+# JavaScript-heavy content and API interception needs, the New York Times 
+# offers a well-documented public API that makes direct data access much simpler. 
+# Thankfully, the NYT Archive API is freely available for registered users.
+# Therefore, R was the natural and efficient choice for this task using httr 
+# and tidyverse tools.
+
+# All data retrieved is publicly available through the New York Times Archive API 
+# under standard API use terms.
+
+
 # Load required packages
 library(httr)
 library(jsonlite)
