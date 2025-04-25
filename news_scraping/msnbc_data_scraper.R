@@ -48,32 +48,49 @@ library(purrr)
 library(stringr)
 
 # ==============================================================================
-# SerpAPI Query for MSNBC Articles (Paginated)
+# SerpAPI Query for MSNBC Articles (Quarterly)
 # ==============================================================================
 
 serpapi_key <- "2ea2160e89eed6f4d6ca61c30b2cb397ae81c904a8b5e8422d072bb6f3bdc9ad"
 base_url <- "https://serpapi.com/search"
 
 all_results <- list()
+years <- 2020:2024
+quarters <- list(
+  Q1 = c("01/01", "03/31"),
+  Q2 = c("04/01", "06/30"),
+  Q3 = c("07/01", "09/30"),
+  Q4 = c("10/01", "12/31")
+)
 
-for (start in seq(0, 4900, by = 100)) {
-  cat("Querying offset:", start, "\n")
-  
-  params <- list(
-    q = "abortion site:msnbc.com",
-    tbm = "nws",
-    api_key = serpapi_key,
-    tbs = "cdr:1,cd_min:1/1/2020,cd_max:12/31/2024",
-    num = 100,
-    start = start
-  )
-  
-  res <- GET(base_url, query = params)
-  json <- content(res, as = "parsed", simplifyVector = FALSE)
-  if (is.null(json$news_results)) break
-  
-  all_results <- append(all_results, json$news_results)
-  Sys.sleep(2)
+for (yr in years) {
+  for (q in names(quarters)) {
+    for (start in seq(0, 900, by = 100)) {
+      cat("Year:", yr, "Quarter:", q, "| Offset:", start, "\n")
+      
+      params <- list(
+        q = "abortion site:msnbc.com",
+        tbm = "nws",
+        api_key = serpapi_key,
+        tbs = paste0("cdr:1,cd_min:", quarters[[q]][1], "/", yr,
+                     ",cd_max:", quarters[[q]][2], "/", yr),
+        num = 100,
+        start = start
+      )
+      
+      res <- GET(base_url, query = params)
+      json <- content(res, as = "parsed", simplifyVector = FALSE)
+      
+      if (!is.null(json$news_results)) {
+        all_results <- append(all_results, json$news_results)
+        cat("Results:", length(json$news_results), "\n")
+      } else {
+        cat("No results\n")
+      }
+      
+      Sys.sleep(2)
+    }
+  }
 }
 
 articles <- all_results
@@ -117,8 +134,7 @@ extract_article <- function(url) {
 
 output <- map(articles, function(article) {
   url <- article$link
-  cat("Processing:", url, "
-")
+  cat("Processing:", url, "\n")
   info <- extract_article(url)
   info$description <- article$snippet %||% ""
   Sys.sleep(2)
