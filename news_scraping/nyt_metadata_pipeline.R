@@ -54,7 +54,7 @@ library(purrr)
 # ==============================================================================
 
 nyt_key <- "FdWOerQ3A95zaAvdCuRX1aRu4H0TyoiO"  # API key for NYT Archive access
-save_path <- "../data/nyt_news_data.csv"       # Path to save the final output CSV
+save_path <- "../data/nyt_news_metadata_only.csv"       # Path to save the final output CSV
 
 # ==============================================================================
 # FETCHING FUNCTION
