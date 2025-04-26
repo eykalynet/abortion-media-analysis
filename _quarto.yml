@@ -12,7 +12,9 @@ website:
         text: "Home"
         icon: house # Get icon names: https://icons.getbootstrap.com/?q=home
       # Add or remove additional pages below in desired order of appearance
-      - another-page.qmd
+      - href: quarto/methodology.qmd
+        text: "Methodology"
+        icon: gear
       - href: quarto/yet-another-page.qmd
         text: "Yet another page with a custom label and icon"
         icon: quarto/arrow-through-heart-fill
