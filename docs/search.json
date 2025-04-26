@@ -173,5 +173,54 @@
     "title": "Before (and After) Roe v. Wade: A Content Analysis of Conservative and Liberal Media on Abortion Legislation in the United States, 2009–2024",
     "section": "Layouts for tables and visualizations produced by code chunks",
     "text": "Layouts for tables and visualizations produced by code chunks\nFor details on how to layout subfigures from multiple graphs produced by the same code chunk, see the examples in the Knitr tabs of the sections on figure layouts, subcaptions, and custom layouts.\nThe same syntax shown across the linked examples can be used to create subtables by replacing fig-cap and fig-subcap with tbl-cap and tbl-subcap.\nTwo examples in Table 1 and Figure 1 below are borrowed and slightly modified from the linked sections.\n\n\n\nTable 1: Two tables side-by-side\n\n\n\n\n\n\n\n(a) First three rows of cars dataset\n\n\n\n\n\nspeed\ndist\n\n\n\n\n4\n2\n\n\n4\n10\n\n\n7\n4\n\n\n\n\n\n\n\n\n\n\n\n(b) First three rows of pressure dataset\n\n\n\n\n\ntemperature\npressure\n\n\n\n\n0\n0.0002\n\n\n20\n0.0012\n\n\n40\n0.0060\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n(a) cars\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n(b) pressure\n\n\n\n\n\n\n\n\n\n\n\n\n\n(c) mtcars\n\n\n\n\n\n\n\nFigure 1: Three figures in a complex layout"
+  },
+  {
+    "objectID": "quarto/methodology.html",
+    "href": "quarto/methodology.html",
+    "title": "Methodology",
+    "section": "",
+    "text": "We constructed a corpus of abortion-related articles from Fox News and The New York Times, covering the period from January 1, 2020 to December 31, 2024, in order to capture discourse both before and after the Supreme Court’s Dobbs v. Jackson Women’s Health Organization decision.\nBecause of differences in platform structure and data accessibility, we employed different methods: - For The New York Times, articles were gathered by manually crawling search results from The New York Times search portal, filtered for English-language articles related to abortion. - For Fox News, articles were scraped directly from the abortion topic page under the Politics section.\nIn addition to news articles, we scraped state-level legislative summaries and policy reports from the Guttmacher Institute to contextualize media framing relative to changing abortion laws.\n\n\nScraping was performed using Python 3.11, with the following libraries:\n\nselenium: Allows automated control of a web browser, mimicking human actions like clicking, scrolling, and loading content.\nbeautifulsoup4: Parses the structure of web pages (HTML) and extracts desired information like article text and metadata.\nrequests: Sends direct HTTP requests to static web pages without using a browser.\nstem (Tor): Routes scraping traffic through multiple anonymous servers to avoid detection or IP blocking.\npandas: Organizes scraped data into structured tables (dataframes), allowing easy export to .csv or .json files.\n\nManual validation was performed to remove duplicates, photo galleries, videos, and non-article content.\nThe final dataset includes [insert number] articles from Fox News, [insert number] articles from The New York Times, and a supplementary corpus of abortion policy documents from the Guttmacher Institute."
+  },
+  {
+    "objectID": "quarto/methodology.html#data-collection",
+    "href": "quarto/methodology.html#data-collection",
+    "title": "Methodology",
+    "section": "",
+    "text": "We constructed a corpus of abortion-related articles from Fox News and The New York Times, covering the period from January 1, 2020 to December 31, 2024, in order to capture discourse both before and after the Supreme Court’s Dobbs v. Jackson Women’s Health Organization decision.\nBecause of differences in platform structure and data accessibility, we employed different methods: - For The New York Times, articles were gathered by manually crawling search results from The New York Times search portal, filtered for English-language articles related to abortion. - For Fox News, articles were scraped directly from the abortion topic page under the Politics section.\nIn addition to news articles, we scraped state-level legislative summaries and policy reports from the Guttmacher Institute to contextualize media framing relative to changing abortion laws.\n\n\nScraping was performed using Python 3.11, with the following libraries:\n\nselenium: Allows automated control of a web browser, mimicking human actions like clicking, scrolling, and loading content.\nbeautifulsoup4: Parses the structure of web pages (HTML) and extracts desired information like article text and metadata.\nrequests: Sends direct HTTP requests to static web pages without using a browser.\nstem (Tor): Routes scraping traffic through multiple anonymous servers to avoid detection or IP blocking.\npandas: Organizes scraped data into structured tables (dataframes), allowing easy export to .csv or .json files.\n\nManual validation was performed to remove duplicates, photo galleries, videos, and non-article content.\nThe final dataset includes [insert number] articles from Fox News, [insert number] articles from The New York Times, and a supplementary corpus of abortion policy documents from the Guttmacher Institute."
+  },
+  {
+    "objectID": "quarto/methodology.html#data-preparation",
+    "href": "quarto/methodology.html#data-preparation",
+    "title": "Methodology",
+    "section": "Data Preparation",
+    "text": "Data Preparation\nText preprocessing was conducted using Python libraries specialized for working with text:\n\nnltk (Natural Language Toolkit): Tokenizes articles into words and sentences; removes common filler words (stopwords).\nspacy: Provides more sophisticated linguistic analysis, such as detecting sentence boundaries and named entities.\nre (regular expressions): Cleans unwanted patterns like multiple spaces, leftover HTML artifacts, or special symbols.\n\nCleaning steps included: - Converting all text to lowercase - Removing HTML tags, ads, and website navigation text - Retaining critical terms related to abortion debates (e.g., “pro-life”, “choice”, “viability”) to preserve outlet-specific framing\nEach article and policy document was assigned a unique ID for traceability."
+  },
+  {
+    "objectID": "quarto/methodology.html#analytical-approach",
+    "href": "quarto/methodology.html#analytical-approach",
+    "title": "Methodology",
+    "section": "Analytical Approach",
+    "text": "Analytical Approach\nWe conducted a multi-stage analysis combining computational and manual techniques:\n\nSentiment Analysis:\nArticles were analyzed for emotional tone using the AFINN and NRC lexicons, implemented through the text2emotion and vaderSentiment libraries.\nTopic Modeling:\nLatent Dirichlet Allocation (LDA) was applied to both pre-Dobbs and post-Dobbs corpora using gensim, optimized for coherence to ensure meaningful topic clusters.\nFraming Analysis:\nA stratified random sample of articles was manually coded to classify dominant frames, following typologies adapted from Entman (1993) and Gamson & Modigliani (1989), including legalistic, rights-based, moral/religious, and public health frames.\n\nAll computational analysis was conducted in reproducible environments managed by conda, and all code was version-controlled with git."
+  },
+  {
+    "objectID": "quarto/methodology.html#comparative-analysis",
+    "href": "quarto/methodology.html#comparative-analysis",
+    "title": "Methodology",
+    "section": "Comparative Analysis",
+    "text": "Comparative Analysis\nWe systematically compared Fox News and The New York Times coverage along three key dimensions: 1. Sentiment Shifts: Changes in emotional tone over time and across outlets. 2. Topic Evolution: Emerging and declining themes before and after Dobbs. 3. Framing Strategies: Variations in how abortion was framed as legal, moral, political, or medical.\nVisualizations were produced using matplotlib and seaborn."
+  },
+  {
+    "objectID": "quarto/methodology.html#technical-appendix-python-libraries-and-purposes",
+    "href": "quarto/methodology.html#technical-appendix-python-libraries-and-purposes",
+    "title": "Methodology",
+    "section": "Technical Appendix: Python Libraries and Purposes",
+    "text": "Technical Appendix: Python Libraries and Purposes\n\n\n\n\n\n\n\nLibrary\nPurpose\n\n\n\n\nselenium\nAutomates browser actions like scrolling, clicking, and dynamic loading\n\n\nbeautifulsoup4\nParses and extracts information from HTML content\n\n\nrequests\nFetches static web pages directly\n\n\nstem (Tor)\nRoutes scraping traffic through anonymous servers\n\n\npandas\nStructures and saves scraped data into tables\n\n\nnltk\nBasic text cleaning: tokenization, stopword removal\n\n\nspacy\nAdvanced natural language processing (sentence segmentation, named entity recognition)\n\n\nre\nPattern-based text cleaning with regular expressions\n\n\ngensim\nBuilds topic models (LDA) and optimizes model coherence\n\n\ntext2emotion, vaderSentiment\nAssigns emotional valence and sentiment scores\n\n\nmatplotlib, seaborn\nCreates visualizations and summary plots"
+  },
+  {
+    "objectID": "quarto/methodology.html#notes",
+    "href": "quarto/methodology.html#notes",
+    "title": "Methodology",
+    "section": "Notes",
+    "text": "Notes\n\nDue to copyright restrictions, full article texts cannot be publicly distributed.\n\nMetadata, scraping scripts, and text preprocessing code are available upon request for academic use."
   }
 ]
