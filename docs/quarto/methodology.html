@@ -119,15 +119,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#data-collection" id="toc-data-collection" class="nav-link active" data-scroll-target="#data-collection">Data Collection</a>
-  <ul class="collapse">
-  <li><a href="#tools-used-for-scraping" id="toc-tools-used-for-scraping" class="nav-link" data-scroll-target="#tools-used-for-scraping">Tools Used for Scraping</a></li>
-  </ul></li>
-  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">Data Preparation</a></li>
-  <li><a href="#analytical-approach" id="toc-analytical-approach" class="nav-link" data-scroll-target="#analytical-approach">Analytical Approach</a></li>
-  <li><a href="#comparative-analysis" id="toc-comparative-analysis" class="nav-link" data-scroll-target="#comparative-analysis">Comparative Analysis</a></li>
-  <li><a href="#technical-appendix-python-libraries-and-purposes" id="toc-technical-appendix-python-libraries-and-purposes" class="nav-link" data-scroll-target="#technical-appendix-python-libraries-and-purposes">Technical Appendix: Python Libraries and Purposes</a></li>
-  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
+  <li><a href="#data-collection" id="toc-data-collection" class="nav-link active" data-scroll-target="#data-collection">Data Collection</a></li>
+  <li><a href="#tools-and-workflow" id="toc-tools-and-workflow" class="nav-link" data-scroll-target="#tools-and-workflow">Tools and Workflow</a></li>
+  <li><a href="#analytical-strategy" id="toc-analytical-strategy" class="nav-link" data-scroll-target="#analytical-strategy">Analytical Strategy</a></li>
   </ul>
 </nav>
     </div>
@@ -161,119 +155,40 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="data-collection" class="level2">
 <h2 class="anchored" data-anchor-id="data-collection">Data Collection</h2>
-<p>We constructed a corpus of abortion-related articles from <strong>Fox News</strong> and <strong>The New York Times</strong>, covering the period from <strong>January 1, 2020</strong> to <strong>December 31, 2024</strong>, in order to capture discourse both before and after the Supreme Court’s <em>Dobbs v. Jackson Women’s Health Organization</em> decision.</p>
-<p>Because of differences in platform structure and data accessibility, we employed different methods: - For <strong>The New York Times</strong>, articles were gathered by manually crawling search results from <a href="https://www.nytimes.com/search?query=abortion&amp;startDate=2020-01-01&amp;endDate=2024-12-31">The New York Times search portal</a>, filtered for English-language articles related to abortion. - For <strong>Fox News</strong>, articles were scraped directly from the <a href="https://www.foxnews.com/category/politics/judiciary/abortion">abortion topic page</a> under the Politics section.</p>
-<p>In addition to news articles, we scraped <strong>state-level legislative summaries</strong> and <strong>policy reports</strong> from the <a href="https://www.guttmacher.org/">Guttmacher Institute</a> to contextualize media framing relative to changing abortion laws.</p>
-<section id="tools-used-for-scraping" class="level3">
-<h3 class="anchored" data-anchor-id="tools-used-for-scraping">Tools Used for Scraping</h3>
-<p>Scraping was performed using <strong>Python 3.11</strong>, with the following libraries:</p>
+<p>This project examines abortion-related media coverage from <strong>Fox News</strong> and <strong>The New York Times</strong> between <strong>January 1, 2020</strong> and <strong>December 31, 2024</strong>. This period captures narratives both before and after the Supreme Court’s <em>Dobbs v. Jackson Women’s Health Organization</em> decision.</p>
+<p>We employed distinct scraping strategies for each outlet due to differences in their online archive structures.<br>
+- For <strong>The New York Times</strong>, we retrieved articles by crawling search results generated from <a href="https://www.nytimes.com/search?query=abortion&amp;startDate=2020-01-01&amp;endDate=2024-12-31">the Times’ internal search portal</a> using the query term “abortion.” - For <strong>Fox News</strong>, we extracted articles directly from <a href="https://www.foxnews.com/category/politics/judiciary/abortion">the abortion topic page</a> under the Politics section.</p>
+<p>We also collected <strong>state-level abortion policy data</strong> from the <a href="https://www.guttmacher.org/">Guttmacher Institute</a>. This supplementary dataset provides context for the evolving legal environment surrounding abortion access.</p>
+<p>We conducted scraping and extraction with <strong>Python 3.11</strong>. The final corpus consists of <strong>[will update]</strong> articles from <em>Fox News</em>, <strong>[will update]</strong> articles from <em>The New York Times</em>, and a set of Guttmacher policy documents.</p>
+</section>
+<section id="tools-and-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="tools-and-workflow">Tools and Workflow</h2>
+<p>Although R was emphasized throughout the course for data analysis, we used <strong>Python</strong> for the web scraping stage. Python offered stronger support for interacting with dynamic websites, handling JavaScript-rendered content, managing browsing sessions, and automating browser behavior. These tasks would have been more limited or unstable if performed in R.</p>
+<p>We used the following open-source Python libraries:</p>
 <ul>
-<li><code>selenium</code>: Allows automated control of a web browser, mimicking human actions like clicking, scrolling, and loading content.</li>
-<li><code>beautifulsoup4</code>: Parses the structure of web pages (HTML) and extracts desired information like article text and metadata.</li>
-<li><code>requests</code>: Sends direct HTTP requests to static web pages without using a browser.</li>
-<li><code>stem</code> (Tor): Routes scraping traffic through multiple anonymous servers to avoid detection or IP blocking.</li>
-<li><code>pandas</code>: Organizes scraped data into structured tables (dataframes), allowing easy export to <code>.csv</code> or <code>.json</code> files.</li>
+<li><p><code>selenium</code>:<br>
+This library automates web browsers. It mimics human behavior such as scrolling, clicking, and loading dynamic content.</p></li>
+<li><p><code>beautifulsoup4</code>:<br>
+This library parses HTML documents and extracts specific elements such as article text, publication dates, and authorship information.</p></li>
+<li><p><code>requests</code>:<br>
+This library sends direct HTTP requests to retrieve static web pages without needing a full browser.</p></li>
+<li><p><code>stem</code> (Tor network):<br>
+This library controls Tor circuits and connections. It routes scraping traffic through anonymous Tor relays to minimize the risk of IP blocking and to enhance anonymity during data collection.</p></li>
+<li><p><code>curl_cffi</code>:<br>
+This library provides a Python interface to <code>libcurl</code>, a low-level tool for making fast, secure HTTP requests. It allows more reliable downloading of web content, especially from websites that block basic requests or require advanced TLS handling.</p></li>
 </ul>
-<p>Manual validation was performed to remove duplicates, photo galleries, videos, and non-article content.</p>
-<p>The final dataset includes <strong>[insert number]</strong> articles from <em>Fox News</em>, <strong>[insert number]</strong> articles from <em>The New York Times</em>, and a supplementary corpus of abortion policy documents from the Guttmacher Institute.</p>
+<p>After collecting the data, we structured metadata fields (title, date, author, URL) and article full texts into standardized datasets for further analysis.</p>
 </section>
-</section>
-<section id="data-preparation" class="level2">
-<h2 class="anchored" data-anchor-id="data-preparation">Data Preparation</h2>
-<p>Text preprocessing was conducted using Python libraries specialized for working with text:</p>
+<section id="analytical-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="analytical-strategy">Analytical Strategy</h2>
+<p>We designed our analytical approach to integrate major techniques covered in class, including <strong>spatial analysis</strong>, <strong>text analysis</strong>, and <strong>unsupervised learning</strong>.</p>
 <ul>
-<li><code>nltk</code> (Natural Language Toolkit): Tokenizes articles into words and sentences; removes common filler words (stopwords).</li>
-<li><code>spacy</code>: Provides more sophisticated linguistic analysis, such as detecting sentence boundaries and named entities.</li>
-<li><code>re</code> (regular expressions): Cleans unwanted patterns like multiple spaces, leftover HTML artifacts, or special symbols.</li>
-</ul>
-<p>Cleaning steps included: - Converting all text to lowercase - Removing HTML tags, ads, and website navigation text - Retaining critical terms related to abortion debates (e.g., “pro-life”, “choice”, “viability”) to preserve outlet-specific framing</p>
-<p>Each article and policy document was assigned a unique ID for traceability.</p>
-</section>
-<section id="analytical-approach" class="level2">
-<h2 class="anchored" data-anchor-id="analytical-approach">Analytical Approach</h2>
-<p>We conducted a multi-stage analysis combining computational and manual techniques:</p>
-<ul>
-<li><p><strong>Sentiment Analysis</strong>:<br>
-Articles were analyzed for emotional tone using the <code>AFINN</code> and <code>NRC</code> lexicons, implemented through the <code>text2emotion</code> and <code>vaderSentiment</code> libraries.</p></li>
-<li><p><strong>Topic Modeling</strong>:<br>
-Latent Dirichlet Allocation (LDA) was applied to both pre-<em>Dobbs</em> and post-<em>Dobbs</em> corpora using <code>gensim</code>, optimized for coherence to ensure meaningful topic clusters.</p></li>
-<li><p><strong>Framing Analysis</strong>:<br>
-A stratified random sample of articles was manually coded to classify dominant frames, following typologies adapted from Entman (1993) and Gamson &amp; Modigliani (1989), including legalistic, rights-based, moral/religious, and public health frames.</p></li>
-</ul>
-<p>All computational analysis was conducted in reproducible environments managed by <code>conda</code>, and all code was version-controlled with <code>git</code>.</p>
-</section>
-<section id="comparative-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="comparative-analysis">Comparative Analysis</h2>
-<p>We systematically compared <em>Fox News</em> and <em>The New York Times</em> coverage along three key dimensions: 1. <strong>Sentiment Shifts</strong>: Changes in emotional tone over time and across outlets. 2. <strong>Topic Evolution</strong>: Emerging and declining themes before and after <em>Dobbs</em>. 3. <strong>Framing Strategies</strong>: Variations in how abortion was framed as legal, moral, political, or medical.</p>
-<p>Visualizations were produced using <code>matplotlib</code> and <code>seaborn</code>.</p>
-</section>
-<section id="technical-appendix-python-libraries-and-purposes" class="level2">
-<h2 class="anchored" data-anchor-id="technical-appendix-python-libraries-and-purposes">Technical Appendix: Python Libraries and Purposes</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Library</th>
-<th style="text-align: left;">Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;"><code>selenium</code></td>
-<td style="text-align: left;">Automates browser actions like scrolling, clicking, and dynamic loading</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><code>beautifulsoup4</code></td>
-<td style="text-align: left;">Parses and extracts information from HTML content</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><code>requests</code></td>
-<td style="text-align: left;">Fetches static web pages directly</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><code>stem</code> (Tor)</td>
-<td style="text-align: left;">Routes scraping traffic through anonymous servers</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><code>pandas</code></td>
-<td style="text-align: left;">Structures and saves scraped data into tables</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><code>nltk</code></td>
-<td style="text-align: left;">Basic text cleaning: tokenization, stopword removal</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><code>spacy</code></td>
-<td style="text-align: left;">Advanced natural language processing (sentence segmentation, named entity recognition)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><code>re</code></td>
-<td style="text-align: left;">Pattern-based text cleaning with regular expressions</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><code>gensim</code></td>
-<td style="text-align: left;">Builds topic models (LDA) and optimizes model coherence</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><code>text2emotion</code>, <code>vaderSentiment</code></td>
-<td style="text-align: left;">Assigns emotional valence and sentiment scores</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><code>matplotlib</code>, <code>seaborn</code></td>
-<td style="text-align: left;">Creates visualizations and summary plots</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="notes" class="level2">
-<h2 class="anchored" data-anchor-id="notes">Notes</h2>
-<ul>
-<li>Due to copyright restrictions, full article texts cannot be publicly distributed.<br>
-</li>
-<li>Metadata, scraping scripts, and text preprocessing code are available upon request for academic use.</li>
+<li><p><strong>Spatial Analysis</strong>:<br>
+We created a map of reproductive health laws across the United States. We geocoded policy data from the Guttmacher Institute and mapped it to highlight regional variation in abortion restrictions and protection.</p></li>
+<li><p><strong>Text Analysis</strong>:<br>
+We conducted sentiment analysis with <code>AFINN</code> to measure emotional tone in articles from <em>Fox News</em> and <em>The New York Times</em>. We also extracted the most frequent bigrams and keywords to compare dominant narrative structures before and after the <em>Dobbs</em> decision.</p></li>
+<li><p><strong>Unsupervised Learning</strong>:<br>
+We applied Latent Dirichlet Allocation (LDA) topic modeling with <code>gensim</code>. We trained separate models for the pre-<em>Dobbs</em> and post-<em>Dobbs</em> periods to see shifts in dominant topics and thematic emphases across media outlets.</p></li>
 </ul>
 
 
