@@ -32,6 +32,7 @@ library(readr)
 library(stringr)
 library(tibble)
 library(kableExtra)
+library(tidytext)
 library(colorspace)
 library(jsonlite)
 library(lubridate)
@@ -151,9 +152,126 @@ nyt_meta2 <- nyt_meta |>
 # =================================================================
 # Step 4: Clean Article Text
 # =================================================================
+nyt_meta3 <- nyt_meta2 |>
+  # Remove rows with missing or blank text
+  filter(!is.na(text), str_trim(text) != "") |>
 
-write.csv(nyt_meta2, "nyt_meta_raw_texts.csv")
+  # Count abortion mentions (case-insensitive) and filter for ≥ 5
+  mutate(abortion_mentions = str_count(str_to_lower(text), 
+                                       "\\babortion\\b")) |>
+  filter(abortion_mentions >= 5) |>
+
+  # Minimal cleaning
+  mutate(
+    text_clean = text |> 
+      str_replace_all("[\r\n\t]", " ") |>     # Normalize whitespace
+      str_replace_all(" +", " ") |>           # Collapse multiple spaces
+      str_trim()                              # Remove trailing/leading spaces
+  )
+
+
+write.csv(nyt_meta3, "../data/wrangled/nyt_news_data_wrangled.csv")
 
 ```
 
-\`\`\`
+## 5. Text Analysis
+
+```{r}
+#| label: top-words
+
+nyt_meta3 |>
+  unnest_tokens(word, text_clean) |>
+  filter(!word %in% stop_words$word, str_detect(word, "^[a-z]+$")) |>
+  count(word, sort = TRUE) |>
+  slice_max(n, n = 15) |>
+  ggplot(aes(n, reorder(word, n))) +
+  geom_col(fill = "steelblue") +
+  labs(title = "Most Frequent Words", x = "Count", y = "")
+```
+
+```{r}
+#| label: bigrams
+
+nyt_meta3 |>
+  unnest_tokens(bigram, text_clean, token = "ngrams", n = 2) |>
+  separate(bigram, c("word1", "word2"), sep = " ") |>
+  filter(!word1 %in% stop_words$word, !word2 %in% stop_words$word) |>
+  unite(bigram, word1, word2, sep = " ") |>
+  count(bigram, sort = TRUE) |>
+  slice_max(n, n = 15) |>
+  ggplot(aes(n, reorder(bigram, n))) +
+  geom_col(fill = "darkorange") +
+  labs(title = "Top Bigrams", x = "Count", y = "")
+```
+```{r}
+#| label: tf-idf
+
+nyt_tf_idf <- nyt_meta3 |> 
+  unnest_tokens(word, text_clean) |> 
+  count(title, word, sort = TRUE) |> 
+  bind_tf_idf(word, title, n)
+
+top_tf_idf_words <- nyt_tf_idf |> 
+  group_by(title) |> 
+  slice_max(tf_idf, n = 5) |> 
+  ungroup()
+
+```
+
+
+```{r}
+#| label: afinn
+afinn <- get_sentiments("afinn")
+
+nyt_meta4 <- nyt_meta3 |> 
+  unnest_tokens(word, text_clean) |> 
+  left_join(afinn, by = "word")
+
+sentiment_analyis_text <- nyt_meta4|> 
+  group_by(title)|>
+  filter(!is.na(value)) |> 
+  summarise(text_sent_score = sum(value))
+
+
+
+nyt_meta4 <- nyt_meta3 |> 
+  unnest_tokens(word, description) |> 
+  left_join(afinn, by = "word")
+
+sentiment_analyis_description <- nyt_meta4|> 
+  group_by(title)|>
+  filter(!is.na(value)) |> 
+  summarise(description_sent_score = sum(value))
+
+
+nyt_meta5 <- nyt_meta3 |> 
+  left_join(sentiment_analyis_text)|> 
+  left_join(sentiment_analyis_description) |> 
+  mutate(sentiment_score = 
+           if_else(is.na(description_sent_score), 0, description_sent_score) + 
+           if_else(is.na(text_sent_score), 0, text_sent_score))|> 
+  select(-url, -description, -text)
+```
+
+```{r}
+#| label: custom-stopwords
+nyt_meta3 |>
+  unnest_tokens(word, text_clean) |>
+  count(word, sort = TRUE) |>
+  filter(!word %in% stop_words$word) |>
+  slice_max(n, n = 50)  # look at common terms that weren't removed
+
+# Top frequent words not already removed
+top_junk <- c("news", "said", "people", "mr", "times", "u.s", "including", "justice", "article", "new", "york")
+
+# Bind to standard stop word list
+custom_stop <- tibble(word = top_junk)
+all_stops <- bind_rows(stop_words, custom_stop)
+
+```
+
+
+
+
+
+
