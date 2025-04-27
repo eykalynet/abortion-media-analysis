@@ -62,9 +62,6 @@ nyt_news_df <- map_dfr(nyt_news, as_tibble)
 # View structure
 glimpse(nyt_news_df)
 ```
-```{r}
-names(nyt_news_df)
-```
 
 ## 2. Subset Metadata
 
@@ -78,21 +75,9 @@ In this step, we subset and clean the raw The New York Times News data to retain
 # =================================================================
 
 nyt_meta <- nyt_news_df |>
-  # Convert to tibble for easier manipulation
   as_tibble() |>
-  transmute(
-    `__typename`,                # Article type (e.g., "Article", "Video", etc.)
-    title = promotionalHeadline,  # Article headline
-    publicationDate = map_chr(firstPublished, ~ .x[1]),  # Use only the first timestamp
-    url,                          # Full article URL
-    description = creativeWorkSummary,  # Short article summary
-    text                           # Full article body text
-  ) |>
-  # Keep only real articles
-  filter(`__typename` == "Article") |>
-  # Clean publication date format
   mutate(
-    publicationDate = as.Date(publicationDate)
+    
   )
 ```
 
