@@ -193,6 +193,35 @@ fox_meta3 |>
 #| label: afinn
 afinn <- get_sentiments("afinn")
 
+fox_meta4 <- fox_meta3 |> 
+  unnest_tokens(word, text_clean) |> 
+  left_join(afinn, by = "word")
+
+sentiment_analyis_text <- fox_meta4|> 
+  group_by(title)|>
+  filter(!is.na(value)) |> 
+  summarise(text_sent_score = sum(value))
+
+
+
+fox_meta4 <- fox_meta3 |> 
+  unnest_tokens(word, description) |> 
+  left_join(afinn, by = "word")
+
+sentiment_analyis_description <- fox_meta4|> 
+  group_by(title)|>
+  filter(!is.na(value)) |> 
+  summarise(description_sent_score = sum(value))
+
+
+fox_meta5 <- fox_meta3 |> 
+  left_join(sentiment_analyis_text)|> 
+  left_join(sentiment_analyis_description) |> 
+  mutate(sentiment_score = 
+           if_else(is.na(description_sent_score), 0, description_sent_score) + 
+           if_else(is.na(text_sent_score), 0, text_sent_score))|> 
+  select(-url, -description, -text)
+
 ```
 
 ```{r}
