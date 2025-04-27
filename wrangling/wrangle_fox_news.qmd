@@ -212,25 +212,64 @@ fox_meta5 <- fox_meta3 |>
            if_else(is.na(description_sent_score), 0, description_sent_score) + 
            if_else(is.na(text_sent_score), 0, text_sent_score))|> 
   select(-url) |> 
-  mutate(np_po = if_else(sentiment_score > 3, "positive", "zero"))|>
-  mutate(np_po = if_else(sentiment_score < -3, "negative", np_po)) |> 
+  mutate(np_po = if_else(sentiment_score > 2, "positive", "zero"))|>
+  mutate(np_po = if_else(sentiment_score < -2, "negative", np_po))|> 
+  mutate(roe_status = if_else(str_detect(roe_status, "Pre"), "Pre-Roe", roe_status))
+  
+fox_text_content <- fox_meta5 |> 
   mutate(pub_date = as.Date(pub_date)) |> 
   mutate(tagging = if_else(str_detect(text, regex("supreme.*court|court.*supreme", ignore_case = TRUE)), "SC", NA)) |> 
-  mutate(tagging = if_else(str_detect(text, regex("catholic.*christian.*religion|catholic.*religion.*christian|christian.*catholic.*religion|christian.*religion.*catholic|religion.*catholic.*christian|religion.*christian.*catholic", ignore_case = TRUE)), if_else(is.na(tagging), "R", paste(tagging, "R", sep = ", ")), tagging))
+  mutate(tagging = if_else(str_detect(text,regex(
+    "catholic.*christian.*religion|catholic.*religion.*christian|christian.*catholic.*religion|christian.*religion.*catholic|religion.*catholic.*christian|religion.*christian.*catholic", ignore_case = TRUE)), 
+    if_else(is.na(tagging), "R", paste(tagging, "R", sep = ", ")), tagging)) |> 
+  mutate(tagging = if_else(str_detect(text,regex(
+    "medicine.*health.*clinic|medicine.*clinic.*health|health.*medicine.*clinic|health.*clinic.*medicine|clinic.*medicine.*health|clinic.*health.*medicine", 
+                                                  ignore_case = TRUE)), 
+                           if_else(is.na(tagging), "H", 
+                                   paste(tagging, "H", sep = ", ")), tagging)) |> 
+  mutate(tagging = if_else(str_detect(text,regex(
+    "Planned Parenthood", ignore_case = TRUE)), if_else(is.na(tagging), "H", 
+                                   paste(tagging, "H", sep = ", ")), tagging)) 
 
 
-g1 <- ggplot(fox_meta5, aes(x = `title`, y = `sentiment_score`, color = `roe_status`)) +
+fox_government_analysis <- fox_meta5 |> 
+  mutate(pub_date = as.Date(pub_date))
+  
+  
+
+```
+
+## 6. Figures
+
+In this sections we begin to explore the different relationship and trends through figures. We isolate and consolidate different factors to see different trends, from the mention of keywords to the date that it was published
+```{r}
+#| label: analysis
+test <-fox_text_content |> 
+  filter(sentiment_score <= -3 | sentiment_score >3) |> 
+  filter(str_detect(tagging, "H"))
+
+
+g1 <- ggplot(test, aes(x = `title`, y = `sentiment_score`, fill = `roe_status`)) +
   geom_bar(stat = "identity") +
-  facet_grid( ~roe_status)
-
+  labs(title = "Sentiment for Fox News Articles", 
+       x = "Title", y = "Sentiment Score", fill = "Pre/Post Roe Status") +
+  facet_grid(~roe_status)
 g1
 
 g2 <- fox_meta5 |> 
-  filter(tagging == "SC") |> 
+  filter(str_detect(tagging, "SC")) |> 
   ggplot(aes(x = `pub_date`, color = `np_po`)) +
   geom_histogram() +
   facet_grid(~roe_status)
 g2
+
+g3 <- fox_meta5 |> 
+  filter(str_detect(tagging, "H")) |> 
+  ggplot(aes(x = `pub_date`, color = `np_po`)) +
+  geom_histogram() +
+  facet_grid(~roe_status)
+g3
+
 
 ```
 
