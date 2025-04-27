@@ -27,6 +27,7 @@ knitr::opts_chunk$set(
 # Load required libraries
 library(tidyverse)
 library(httr)
+library(purrr)
 library(readr)
 library(stringr)
 library(tibble)
@@ -38,10 +39,10 @@ library(lubridate)
 
 ## 1. Read and Prepare Raw JSON
 
-The JSON file `nyt_news_data.json` was scraped from The New York Times using a Python-based Tor-enabled web scraper. It includes article-level information such as titles, dates, body text, links, and images.
+In this step, we load the raw JSON file containing NYT articles. We first preserve its nested structure by setting `flatten = FALSE`. Because the JSON is deeply nested and large (\~596 entries), we avoid inspecting it directly and instead combine its elements into a single tibble using `map_dfr()`. Upon examining the structure, we notice that several fields, such as `creativeWorkHeadline`, are nested data.frames. To simplify analysis, we extract the `default` subfield (containing the main headline text) and unnest it into regular columns.
 
 ```{r}
-#| label: step-1
+#| label: step-1a
 
 ## =================================================================
 # Step 1: Read and Prepare Raw JSON (flatten = FALSE)
@@ -53,8 +54,12 @@ The JSON file `nyt_news_data.json` was scraped from The New York Times using a P
 # Load JSON scraped from Python
 nyt_news <- fromJSON("../data/nyt_news_data.json", flatten = FALSE)
 
-# Preview structure
-glimpse(nyt_news)
+# We suggest to avoid running `glimpse(nyt_news)` directly because it is a very
+# large list (~596 elements, deeply nested) and would result in an extremely
+# extremely long and overwhelming chunk output.
+
+# Instead, we first combine all the small data.frames inside `nyt_news`
+# into a single large tibble for easier handling.
 
 # Combine all the little data.frames into one big tibble
 nyt_news_df <- map_dfr(nyt_news, as_tibble)
@@ -63,9 +68,26 @@ nyt_news_df <- map_dfr(nyt_news, as_tibble)
 glimpse(nyt_news_df)
 ```
 
+```{r}
+#| label: step-1b
+
+# We observed that the `creativeWorkHeadline` column in `nyt_news_df`
+# contains a nested data.frame with two subfields:
+# - `__typename`: metadata about the headline type
+# - `default`: the main headline text we want
+#
+# To simplify the dataset for analysis, we extract the `default` field
+# as a new column. If missing, we assign NA.
+# 
+# This step "unnests" the nested structure into regular columns.
+
+nyt_news_df <- nyt_news_df |>
+  unnest_wider(creativeWorkHeadline, names_sep = "_")
+```
+
 ## 2. Subset Metadata
 
-In this step, we subset and clean the raw The New York Times News data to retain only the important metadata fields needed for our analysis. Specifically, we extract the article title, description, full text, publication date, URL, and author information. The `publicationDate` field is simplified by selecting only the first timestamp per article. 
+In this step, we subset the New York Times dataset to retain only entries classified as articles. We then extract the relevant metadata, headline, publication date, URL, summary, and full text, and clean the publication date into a standard `Date` format for easier filtering later.
 
 ```{r}
 #| label: step-2
@@ -75,10 +97,20 @@ In this step, we subset and clean the raw The New York Times News data to retain
 # =================================================================
 
 nyt_meta <- nyt_news_df |>
-  as_tibble() |>
+  # Keep only entries classified as Article
+  filter(`__typename` == "Article") |>
+  transmute(
+    title = creativeWorkHeadline_default,   # Article headline
+    publicationDate = firstPublished,        # Publication timestamp
+    url,                                     # Article URL
+    description = creativeWorkSummary,       # Short summary
+    text                                     # Full article body (if available)
+  ) |>
+  # Clean publication date format to Date class
   mutate(
-    
+    publicationDate = as.Date(publicationDate)
   )
+
 ```
 
 ## 3. Filter Articles by Publication Year (2020-2024)
@@ -113,7 +145,6 @@ nyt_meta2 <- nyt_meta |>
 
 ## 4. Clean Article Text
 
-
 ```{r}
 #| label: step-4
 
@@ -121,7 +152,8 @@ nyt_meta2 <- nyt_meta |>
 # Step 4: Clean Article Text
 # =================================================================
 
+write.csv(nyt_meta2, "nyt_meta_raw_texts.csv")
 
 ```
 
-```
+\`\`\`
