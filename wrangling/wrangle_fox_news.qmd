@@ -211,7 +211,26 @@ fox_meta5 <- fox_meta3 |>
   mutate(sentiment_score = 
            if_else(is.na(description_sent_score), 0, description_sent_score) + 
            if_else(is.na(text_sent_score), 0, text_sent_score))|> 
-  select(-url, -description, -text)
+  select(-url) |> 
+  mutate(np_po = if_else(sentiment_score > 3, "positive", "zero"))|>
+  mutate(np_po = if_else(sentiment_score < -3, "negative", np_po)) |> 
+  mutate(pub_date = as.Date(pub_date)) |> 
+  mutate(tagging = if_else(str_detect(text, regex("supreme.*court|court.*supreme", ignore_case = TRUE)), "SC", NA)) |> 
+  mutate(tagging = if_else(str_detect(text, regex("catholic.*christian.*religion|catholic.*religion.*christian|christian.*catholic.*religion|christian.*religion.*catholic|religion.*catholic.*christian|religion.*christian.*catholic", ignore_case = TRUE)), if_else(is.na(tagging), "R", paste(tagging, "R", sep = ", ")), tagging))
+
+
+g1 <- ggplot(fox_meta5, aes(x = `title`, y = `sentiment_score`, color = `roe_status`)) +
+  geom_bar(stat = "identity") +
+  facet_grid( ~roe_status)
+
+g1
+
+g2 <- fox_meta5 |> 
+  filter(tagging == "SC") |> 
+  ggplot(aes(x = `pub_date`, color = `np_po`)) +
+  geom_histogram() +
+  facet_grid(~roe_status)
+g2
 
 ```
 
