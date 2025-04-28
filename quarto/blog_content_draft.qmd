@@ -27,15 +27,21 @@ library(widyr)
 library(igraph)
 library(ggraph)
 library(tibble)
+library(readr)
+library(lubridate)  
+library(ggridges)
+library(gganimate)
+library(magick)
 
 # Load cleaned datasets
 nyt <- read_csv("../data/wrangled/nyt_news_data_wrangled.csv")
 fox <- read_csv("../data/wrangled/fox_news_data_wrangled.csv")
-## guttmacher <- read_csv("../data/Guttmatcher_institute_data/your_guttmacher_file.csv")  
+## guttmacher <- read_csv("../data/Guttmatcher_institute_data/guttmacher_file.csv")  
 ```
 
 ```{r}
 #| label: top-words-check
+#| include: false
 
 # Tokenize text into individual words
 tokens <- bind_rows(
@@ -56,6 +62,7 @@ custom_stopwords <- tibble(word = c(
 
 ```{r}
 #| label: clean-tokens
+#| include: false
 
 # Tokenize and remove both standard and custom stop words
 tokens2 <- bind_rows(
@@ -64,16 +71,16 @@ tokens2 <- bind_rows(
 ) |>
   unnest_tokens(word, text) |>
   anti_join(stop_words) |>         # Remove standard English stop words
-  anti_join(custom_stopwords)       # Remove custom filler/irrelevant words
+  anti_join(custom_stopwords)      # Remove custom filler/irrelevant words
 ```
 
-Long a topic of debate across law, medicine, gender, and religion, abortion has remained one of the most polarizing issues in American public life. That polarization deepened in June 2022, when the Supreme Court’s decision in Dobbs v. Jackson Women’s Health Organization overturned Roe v. Wade, the 1973 ruling that had established a constitutional right to abortion.The decision unsettled not only the legal framework around abortion, but also the way the issue is discussed across the country. As states move in sharply different directions, media coverage has had to grapple with new divisions, new language, and new stakes. 
+Long a topic of debate across law, medicine, gender, and religion, abortion has remained one of the most polarizing issues in American public life. That polarization deepened in June 2022, when the Supreme Court’s decision in Dobbs v. Jackson Women’s Health Organization overturned Roe v. Wade, the 1973 ruling that had established a constitutional right to abortion.The decision unsettled not only the legal framework around abortion, but also the way the issue is discussed across the country. As states move in sharply different directions, media coverage has had to grapple with new divisions, new language, and new stakes.
 
 At its core, the public debate still turns on a simple but deeply charged question: is abortion good or bad? How that question gets answered–or even framed–depends heavily on where one looks. News coverage of abortion varies sharply by ideological leaning. Conservative media outlets often emphasize religious and legal arguments by focusing on fetal personhood, state-level bans, and moral appeals (Williams, 2024). In contrast, liberal media frequently frame abortion in terms of bodily autonomy, healthcare access, and gender justice, while emphasizing the disproportionate impact of abortion restrictions on marginalized communities (Human Rights Watch, 2023). These competing narratives do more than reflect existing viewpoints but actively shape public perception of abortion legislation.
 
 In this blog, we examine how abortion is framed by two ideologically distinct media outlets: Fox News and The New York Times. To trace how these narratives evolved, we analyzed abortion-related news coverage from both sources before and after the Dobbs decision. These platforms were chosen not only for their national prominence and broad audiences, but also for their well-documented political leanings–Fox News is widely recognized as a conservative outlet, while The New York Times is identified as liberal-leaning (Pew Research Center, 2014; Mitchell et al., 2020). By comparing these two sources, we aim to better understand how media framing reflects and reinforces broader ideological divides around abortion. Using text and sentiment analysis, topic modeling, and geographic data from the Guttmacher Institute, we explore how media narratives align with state-level abortion laws and how discourse evolves in response to shifting legal landscapes.
 
-## How Often Was Abortion Covered? Volume of Coverage Over Time
+## Volume of Coverage Over Time
 
 We collected a total of `3,168` abortion-related news articles. `1,739` were from Fox News and the remaining 1,429 were from The New York Times between early 2020 and late 2024. The chart below traces the cumulative number of articles over time to show how coverage evolved across both outlets.
 
@@ -118,41 +125,44 @@ all_time |>
 
 ```
 
-## 
+## Sentiment and Language Shift in Abortion Coverage Before and After Dobbs
 
 ```{r}
-# Step 1: Add unique article IDs
-nyt <- nyt |> mutate(article_id = paste0("nyt_", row_number()))
-fox <- fox |> mutate(article_id = paste0("fox_", row_number()))
+#| label: afinn-sentiment-histogram
 
-# Step 2: Bind datasets and tokenize
-tokens2 <- bind_rows(
-  nyt |> mutate(outlet = "NYT"),
-  fox |> mutate(outlet = "Fox")
-) |> 
-  unnest_tokens(word, text_clean) |>   
-  anti_join(stop_words, by = "word") |>   
-  anti_join(custom_stopwords, by = "word") 
+# Tokenize and summarize
+afinn_sentiment <- all_time |> 
+  mutate(article_id = row_number()) |> 
+  unnest_tokens(word, text_clean) |> 
+  inner_join(get_sentiments("afinn"), by = "word")
 
-# Step 3: Build word co-occurrence pairs (based on same article)
-word_pairs <- tokens2 |> 
-  pairwise_count(word, article_id, sort = TRUE)
+article_sentiment <- afinn_sentiment |> 
+  group_by(article_id, pub_date, outlet) |> 
+  summarize(mean_sentiment = mean(value), .groups = "drop") |> 
+  mutate(
+    month = floor_date(pub_date, "month")
+  )
 
-# Step 4: Filter to frequent connections only (adjust threshold ??)
-word_pairs_filtered <- word_pairs |> 
-  filter(n >= 10)  # keep only pairs that co-occur at least 10 times
+# Plot
+p <- ggplot(article_sentiment, aes(x = mean_sentiment, y = outlet, color = outlet)) +
+  geom_jitter(width = 0.3, height = 0.2, alpha = 0.7, size = 2) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "gray40") +
+  scale_color_manual(values = c("Fox" = "#D81B60", "NYT" = "#1E88E5")) +
+  scale_x_continuous(limits = c(-2.5, 2.5)) +
+  labs(
+    title = "Sentiment Evolution Over Time",
+    subtitle = 'Month: {frame_time}',
+    x = "Mean Sentiment Score (AFINN Scale)",
+    y = NULL,
+    color = "Outlet"
+  ) +
+  theme(legend.position = "bottom") +
+  transition_time(month) +
+  ease_aes('linear')
 
-# Step 5: Create a graph
-word_graph <- word_pairs_filtered |> 
-  graph_from_data_frame()
+# Animate
+animate(p, fps = 10, width = 800, height = 500, renderer = magick_renderer())
 
-# Step 6: Plot the word network
-ggraph(word_graph, layout = "fr") +
-  geom_edge_link(aes(edge_alpha = n), show.legend = FALSE) +
-  geom_node_point(color = "steelblue", size = 4) +
-  geom_node_text(aes(label = name), repel = TRUE, size = 3) +
-  theme_void() +
-  labs(title = "Word Co-Occurrence Network in Abortion Coverage",
-       subtitle = "Words clustered by co-appearance in Fox and NYT articles (2020–2024)")
+# Save
+anim_save("sentiment_evolution.gif")
 
-```
