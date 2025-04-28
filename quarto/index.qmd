@@ -83,6 +83,8 @@ tokens2 <- bind_rows(
   anti_join(custom_stopwords)      # Remove custom filler/irrelevant words
 ```
 
+## Introduction
+
 Long a topic of debate across law, medicine, gender, and religion,
 abortion has remained one of the most polarizing issues in American
 public life. That polarization deepened in June 2022, when the Supreme
@@ -123,3 +125,50 @@ narratives align with state-level abortion laws and how discourse
 evolves in response to shifting legal landscapes.
 
 ## A First Look at the Coverage
+
+```{r}
+#| label: num-articles-over-time
+#| echo: false
+
+# Combine NYT and Fox together
+articles <- bind_rows(
+  nyt |> mutate(outlet = "NYT"),
+  fox |> mutate(outlet = "Fox")
+) |> 
+  mutate(pub_date = as.Date(pub_date)) |> 
+  filter(!is.na(pub_date))  # Just to be safe
+
+# Make sure pub_date is Date type
+articles <- articles |> mutate(pub_date = ymd(pub_date))
+
+# Count articles per month and outlet
+articles_monthly <- articles |> 
+  mutate(month = floor_date(pub_date, "month")) |> 
+  count(month, outlet, roe_status)
+
+# Create a nicer outlet label
+articles_monthly <- articles_monthly |> 
+  mutate(outlet = case_when(
+    outlet == "Fox" ~ "Fox News",
+    outlet == "NYT" ~ "The New York Times",
+    TRUE ~ outlet
+  ))
+
+# Plot
+ggplot(articles_monthly, aes(x = month, y = n, color = outlet)) +
+  geom_smooth(se = FALSE, method = "loess", span = 0.3, size = 1.2) +  # smoother line!
+  geom_vline(xintercept = as.Date("2022-06-24"), linetype = "dashed", color = "gray40") +
+  facet_wrap(~ outlet, scales = "fixed") +
+  scale_color_manual(values = c(
+    "Fox News" = "#cf1322",
+    "The New York Times" = "#003f5c"
+  )) +
+  labs(
+    title = "Abortion-Related Articles Over Time",
+    x = "Year", y = "Number of Articles"
+  ) +
+  theme(
+    legend.position = "none",
+  )
+
+```

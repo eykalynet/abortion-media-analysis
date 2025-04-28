@@ -6,6 +6,7 @@ author:
 - "Emilie Ward"
 - "Maigan Lafontant"
 abstract: "A brief abstract summarizing your project is required here. This abstract, along with the first image or figure in your blog, will be used as a preview to your blog on the course's landing page for all the blogs."
+freeze: true
 ---
 
 ```{r}
