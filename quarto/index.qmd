@@ -46,6 +46,14 @@ nyt <- read_csv("../data/wrangled/nyt_news_data_wrangled.csv")
 fox <- read_csv("../data/wrangled/fox_news_data_wrangled.csv")
 ## guttmacher <- read_csv("../data/Guttmatcher_institute_data/guttmacher_file.csv")  
 
+# Combine NYT and Fox together
+articles <- bind_rows(
+  nyt |> mutate(outlet = "NYT"),
+  fox |> mutate(outlet = "Fox")
+) |> 
+  mutate(pub_date = as.Date(pub_date)) |> 
+  filter(!is.na(pub_date))  # Just to be safe
+
 ```
 
 ```{r}
@@ -126,17 +134,32 @@ evolves in response to shifting legal landscapes.
 
 ## A First Look at the Coverage
 
+We collected a total of `r nrow(articles)` abortion-related news
+articles for this analysis. Of these, `r nrow(fox)` were published by
+Fox News and the remaining `r nrow(nyt)` by The New York Times, spanning
+from early 2020 through late 2024. Together, these articles provide a
+window into how two major media outlets approached abortion coverage
+across a period of significant legal and political change.
+
+To trace how attention fluctuated over time, we first examined monthly
+trends in article publication. Both Fox News and The New York Times
+exhibited visible surges in abortion-related reporting across the
+2020-2024 period. While our primary focus is on the Dobbs v. Jackson
+Women’s Health Organization decision and its aftermath, earlier spikes
+in coverage are also notable. Attention intensified sharply in September
+2021 with the enactment of Texas’s SB8 “heartbeat bill”, surged again in
+May 2022 when Politico leaked the Supreme Court’s draft opinion in
+Dobbs, and peaked in June 2022 when the Court officially overturned Roe
+v. Wade. Additional upticks are visible during the November 2022 midterm
+elections, where abortion rights featured prominently on state ballots,
+and during the August 2023 Ohio special election focused on abortion
+protections.
+
 ```{r}
 #| label: num-articles-over-time
 #| echo: false
-
-# Combine NYT and Fox together
-articles <- bind_rows(
-  nyt |> mutate(outlet = "NYT"),
-  fox |> mutate(outlet = "Fox")
-) |> 
-  mutate(pub_date = as.Date(pub_date)) |> 
-  filter(!is.na(pub_date))  # Just to be safe
+#| warnings: false
+#| messages: false 
 
 # Make sure pub_date is Date type
 articles <- articles |> mutate(pub_date = ymd(pub_date))
@@ -156,19 +179,58 @@ articles_monthly <- articles_monthly |>
 
 # Plot
 ggplot(articles_monthly, aes(x = month, y = n, color = outlet)) +
-  geom_smooth(se = FALSE, method = "loess", span = 0.3, size = 1.2) +  # smoother line!
+  geom_line(size = 1.2) +
   geom_vline(xintercept = as.Date("2022-06-24"), linetype = "dashed", color = "gray40") +
   facet_wrap(~ outlet, scales = "fixed") +
   scale_color_manual(values = c(
-    "Fox News" = "#cf1322",
+    "Fox News" = "#cf1322", 
     "The New York Times" = "#003f5c"
   )) +
   labs(
     title = "Abortion-Related Articles Over Time",
-    x = "Year", y = "Number of Articles"
+    x = "Month", y = "Number of Articles"
   ) +
   theme(
-    legend.position = "none",
-  )
+    legend.position = "none")
 
+```
+
+Interestingly, while monthly patterns highlight media reactions to
+specific events, they do not fully capture the overall scale of
+coverage. To provide a cumulative perspective, we plotted the running
+total of abortion-related articles over time. Although The New York
+Times often displayed sharper monthly peaks, the cumulative view reveals
+a different story: over the long term, Fox News produced a significantly
+larger volume of abortion-related coverage. Following the Dobbs
+decision, the total number of articles rose sharply for both outlets,
+but Fox News continued to publish abortion-related content at a faster
+pace. By the end of 2024, Fox News had amassed a much larger body of
+coverage compared to The New York Times.
+
+```{r}
+#| label: cumulative-articles 
+#| echo: false
+#| warnings: false
+#| messages: false 
+
+articles_monthly_cum <- articles_monthly |>
+  group_by(outlet) |>
+  arrange(month) |>
+  mutate(cumulative_articles = cumsum(n))
+
+# Then plot
+ggplot(articles_monthly_cum, aes(x = month, y = cumulative_articles, color = outlet)) +
+  geom_line(size = 1.2) +
+  geom_vline(xintercept = as.Date("2022-06-24"), linetype = "dashed", color = "gray40") +
+  scale_color_manual(values = c(
+    "Fox News" = "#cf1322",
+    "The New York Times" = "#003f5c"
+  )) +
+  facet_wrap(~ outlet, scales = "fixed") +
+  labs(
+    title = "Cumulative Abortion-Related Coverage Over Time",
+    x = "Year", y = "Cumulative Number of Articles"
+  ) +
+  theme(
+    legend.position = "none")
 ```
