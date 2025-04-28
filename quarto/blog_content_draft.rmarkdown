@@ -1,0 +1,341 @@
+---
+title: "blog_content_draft"
+format: html
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+# =================================================================
+# Setup: Global Options and Libraries
+# =================================================================
+
+# Set code chunk defaults for cleaner output
+knitr::opts_chunk$set(
+  tidy = FALSE,                # Preserve code formatting
+  size = "small",              # Use slightly smaller font for code
+  message = FALSE,             # Suppress messages in output
+  options(scipen = 1,          # Prefer standard numeric formatting (no scientific notation)
+          knitr.kable.NA = '') # Display empty cells instead of "NA" in tables
+)
+
+# Load required libraries
+library(tidyverse)    # Core packages: dplyr, ggplot2, readr, tibble, etc.
+library(purrr)        # Functional programming tools (mapping, iteration)
+library(readr)        # Fast and friendly reading of rectangular data
+library(stringr)      # String manipulation utilities
+library(tibble)       # Modern, clean data frames
+library(kableExtra)   # Table formatting for nicer presentation
+library(tidytext)     # Text mining and natural language processing
+library(colorspace)   # Color palettes and manipulation
+library(wordcloud2)   # Clearly for wordclouds
+library(gganimate)    # Animation stuff yay
+
+# Load cleaned datasets
+nyt <- read_csv("../data/wrangled/nyt_news_data_wrangled.csv")
+fox <- read_csv("../data/wrangled/fox_news_data_wrangled.csv")
+## guttmacher <- read_csv("../data/Guttmatcher_institute_data/your_guttmacher_file.csv")  
+```
+
+```{r}
+#| label: top-words-check
+
+# Tokenize text into individual words
+tokens <- bind_rows(
+  nyt |> mutate(outlet = "NYT"),
+  fox |> mutate(outlet = "Fox")
+) |>
+  unnest_tokens(word, text) |>
+  anti_join(stop_words)  # Remove standard English stop words first
+
+# Additional stop words
+custom_stopwords <- tibble(word = c(
+  "said", "ms", "mr", "mrs",
+  "fox", "news", "nyt", "new", "york", "times",
+  "u.s", "one", "two", "also", "would", "including", "don’t", "that’s", "it’s", "wrote", "told",
+  "roe"
+))
+```
+
+```{r}
+#| label: clean-tokens
+
+# Tokenize and remove both standard and custom stop words
+tokens2 <- bind_rows(
+  nyt |> mutate(outlet = "NYT"),
+  fox |> mutate(outlet = "Fox")
+) |>
+  unnest_tokens(word, text) |>
+  anti_join(stop_words) |>         # Remove standard English stop words
+  anti_join(custom_stopwords)       # Remove custom filler/irrelevant words
+```
+
+
+
+## Top Words
+
+
+
+```{r}
+#| label: plot-top-words
+
+# Recount top words separately for NYT
+top_words_nyt <- tokens2 |>
+  filter(outlet == "NYT") |>
+  count(word, sort = TRUE) |>
+  slice_max(n, n = 20)
+
+# Recount top words separately for Fox
+top_words_fox <- tokens2 |>
+  filter(outlet == "Fox") |>
+  count(word, sort = TRUE) |>
+  slice_max(n, n = 20)
+
+# Plot NYT Top 20
+top_words_nyt |>
+  ggplot(aes(x = reorder(word, n), y = n)) +
+  geom_col(fill = "#263995") +
+  coord_flip() +
+  labs(
+    title = "Top 20 Most Frequent Words from the New York Times",
+    x = "Word",
+    y = "Count"
+  ) 
+
+# Plot Fox Top 20
+top_words_fox |>
+  ggplot(aes(x = reorder(word, n), y = n)) +
+  geom_col(fill = "#d81f25") +
+  coord_flip() +
+  labs(
+    title = "Top 20 Most Frequent Words from Fox News",
+    x = "Word",
+    y = "Count"
+  ) 
+```
+
+
+
+## Top Bigrams
+
+
+
+```{r}
+#| label: plot-top-bigrams-by-outlet
+
+# Tokenize bigrams separately
+bigrams <- bind_rows(
+  nyt |> mutate(outlet = "NYT"),
+  fox |> mutate(outlet = "Fox")
+) |>
+  unnest_tokens(bigram, text, token = "ngrams", n = 2) |>
+  separate(bigram, into = c("word1", "word2"), sep = " ") |>
+  filter(
+    !word1 %in% stop_words$word,
+    !word2 %in% stop_words$word,
+    !word1 %in% custom_stopwords$word,
+    !word2 %in% custom_stopwords$word
+  ) |>
+  mutate(bigram = paste(word1, word2)) |>
+  select(outlet, bigram)
+
+# Recount top bigrams separately for NYT
+top_bigrams_nyt <- bigrams |>
+  filter(outlet == "NYT") |>
+  count(bigram, sort = TRUE) |>
+  slice_max(n, n = 20)
+
+# Recount top bigrams separately for Fox
+top_bigrams_fox <- bigrams |>
+  filter(outlet == "Fox") |>
+  count(bigram, sort = TRUE) |>
+  slice_max(n, n = 20)
+
+# Plot NYT Top 20 Bigrams
+top_bigrams_nyt |>
+  ggplot(aes(x = reorder(bigram, n), y = n)) +
+  geom_col(fill = "#263995") +
+  coord_flip() +
+  labs(
+    title = "Top 20 Most Frequent Bigrams from the New York Times",
+    x = "Bigram",
+    y = "Count"
+  )
+
+# Plot Fox Top 20 Bigrams
+top_bigrams_fox |>
+  ggplot(aes(x = reorder(bigram, n), y = n)) +
+  geom_col(fill = "#d81f25") +
+  coord_flip() +
+  labs(
+    title = "Top 20 Most Frequent Bigrams from Fox News",
+    x = "Bigram",
+    y = "Count"
+  )
+
+```
+
+
+
+## Top Trigrams
+
+
+
+```{r}
+#| label: plot-top-trigrams-by-outlet
+
+# Tokenize trigrams separately
+trigrams <- bind_rows(
+  nyt |> mutate(outlet = "NYT"),
+  fox |> mutate(outlet = "Fox")
+) |>
+  unnest_tokens(trigram, text, token = "ngrams", n = 3) |>
+  separate(trigram, into = c("word1", "word2", "word3"), sep = " ") |>
+  filter(
+    !word1 %in% stop_words$word,
+    !word2 %in% stop_words$word,
+    !word3 %in% stop_words$word,
+    !word1 %in% custom_stopwords$word,
+    !word2 %in% custom_stopwords$word,
+    !word3 %in% custom_stopwords$word
+  ) |>
+  mutate(trigram = paste(word1, word2, word3)) |>
+  select(outlet, trigram)
+
+# Recount top trigrams separately for NYT
+top_trigrams_nyt <- trigrams |>
+  filter(outlet == "NYT") |>
+  count(trigram, sort = TRUE) |>
+  slice_max(n, n = 20)
+
+# Recount top trigrams separately for Fox
+top_trigrams_fox <- trigrams |>
+  filter(outlet == "Fox") |>
+  count(trigram, sort = TRUE) |>
+  slice_max(n, n = 20)
+
+# Plot NYT Top 20 Trigrams
+top_trigrams_nyt |>
+  ggplot(aes(x = reorder(trigram, n), y = n)) +
+  geom_col(fill = "#263995") +
+  coord_flip() +
+  labs(
+    title = "Top 20 Most Frequent Trigrams from the New York Times",
+    x = "Trigram",
+    y = "Count"
+  )
+
+# Plot Fox Top 20 Trigrams
+top_trigrams_fox |>
+  ggplot(aes(x = reorder(trigram, n), y = n)) +
+  geom_col(fill = "#d81f25") +
+  coord_flip() +
+  labs(
+    title = "Top 20 Most Frequent Trigrams from Fox News",
+    x = "Trigram",
+    y = "Count"
+  )
+```
+
+
+
+## Word Cloud
+
+
+
+```{r}
+#| label: nyt-unigrams-wordcloud2
+
+library(wordcloud2)
+# NYT Unigrams Word Cloud
+wordcloud2(top_words_nyt, 
+           color = "#263995", 
+           backgroundColor = "white", 
+           size = 0.8)
+
+wordcloud2(top_words_fox, 
+           color = "#d81f25", 
+           backgroundColor = "white", 
+           size = 0.8)
+```
+
+
+
+## Timeline
+
+
+
+```{r}
+#| label: plot-timeline
+
+# Ensure pub_date is in Date format
+nyt <- nyt |> mutate(pub_date = as.Date(pub_date))
+fox <- fox |> mutate(pub_date = as.Date(pub_date))
+
+# Combine datasets with outlet labels
+nyt_time <- nyt |> mutate(outlet = "NYT")
+fox_time <- fox |> mutate(outlet = "Fox")
+all_time <- bind_rows(nyt_time, fox_time)
+
+# Plotting the timeline
+
+all_time |>
+  filter(!is.na(pub_date)) |> 
+  count(pub_date, outlet) |>
+  group_by(outlet) |>
+  arrange(pub_date) |>
+  mutate(cumulative_articles = cumsum(n)) |> 
+  ggplot(aes(x = pub_date, y = cumulative_articles, fill = outlet)) +
+  geom_area(alpha = 0.8, color = "white", size = 0.2) +  # Stacked areas
+  geom_vline(xintercept = as.Date("2022-06-24"), 
+             linetype = "dashed", color = "black", size = 0.8) +
+  geom_vline(xintercept = as.Date("2024-11-05"), 
+             linetype = "dashed", color = "gray50", size = 0.8) +
+  annotate("text", x = as.Date("2022-06-24") + 30, y = Inf, 
+           label = "Dobbs Decision\n(June 24, 2022)", 
+           vjust = 1.5, hjust = 0, size = 3.5, color = "black", fontface = "italic") +
+  annotate("text", x = as.Date("2024-11-05") - 90, y = Inf, 
+           label = "2024 Election\n(Nov 5, 2024)", 
+           vjust = 1.5, hjust = 0, size = 3.5, color = "gray30", fontface = "italic") +
+  scale_fill_manual(values = c("NYT" = "#263995", "Fox" = "#d81f25")) +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b %Y") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "Cumulative Coverage of Abortion-Related Articles (Stacked Area Chart)",
+    subtitle = "Tracking cumulative reporting over time | Dobbs Decision and 2024 Election marked",
+    x = NULL,
+    y = "Cumulative Number of Articles",
+    fill = NULL
+  ) 
+
+```
+
+```{r}
+cumulative_plot <- all_time |>
+  filter(!is.na(pub_date)) |> 
+  count(pub_date, outlet) |>
+  group_by(outlet) |>
+  arrange(pub_date) |>
+  mutate(cumulative_articles = cumsum(n)) |> 
+  ggplot(aes(x = pub_date, y = cumulative_articles, fill = outlet)) +
+  geom_area(alpha = 0.8, color = "white", size = 0.2) +
+  geom_vline(xintercept = as.Date("2022-06-24"), linetype = "dashed", color = "black", size = 0.8) +
+  geom_vline(xintercept = as.Date("2024-11-05"), linetype = "dashed", color = "gray50", size = 0.8) +
+  scale_fill_manual(values = c("NYT" = "#263995", "Fox" = "#d81f25")) +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b %Y") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "Cumulative Coverage of Abortion-Related Articles",
+    subtitle = "Growing coverage over time | Dobbs and 2024 Election marked",
+    x = NULL,
+    y = "Cumulative Number of Articles",
+    fill = NULL
+  ) 
+  transition_reveal(pub_date)  # Animate along publication date
+```
+
+```{r}
+animate(cumulative_plot, fps = 20, duration = 10, width = 800, height = 500, renderer = gifski_renderer())
+```
+

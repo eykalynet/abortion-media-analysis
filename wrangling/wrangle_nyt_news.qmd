@@ -203,6 +203,7 @@ nyt_meta3 |>
   geom_col(fill = "darkorange") +
   labs(title = "Top Bigrams", x = "Count", y = "")
 ```
+
 ```{r}
 #| label: tf-idf
 
@@ -217,7 +218,6 @@ top_tf_idf_words <- nyt_tf_idf |>
   ungroup()
 
 ```
-
 
 ```{r}
 #| label: afinn
@@ -269,9 +269,3 @@ custom_stop <- tibble(word = top_junk)
 all_stops <- bind_rows(stop_words, custom_stop)
 
 ```
-
-
-
-
-
-
