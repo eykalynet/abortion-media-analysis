@@ -256,16 +256,16 @@ g1 <- ggplot(test, aes(x = `title`, y = `sentiment_score`, fill = `roe_status`))
   facet_grid(~roe_status)
 g1
 
-g2 <- fox_meta5 |> 
+g2 <- fox_text_content |> 
   filter(str_detect(tagging, "SC")) |> 
   ggplot(aes(x = `pub_date`, color = `np_po`)) +
   geom_histogram() +
   facet_grid(~roe_status)
 g2
 
-g3 <- fox_meta5 |> 
-  filter(str_detect(tagging, "H")) |> 
-  ggplot(aes(x = `pub_date`, color = `np_po`)) +
+g3 <- fox_text_content |> 
+  # filter(str_detect(tagging, "H")) |> 
+  ggplot(aes(x = `pub_date`, fill = `np_po`)) +
   geom_histogram() +
   facet_grid(~roe_status)
 g3
