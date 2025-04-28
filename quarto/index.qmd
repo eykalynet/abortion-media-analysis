@@ -40,6 +40,9 @@ library(lubridate)
 library(ggridges)
 library(gganimate)
 library(magick)
+library(ggplot2)
+library(tidyr)
+
 
 # Load cleaned datasets
 nyt <- read_csv("../data/wrangled/nyt_news_data_wrangled.csv")
@@ -179,7 +182,7 @@ articles_monthly <- articles_monthly |>
 
 # Plot
 ggplot(articles_monthly, aes(x = month, y = n, color = outlet)) +
-  geom_line(size = 1.2) +
+  geom_line(linewidth = 1.2) +
   geom_vline(xintercept = as.Date("2022-06-24"), linetype = "dashed", color = "gray40") +
   facet_wrap(~ outlet, scales = "fixed") +
   scale_color_manual(values = c(
@@ -220,7 +223,7 @@ articles_monthly_cum <- articles_monthly |>
 
 # Then plot
 ggplot(articles_monthly_cum, aes(x = month, y = cumulative_articles, color = outlet)) +
-  geom_line(size = 1.2) +
+  geom_line(linewidth = 1.2) +
   geom_vline(xintercept = as.Date("2022-06-24"), linetype = "dashed", color = "gray40") +
   scale_color_manual(values = c(
     "Fox News" = "#cf1322",
@@ -233,4 +236,13 @@ ggplot(articles_monthly_cum, aes(x = month, y = cumulative_articles, color = out
   ) +
   theme(
     legend.position = "none")
+```
+
+```{r}
+#| label: top-bigrams
+#| echo: false
+#| warnings: false
+#| messages: false 
+
+
 ```
