@@ -21,16 +21,12 @@ knitr::opts_chunk$set(
 )
 
 # Load required libraries
-library(tidyverse)    # Core packages: dplyr, ggplot2, readr, tibble, etc.
-library(purrr)        # Functional programming tools (mapping, iteration)
-library(readr)        # Fast and friendly reading of rectangular data
-library(stringr)      # String manipulation utilities
-library(tibble)       # Modern, clean data frames
-library(kableExtra)   # Table formatting for nicer presentation
-library(tidytext)     # Text mining and natural language processing
-library(colorspace)   # Color palettes and manipulation
-library(wordcloud2)   # Clearly for wordclouds
-library(gganimate)    # Animation stuff yay
+library(tidytext)
+library(dplyr)
+library(widyr)
+library(igraph)
+library(ggraph)
+library(tibble)
 
 # Load cleaned datasets
 nyt <- read_csv("../data/wrangled/nyt_news_data_wrangled.csv")
@@ -79,7 +75,7 @@ In this blog, we examine how abortion is framed by two ideologically distinct me
 
 ## How Often Was Abortion Covered? Volume of Coverage Over Time
 
-We collected a total of `3,168` abortion-related news articles. `1,739` were from Fox News and the remaining `1,429` were from The New York Times between 2020 and 2024. The chart below traces the cumulative number of articles over time to show how coverage evolved across both outlets.
+We collected a total of `3,168` abortion-related news articles. `1,739` were from Fox News and the remaining 1,429 were from The New York Times between early 2020 and late 2024. The chart below traces the cumulative number of articles over time to show how coverage evolved across both outlets.
 
 ```{r}
 #| label: plot-timeline
@@ -122,218 +118,41 @@ all_time |>
 
 ```
 
-## Top Words
-
-```{r}
-#| label: plot-top-words
-
-# Recount top words separately for NYT
-top_words_nyt <- tokens2 |>
-  filter(outlet == "NYT") |>
-  count(word, sort = TRUE) |>
-  slice_max(n, n = 20)
-
-# Recount top words separately for Fox
-top_words_fox <- tokens2 |>
-  filter(outlet == "Fox") |>
-  count(word, sort = TRUE) |>
-  slice_max(n, n = 20)
-
-# Plot NYT Top 20
-top_words_nyt |>
-  ggplot(aes(x = reorder(word, n), y = n)) +
-  geom_col(fill = "#263995") +
-  coord_flip() +
-  labs(
-    title = "Top 20 Most Frequent Words from the New York Times",
-    x = "Word",
-    y = "Count"
-  ) 
-
-# Plot Fox Top 20
-top_words_fox |>
-  ggplot(aes(x = reorder(word, n), y = n)) +
-  geom_col(fill = "#d81f25") +
-  coord_flip() +
-  labs(
-    title = "Top 20 Most Frequent Words from Fox News",
-    x = "Word",
-    y = "Count"
-  ) 
-```
-
-## Top Bigrams
-
-```{r}
-#| label: plot-top-bigrams-by-outlet
-
-# Tokenize bigrams separately
-bigrams <- bind_rows(
-  nyt |> mutate(outlet = "NYT"),
-  fox |> mutate(outlet = "Fox")
-) |>
-  unnest_tokens(bigram, text, token = "ngrams", n = 2) |>
-  separate(bigram, into = c("word1", "word2"), sep = " ") |>
-  filter(
-    !word1 %in% stop_words$word,
-    !word2 %in% stop_words$word,
-    !word1 %in% custom_stopwords$word,
-    !word2 %in% custom_stopwords$word
-  ) |>
-  mutate(bigram = paste(word1, word2)) |>
-  select(outlet, bigram)
-
-# Recount top bigrams separately for NYT
-top_bigrams_nyt <- bigrams |>
-  filter(outlet == "NYT") |>
-  count(bigram, sort = TRUE) |>
-  slice_max(n, n = 20)
-
-# Recount top bigrams separately for Fox
-top_bigrams_fox <- bigrams |>
-  filter(outlet == "Fox") |>
-  count(bigram, sort = TRUE) |>
-  slice_max(n, n = 20)
-
-# Plot NYT Top 20 Bigrams
-top_bigrams_nyt |>
-  ggplot(aes(x = reorder(bigram, n), y = n)) +
-  geom_col(fill = "#263995") +
-  coord_flip() +
-  labs(
-    title = "Top 20 Most Frequent Bigrams from the New York Times",
-    x = "Bigram",
-    y = "Count"
-  )
-
-# Plot Fox Top 20 Bigrams
-top_bigrams_fox |>
-  ggplot(aes(x = reorder(bigram, n), y = n)) +
-  geom_col(fill = "#d81f25") +
-  coord_flip() +
-  labs(
-    title = "Top 20 Most Frequent Bigrams from Fox News",
-    x = "Bigram",
-    y = "Count"
-  )
-
-```
-
-```         
-```
-
-## Word Cloud
-
-```{r}
-#| label: nyt-unigrams-wordcloud2
-
-library(wordcloud2)
-# NYT Unigrams Word Cloud
-wordcloud2(top_words_nyt, 
-           color = "#263995", 
-           backgroundColor = "white", 
-           size = 0.8)
-
-wordcloud2(top_words_fox, 
-           color = "#d81f25", 
-           backgroundColor = "white", 
-           size = 0.8)
-```
-
 ## 
 
 ```{r}
-#| label: cumulative-animate-fixed
+# Step 1: Add unique article IDs
+nyt <- nyt |> mutate(article_id = paste0("nyt_", row_number()))
+fox <- fox |> mutate(article_id = paste0("fox_", row_number()))
 
-library(gganimate)
-library(tidyverse)
-library(gganimate)
+# Step 2: Bind datasets and tokenize
+tokens2 <- bind_rows(
+  nyt |> mutate(outlet = "NYT"),
+  fox |> mutate(outlet = "Fox")
+) |> 
+  unnest_tokens(word, text_clean) |>   
+  anti_join(stop_words, by = "word") |>   
+  anti_join(custom_stopwords, by = "word") 
 
-# Rebuild cumulative data, filling in dates
-cumulative_data <- all_time |>
-  filter(!is.na(pub_date)) |> 
-  count(pub_date, outlet) |>
-  complete(pub_date = seq.Date(min(pub_date), max(pub_date), by = "day"), outlet, fill = list(n = 0)) |> 
-  group_by(outlet) |>
-  arrange(pub_date) |>
-  mutate(cumulative_articles = cumsum(n)) |> 
-  ungroup()
+# Step 3: Build word co-occurrence pairs (based on same article)
+word_pairs <- tokens2 |> 
+  pairwise_count(word, article_id, sort = TRUE)
 
-# Now plot
-cumulative_plot <- cumulative_data |>
-  ggplot(aes(x = pub_date, y = cumulative_articles, fill = outlet, group = outlet)) +
-  geom_area(stat = "identity", alpha = 0.8, color = "white", size = 0.2) +
-  geom_vline(xintercept = as.Date("2022-06-24"), linetype = "dashed", color = "black", size = 0.8) +
-  geom_vline(xintercept = as.Date("2024-11-05"), linetype = "dashed", color = "gray50", size = 0.8) +
-  scale_fill_manual(values = c("NYT" = "#263995", "Fox" = "#d81f25")) +
-  labs(
-    title = "Cumulative Coverage of Abortion-Related Articles",
-    subtitle = "Animated Over Time | Dobbs Decision and 2024 Election Marked",
-    x = NULL,
-    y = "Cumulative Number of Articles",
-    fill = NULL
-  ) +
-  transition_reveal(pub_date)
+# Step 4: Filter to frequent connections only (adjust threshold ??)
+word_pairs_filtered <- word_pairs |> 
+  filter(n >= 10)  # keep only pairs that co-occur at least 10 times
 
-# Animate
-animation <- animate(
-  cumulative_plot,
-  fps = 20, duration = 10,
-  width = 800, height = 500,
-  renderer = gifski_renderer()
-)
+# Step 5: Create a graph
+word_graph <- word_pairs_filtered |> 
+  graph_from_data_frame()
 
-# View
-animation
-
-# Save
-anim_save("cumulative_articles.gif", animation = animation)
-```
-
-## Sentiment Before and After
-
-```{r}
-# 1. Recode roe_status cleanly first
-all_time <- all_time |>
-  mutate(
-    roe_status = case_when(
-      roe_status %in% c("Pre-R", "Pre-Roe", "Pre-Roe Decision") ~ "Before Dobbs",
-      roe_status %in% c("Post-Roe", "Post-Roe Decision") ~ "After Dobbs",
-      TRUE ~ roe_status
-    )
-  )
-
-# 2. Now tokenize AFTER cleaning
-tokens <- all_time |>
-  unnest_tokens(word, text_clean) |>
-  anti_join(stop_words, by = "word")
-
-# 3. Count words by (fixed) roe_status
-top_words_period <- tokens |>
-  count(roe_status, word, sort = TRUE) |>
-  group_by(roe_status) |>
-  slice_max(n, n = 20) |> 
-  ungroup()
-
-# 4. Plot clean Top Words
-library(ggplot2)
-
-top_words_period |>
-  ggplot(aes(x = reorder_within(word, n, roe_status), y = n, fill = roe_status)) +
-  geom_col(show.legend = FALSE) +
-  facet_wrap(~roe_status, scales = "free_y") +
-  scale_x_reordered() +
-  coord_flip() +
-  scale_fill_manual(values = c("Before Dobbs" = "#263995", "After Dobbs" = "#d81f25")) +
-  labs(
-    title = "Top Words Before and After the Dobbs Decision",
-    x = "Word",
-    y = "Count"
-  ) +
-  theme_minimal(base_size = 14)
-
-```
-
-```{r}
+# Step 6: Plot the word network
+ggraph(word_graph, layout = "fr") +
+  geom_edge_link(aes(edge_alpha = n), show.legend = FALSE) +
+  geom_node_point(color = "steelblue", size = 4) +
+  geom_node_text(aes(label = name), repel = TRUE, size = 3) +
+  theme_void() +
+  labs(title = "Word Co-Occurrence Network in Abortion Coverage",
+       subtitle = "Words clustered by co-appearance in Fox and NYT articles (2020–2024)")
 
 ```
