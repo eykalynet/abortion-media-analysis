@@ -1,7 +1,10 @@
 project:
   type: website
   output-dir: docs
-
+  render:
+    - "*.qmd"
+    - "!wrangling/"
+    
 # Can customize this section with options from the following page:
 # https://quarto.org/docs/websites/website-navigation.html
 website:
