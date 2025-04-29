@@ -1,7 +1,11 @@
 project:
   type: website
   output-dir: docs
-
+  render:
+    - "*.qmd"
+    - "!wrangling/"
+    
+    
 # Can customize this section with options from the following page:
 # https://quarto.org/docs/websites/website-navigation.html
 website:
@@ -43,6 +47,10 @@ format:
     # If you want to customize beyond a built-in theme, you can add content to
     # styles.css (currently empty). See the following page for more info:
     # https://quarto.org/docs/output-formats/html-themes.html#custom-themes
+    include-in-header:
+      text: |
+        <link href="https://fonts.googleapis.com/css2?family=News+Cycle&display=swap" rel="stylesheet">
+
 
 # Add default code chunk execution options here
 execute:
