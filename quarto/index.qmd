@@ -174,19 +174,26 @@ across a period of significant legal and political change.
 #| mesages: false
 #| include: false
 
+# Prepare interactive tooltip columns (do once)
 monthly_data_2 <- monthly_data |>
   mutate(
     outlet = factor(outlet, levels = c("Fox News", "The New York Times")),
     
-    # For monthly volume
+    # Monthly
     tooltip_text_monthly = paste0(outlet, "\nMonth: ", format(month, "%b %Y"), "\nArticles: ", monthly_n),
-    data_id_monthly = paste(outlet, "Monthly", format(month, "%Y-%m"), monthly_n, sep = "_"),
-
-    # For cumulative
+    data_id_monthly = paste(outlet, "Monthly", format(month, "%Y-%m"), monthly_n, sep = "-"),
+    
+    # Cumulative
     tooltip_text_c = paste0(outlet, "\nMonth: ", format(month, "%b %Y"), "\nArticles: ", cumulative_n),
-    data_id_c = paste(outlet, "Cumulative", format(month, "%Y-%m"), cumulative_n, sep = "_")
+    data_id_c = paste(outlet, "Cumulative", format(month, "%Y-%m"), cumulative_n, sep = "-")
   )
 
+# Split data
+fox_data_m <- monthly_data_2 |> filter(outlet == "Fox News")
+nyt_data_m <- monthly_data_2 |> filter(outlet == "The New York Times")
+
+fox_data_c <- fox_data_m
+nyt_data_c <- nyt_data_m
 ```
 
 To trace how attention fluctuated over time, we first examined monthly trends in article publication. Both *Fox News* and *The New York Times* exhibited visible surges in abortion-related reporting across the 2020–2024 period. While our primary focus is on the [*Dobbs v. Jackson Women’s Health Organization*](https://www.supremecourt.gov/opinions/21pdf/19-1392_6j37.pdf) decision and its aftermath, earlier spikes in coverage are also notable. Attention intensified sharply in **September 2021** with the enactment of [Texas’s SB8 “heartbeat bill”](https://capitol.texas.gov/tlodocs/87R/billtext/pdf/SB00008I.pdf), surged again in **May 2022** when *Politico* [leaked the Supreme Court’s draft opinion](https://www.politico.com/news/2022/05/02/supreme-court-abortion-draft-opinion-00029473) in *Dobbs*, and peaked in **June 2022** when the Court [officially overturned *Roe v. Wade*](https://www.supremecourt.gov/opinions/21pdf/19-1392_6j37.pdf).
@@ -196,46 +203,42 @@ To trace how attention fluctuated over time, we first examined monthly trends in
 #| fig.height: 3.5
 
 # Build the plot
-monthly_plot <- ggplot(monthly_data_2, aes(x = month, y = monthly_n, group = outlet)) +
+monthly_plot <- ggplot() +
   geom_area_interactive(
-    aes(
-      fill = outlet,
-      tooltip = tooltip_text_monthly,
-      data_id = data_id_monthly
-    ),
-    alpha = 0.35,
-    position = "identity"
+    data = fox_data_m,
+    aes(x = month, y = monthly_n, fill = outlet, tooltip = tooltip_text_monthly, data_id = data_id_monthly),
+    alpha = 0.35
   ) +
   geom_line_interactive(
-    aes(
-      color = outlet,
-      tooltip = tooltip_text_monthly,
-      data_id = data_id_monthly
-    ),
+    data = fox_data_m,
+    aes(x = month, y = monthly_n, color = outlet, tooltip = tooltip_text_monthly, data_id = data_id_monthly),
     linewidth = 1.2
   ) +
   geom_point_interactive(
-    aes(
-      color = outlet,
-      tooltip = tooltip_text_monthly,
-      data_id = data_id_monthly
-    ),
+    data = fox_data_m,
+    aes(x = month, y = monthly_n, color = outlet, tooltip = tooltip_text_monthly, data_id = data_id_monthly),
     size = 2, alpha = 0
   ) +
-  geom_vline(
-    xintercept = as.Date("2022-06-24"),
-    linetype = "dashed",
-    color = "grey80",
-    linewidth = 0.8
+  geom_area_interactive(
+    data = nyt_data_m,
+    aes(x = month, y = monthly_n, fill = outlet, tooltip = tooltip_text_monthly, data_id = data_id_monthly),
+    alpha = 0.35
   ) +
+  geom_line_interactive(
+    data = nyt_data_m,
+    aes(x = month, y = monthly_n, color = outlet, tooltip = tooltip_text_monthly, data_id = data_id_monthly),
+    linewidth = 1.2
+  ) +
+  geom_point_interactive(
+    data = nyt_data_m,
+    aes(x = month, y = monthly_n, color = outlet, tooltip = tooltip_text_monthly, data_id = data_id_monthly),
+    size = 2, alpha = 0
+  ) +
+  geom_vline(xintercept = as.Date("2022-06-24"), linetype = "dashed", color = "grey80", linewidth = 0.8) +
   scale_fill_manual(values = fill_colors) +
   scale_color_manual(values = line_colors) +
   scale_x_date(date_breaks = "1 month", date_labels = "%b'%y") +
-  labs(
-    title = "Monthly Volume of Abortion Coverage",
-    x = "Date", y = "Number of Articles",
-    fill = "Outlet", color = "Outlet"
-  ) +
+  labs(title = "Monthly Volume of Abortion Coverage", x = "Date", y = "Number of Articles", fill = "Outlet", color = "Outlet") +
   theme_light(base_family = "News Cycle") +
   theme(
     legend.position = "top",
@@ -270,46 +273,42 @@ While monthly patterns highlight media reactions to key events, they don’t ful
 #| label: cumulative-plot
 #| fig.height: 3.5
 
-cumulative_plot <- ggplot(monthly_data_2, aes(x = month, y = cumulative_n, group = outlet)) +
+cumulative_plot <- ggplot() +
   geom_area_interactive(
-    aes(
-      fill = outlet,
-      tooltip = tooltip_text_c,
-      data_id = data_id_c
-    ),
-    alpha = 0.35,
-    position = "identity"
+    data = fox_data_c,
+    aes(x = month, y = cumulative_n, fill = outlet, tooltip = tooltip_text_c, data_id = data_id_c),
+    alpha = 0.35
   ) +
   geom_line_interactive(
-    aes(
-      color = outlet,
-      tooltip = tooltip_text_c,
-      data_id = data_id_c
-    ),
+    data = fox_data_c,
+    aes(x = month, y = cumulative_n, color = outlet, tooltip = tooltip_text_c, data_id = data_id_c),
     linewidth = 1.2
   ) +
   geom_point_interactive(
-    aes(
-      color = outlet,
-      tooltip = tooltip_text_c,
-      data_id = data_id_c
-    ),
-    size = 2, alpha = 0  # invisible points, but trigger tooltip
+    data = fox_data_c,
+    aes(x = month, y = cumulative_n, color = outlet, tooltip = tooltip_text_c, data_id = data_id_c),
+    size = 2, alpha = 0
   ) +
-  geom_vline(
-    xintercept = as.Date("2022-06-24"),
-    linetype = "dashed",
-    color = "grey80",
-    linewidth = 0.8
+  geom_area_interactive(
+    data = nyt_data_c,
+    aes(x = month, y = cumulative_n, fill = outlet, tooltip = tooltip_text_c, data_id = data_id_c),
+    alpha = 0.35
   ) +
+  geom_line_interactive(
+    data = nyt_data_c,
+    aes(x = month, y = cumulative_n, color = outlet, tooltip = tooltip_text_c, data_id = data_id_c),
+    linewidth = 1.2
+  ) +
+  geom_point_interactive(
+    data = nyt_data_c,
+    aes(x = month, y = cumulative_n, color = outlet, tooltip = tooltip_text_c, data_id = data_id_c),
+    size = 2, alpha = 0
+  ) +
+  geom_vline(xintercept = as.Date("2022-06-24"), linetype = "dashed", color = "grey80", linewidth = 0.8) +
   scale_fill_manual(values = fill_colors) +
   scale_color_manual(values = line_colors) +
   scale_x_date(date_breaks = "1 month", date_labels = "%b'%y") +
-  labs(
-    title = "Cumulative Abortion Coverage Over Time",
-    x = "Date", y = "Cumulative Number of Articles",
-    fill = "Outlet", color = "Outlet"
-  ) +
+  labs(title = "Cumulative Abortion Coverage Over Time", x = "Date", y = "Cumulative Number of Articles", fill = "Outlet", color = "Outlet") +
   theme_light(base_family = "News Cycle") +
   theme(
     legend.position = "top",
