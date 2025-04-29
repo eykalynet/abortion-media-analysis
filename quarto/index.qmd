@@ -198,12 +198,29 @@ To trace how attention fluctuated over time, we first examined monthly trends in
 # Build the plot
 monthly_plot <- ggplot(monthly_data_2, aes(x = month, y = monthly_n, group = outlet)) +
   geom_area_interactive(
-    aes(fill = outlet, tooltip = tooltip_text_monthly, data_id = data_id_monthly),
-    alpha = 0.35, position = "identity"
+    aes(
+      fill = outlet,
+      tooltip = tooltip_text_monthly,
+      data_id = data_id_monthly
+    ),
+    alpha = 0.35,
+    position = "identity"
   ) +
   geom_line_interactive(
-    aes(color = outlet, tooltip = tooltip_text_monthly, data_id = data_id_monthly),
+    aes(
+      color = outlet,
+      tooltip = tooltip_text_monthly,
+      data_id = data_id_monthly
+    ),
     linewidth = 1.2
+  ) +
+  geom_point_interactive(
+    aes(
+      color = outlet,
+      tooltip = tooltip_text_monthly,
+      data_id = data_id_monthly
+    ),
+    size = 2, alpha = 0
   ) +
   geom_vline(
     xintercept = as.Date("2022-06-24"),
@@ -253,15 +270,31 @@ While monthly patterns highlight media reactions to key events, they don’t ful
 #| label: cumulative-plot
 #| fig.height: 3.5
 
-# Build interactive plot
 cumulative_plot <- ggplot(monthly_data_2, aes(x = month, y = cumulative_n, group = outlet)) +
   geom_area_interactive(
-    aes(fill = outlet, tooltip = tooltip_text_c, data_id = data_id_c),
-    alpha = 0.35, position = "identity"
+    aes(
+      fill = outlet,
+      tooltip = tooltip_text_c,
+      data_id = data_id_c
+    ),
+    alpha = 0.35,
+    position = "identity"
   ) +
   geom_line_interactive(
-    aes(color = outlet, tooltip = tooltip_text_c, data_id = data_id_c),
+    aes(
+      color = outlet,
+      tooltip = tooltip_text_c,
+      data_id = data_id_c
+    ),
     linewidth = 1.2
+  ) +
+  geom_point_interactive(
+    aes(
+      color = outlet,
+      tooltip = tooltip_text_c,
+      data_id = data_id_c
+    ),
+    size = 2, alpha = 0  # invisible points, but trigger tooltip
   ) +
   geom_vline(
     xintercept = as.Date("2022-06-24"),
@@ -287,7 +320,6 @@ cumulative_plot <- ggplot(monthly_data_2, aes(x = month, y = cumulative_n, group
     plot.margin = margin(10, 15, 10, 15)
   )
 
-# Render
 girafe(
   ggobj = cumulative_plot,
   options = list(
