@@ -204,20 +204,6 @@ nyt_meta3 |>
   labs(title = "Top Bigrams", x = "Count", y = "")
 ```
 
-```{r}
-#| label: tf-idf
-
-nyt_tf_idf <- nyt_meta3 |> 
-  unnest_tokens(word, text_clean) |> 
-  count(title, word, sort = TRUE) |> 
-  bind_tf_idf(word, title, n)
-
-top_tf_idf_words <- nyt_tf_idf |> 
-  group_by(title) |> 
-  slice_max(tf_idf, n = 5) |> 
-  ungroup()
-
-```
 
 ```{r}
 #| label: afinn
@@ -253,6 +239,23 @@ nyt_meta5 <- nyt_meta3 |>
   select(-url, -description, -text)
 ```
 
+
+```{r}
+nyt_words <- nyt_meta3 |> 
+  unnest_tokens(word, text_clean)
+
+# Join words with sentiment scores
+nyt_sentiment <- nyt_words |> 
+  left_join(afinn, by = "word")
+
+# Summarize sentiment score per article
+article_sentiment <- nyt_sentiment |> 
+  group_by(title) |> 
+  summarise(sentiment_score = sum(value, na.rm = TRUE))
+
+```
+
+
 ```{r}
 #| label: custom-stopwords
 nyt_meta3 |>
@@ -269,3 +272,46 @@ custom_stop <- tibble(word = top_junk)
 all_stops <- bind_rows(stop_words, custom_stop)
 
 ```
+
+## 6. Figures
+
+```{r}
+article_sentiment |> 
+  ggplot(aes(x = sentiment_score)) +
+  geom_histogram(binwidth = 1, fill = "black", color = "skyblue") +
+  labs(title = "Distribution of NYT Article Sentiment Scores", x = "Sentiment Score", y = "Number of Articles")
+
+
+```
+
+
+
+```{r}
+
+
+```
+
+
+```{r}
+nyt_meta5 |> 
+  ggplot(aes(x = sentiment_score)) +
+  geom_histogram(binwidth = 1, fill = "skyblue", color = "black") +
+  labs(title = "Distribution of Sentiment Scores", x = "Sentiment Score", y = "Number of Articles")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
