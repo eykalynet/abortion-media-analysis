@@ -186,22 +186,27 @@ articles_monthly <- articles_monthly |>
     TRUE ~ outlet
   ))
 
-# Plot
-ggplot(articles_monthly, aes(x = month, y = n, color = outlet)) +
-  geom_line(linewidth = 1.2) +
+ggplot(articles_monthly, aes(x = month, y = n, group = outlet)) +
+  geom_area(aes(fill = outlet), alpha = 0.25, position = "identity") +
+  geom_line(aes(color = outlet), linewidth = 1.2) +
   geom_vline(xintercept = as.Date("2022-06-24"), linetype = "dashed", color = "gray40") +
-  facet_wrap(~ outlet, scales = "fixed") +
   scale_color_manual(values = c(
+    "Fox News" = "#cf1322", 
+    "The New York Times" = "#003f5c"
+  )) +
+  scale_fill_manual(values = c(
     "Fox News" = "#cf1322", 
     "The New York Times" = "#003f5c"
   )) +
   labs(
     title = "Abortion-Related Articles Over Time",
-    x = "Month", y = "Number of Articles"
-  ) +
+    x = "Month", y = "Number of Articles",
+    color = "Outlet", fill = "Outlet"
+  ) + theme_minimal() + 
   theme(
-    legend.position = "none")
-
+    legend.position = "top",
+    legend.title = element_blank()
+  )
 ```
 
 Interestingly, while monthly patterns highlight media reactions to
@@ -228,79 +233,38 @@ articles_monthly_cum <- articles_monthly |>
   mutate(cumulative_articles = cumsum(n))
 
 # Then plot
-ggplot(articles_monthly_cum, aes(x = month, y = cumulative_articles, color = outlet)) +
-  geom_line(linewidth = 1.2) +
+ggplot(articles_monthly_cum, aes(x = month, y = cumulative_articles, group = outlet)) +
+  geom_area(aes(fill = outlet), alpha = 0.25, position = "identity") +
+  geom_line(aes(color = outlet), linewidth = 1.2) +
   geom_vline(xintercept = as.Date("2022-06-24"), linetype = "dashed", color = "gray40") +
   scale_color_manual(values = c(
     "Fox News" = "#cf1322",
     "The New York Times" = "#003f5c"
   )) +
-  facet_wrap(~ outlet, scales = "fixed") +
+  scale_fill_manual(values = c(
+    "Fox News" = "#cf1322",
+    "The New York Times" = "#003f5c"
+  )) +
   labs(
     title = "Cumulative Abortion-Related Coverage Over Time",
-    x = "Year", y = "Cumulative Number of Articles"
-  ) +
+    x = "Year", y = "Cumulative Number of Articles",
+    color = "Outlet", fill = "Outlet"
+  ) + theme_minimal() + 
   theme(
-    legend.position = "none")
+    legend.position = "top",
+    legend.title = element_blank()
+  ) 
 ```
 
-## A Calendar of Changing Narratives.
+## A Calendar of Changing Narratives
 
-```{r}
-#| label: practice-only
-#| include: false
-# Create data
-set.seed(2134)
-dat <- data.table(
-  date = seq(as.Date("2016-01-01"), as.Date("2019-12-31"), "days"),
-  ValueCol = runif(1461)
-)
+To understand how language and sentiment around abortion shifted in the
+media before and after the Supreme Court’s landmark decision in Dobbs v.
+Jackson Women’s Health Organization, we mapped article sentiment scores
+across the two major outlets in a calendar heatmap format spanning 2020
+to 2024.
 
-# Add weekend and month-related effects
-dat[, ValueCol := ValueCol + (strftime(date, "%u") %in% c(6,7))*runif(1)*0.75]
-dat[, ValueCol := ValueCol + (abs(as.numeric(strftime(date, "%m")) - 6.5))*runif(1)*0.75]
-
-# Extract time features
-dat[, ':='(
-  Year = as.integer(strftime(date, "%Y")),
-  month = as.integer(strftime(date, "%m")),
-  week = as.integer(strftime(date, "%V")) # ISO week, Monday start
-)]
-
-# Fill missing ValueCol if needed
-dat[, ValueCol := na.approx(ValueCol, na.rm = FALSE)]
-
-# Create month labels
-MonthLabels <- dat[, .(meanWkofYr = mean(week)), by = month][
-  , month := month.abb[month]
-]
-
-# Plot
-ggplot(data = dat, aes(date = date, fill = ValueCol)) + 
-  stat_calendar_heatmap() + 
-  scale_fill_gradientn(colours = rev(brewer.pal(11, "Spectral"))) + 
-  scale_y_continuous(
-    name = NULL,
-    breaks = seq(7, 1, -1),
-    labels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
-  ) + 
-  scale_x_continuous(
-    name = NULL,
-    breaks = MonthLabels$meanWkofYr,
-    labels = MonthLabels$month,
-    expand = c(0, 0)
-  ) + 
-  facet_wrap(~Year, ncol = 1, strip.position = "right") + 
-  theme(
-    panel.background = element_blank(),
-    panel.border = element_blank(),
-    strip.background = element_blank(),
-    strip.text = element_text(size = 13, face = "plain", color = "black"),
-    axis.line = element_line(colour = "black", size = 0.25),
-    axis.title = element_text(size = 10, face = "plain", color = "black"),
-    axis.text = element_text(size = 10, face = "plain", color = "black")
-  )
-```
+### Fox News
 
 ```{r}
 #| label: fox-calendar
@@ -358,13 +322,28 @@ range_max <- ceiling(max(abs(calendar_fox$sentiment_score), na.rm = TRUE))
 
 #: Plot final calendar heatmap
 ggplot(data = calendar_fox, aes(date = date, fill = sentiment_score)) + 
-  stat_calendar_heatmap(colour = "grey80", size = 0.1) + 
-  scale_fill_scico(
-    palette = "vik",
+  stat_calendar_heatmap(colour = "grey80", linewidth = 0.1) + 
+  scale_fill_gradient2(
+    low = "#cf1322",
+    mid = "white",
+    high = "#003f5c",
+    midpoint = 0,
     limits = c(-range_max, range_max),
-    oob = scales::squish,
-    na.value = "grey95"
+    breaks = c(-100, 0, 100),
+    labels = c("More Negative", "Neutral", "More Positive"),
+    name = "Sentiment"
   ) + 
+  labs(fill = "Sentiment Score") +
+  guides(fill = guide_colorbar(
+    direction = "horizontal",
+    title.position = "top",
+    title.hjust = 0.5,
+    barwidth = 15,
+    barheight = 0.8,
+    label = TRUE,
+    ticks = TRUE,
+    label.position = "bottom"
+  )) +
   scale_y_continuous(
     name = NULL,
     breaks = seq(7, 1, -1),
@@ -382,17 +361,22 @@ ggplot(data = calendar_fox, aes(date = date, fill = sentiment_score)) +
     panel.border = element_blank(),
     strip.background = element_blank(),
     strip.text = element_text(size = 13, face = "plain", color = "black"),
-    axis.line = element_line(colour = "black", size = 0.25),
+    axis.line = element_line(colour = "black", linewidth = 0.25),
     axis.title = element_text(size = 10, face = "plain", color = "black"),
-    axis.text = element_text(size = 10, face = "plain", color = "black")
+    axis.text = element_text(size = 10, face = "plain", color = "black"),
+    legend.position = "bottom"
   )
+
+
 ```
+
+### The New York Times
 
 ```{r}
 #| label: nyt-calendar
 #| echo: false
 
-# Step 1: Tokenize and assign article ID
+# Tokenize and assign article ID
 nyt <- as.data.table(nyt)
 
 article_words_nyt <- nyt |>
@@ -400,7 +384,7 @@ article_words_nyt <- nyt |>
   mutate(article_id = row_number()) |>
   unnest_tokens(word, text_clean)
 
-# Step 2: Join with AFINN sentiment lexicon
+# Join with AFINN sentiment lexicon
 afinn <- get_sentiments("afinn")
 
 article_scores_nyt <- article_words_nyt |>
@@ -408,7 +392,7 @@ article_scores_nyt <- article_words_nyt |>
   group_by(article_id, pub_date) |>
   summarise(article_sentiment = sum(value), .groups = "drop")
 
-# Step 3: Floor timestamps, then average per day
+# Floor timestamps, then average per day
 nyt_sentiment <- article_scores_nyt |>
   mutate(pub_day = as.Date(pub_date)) |>
   group_by(pub_day) |>
@@ -416,17 +400,17 @@ nyt_sentiment <- article_scores_nyt |>
   rename(date = pub_day) |>
   as.data.table()
 
-# Step 4: Create calendar covering all real article dates
+# Create calendar covering all real article dates
 calendar_nyt <- data.table(
   date = seq(min(nyt_sentiment$date), max(nyt_sentiment$date), by = "day")
 )
 
-# Step 5: Merge + interpolate missing values
+# Merge + interpolate missing values
 calendar_nyt <- merge(calendar_nyt, nyt_sentiment, by = "date", all.x = TRUE)
 calendar_nyt[, sentiment_score := na.approx(sentiment_score, na.rm = FALSE)]
 calendar_nyt[is.na(sentiment_score), sentiment_score := 0]
 
-# Step 6: Add calendar features
+# Add calendar features
 calendar_nyt[, ':='(
   Year = as.integer(format(date, "%Y")),
   month = as.integer(format(date, "%m")),
@@ -434,23 +418,37 @@ calendar_nyt[, ':='(
 )]
 calendar_nyt[is.na(week) | week <= 0, week := 1]
 
-# Step 7: Create labels for month axis
+# Create labels for month axis
 MonthLabels_nyt <- calendar_nyt[, .(meanWkofYr = mean(week)), by = month][
   , month := month.abb[month]
 ]
 
-# Step 8: Dynamically compute sentiment range for color scale
+# Dynamically compute sentiment range for color scale
 range_max_nyt <- ceiling(max(abs(calendar_nyt$sentiment_score), na.rm = TRUE))
 
-# Step 9: Plot final calendar heatmap
 ggplot(data = calendar_nyt, aes(date = date, fill = sentiment_score)) + 
-  stat_calendar_heatmap(colour = "grey80", size = 0.1) + 
-  scale_fill_scico(
-    palette = "vik",
-    limits = c(-range_max_nyt, range_max_nyt),
-    oob = scales::squish,
-    na.value = "grey95"
+  stat_calendar_heatmap(colour = "grey80", linewidth = 0.1) + 
+  scale_fill_gradient2(
+    low = "#cf1322",
+    mid = "white",
+    high = "#003f5c",
+    midpoint = 0,
+    limits = c(-range_max, range_max),
+    breaks = c(-100, 0, 100),
+    labels = c("More Negative", "Neutral", "More Positive"),
+    name = "Sentiment"
   ) + 
+  labs(fill = "Sentiment Score") +
+  guides(fill = guide_colorbar(
+    direction = "horizontal",
+    title.position = "top",
+    title.hjust = 0.5,
+    barwidth = 15,
+    barheight = 0.8,
+    label = TRUE,
+    ticks = TRUE,
+    label.position = "bottom"
+  )) +
   scale_y_continuous(
     name = NULL,
     breaks = seq(7, 1, -1),
@@ -458,8 +456,8 @@ ggplot(data = calendar_nyt, aes(date = date, fill = sentiment_score)) +
   ) + 
   scale_x_continuous(
     name = NULL,
-    breaks = MonthLabels_nyt$meanWkofYr,
-    labels = MonthLabels_nyt$month,
+    breaks = MonthLabels$meanWkofYr,
+    labels = MonthLabels$month,
     expand = c(0, 0)
   ) + 
   facet_wrap(~Year, ncol = 1, strip.position = "right") + 
@@ -468,8 +466,11 @@ ggplot(data = calendar_nyt, aes(date = date, fill = sentiment_score)) +
     panel.border = element_blank(),
     strip.background = element_blank(),
     strip.text = element_text(size = 13, face = "plain", color = "black"),
-    axis.line = element_line(colour = "black", size = 0.25),
+    axis.line = element_line(colour = "black", linewidth = 0.25),
     axis.title = element_text(size = 10, face = "plain", color = "black"),
-    axis.text = element_text(size = 10, face = "plain", color = "black")
+    axis.text = element_text(size = 10, face = "plain", color = "black"),
+    legend.position = "bottom"
   )
+
+
 ```
