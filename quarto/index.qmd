@@ -116,19 +116,10 @@ monthly_data <- articles |>
   arrange(outlet, month) |> 
   group_by(outlet) |> 
   mutate(cumulative_n = cumsum(monthly_n)) |> 
-  ungroup()
+  ungroup() |>
+  mutate(outlet = factor(outlet, levels = c("Fox News", "The New York Times")))
 
-facet_data <- monthly_data |> 
-  pivot_longer(
-    cols = c(monthly_n, cumulative_n),
-    names_to = "measure",
-    values_to = "n"
-  ) |> 
-  mutate(measure = recode(
-    measure,
-    monthly_n = "Monthly Volume",
-    cumulative_n = "Cumulative Coverage"
-  ))
+
 ```
 
 ```{r}
@@ -178,83 +169,69 @@ window into how two major media outlets approached abortion coverage
 across a period of significant legal and political change.
 
 ```{r}
-#| label: eda-graph
+#| label: eda 
 #| warnings: false
 #| mesages: false
-#| fig.height: 5.5
+#| include: false
 
-#| label: eda-graph
-#| warnings: false
-#| messages: false
-#| fig.height: 5.5
-
-# Add unique point-level data_id and tooltip
-facet_data <- facet_data |>
+monthly_data_2 <- monthly_data |>
   mutate(
-    tooltip_text = paste0(outlet, "\n", measure, "\nMonth: ", format(month, "%b %Y"), "\nArticles: ", n),
-    data_id = paste(outlet, measure, format(month, "%Y-%m"), n, sep = "_")
+    outlet = factor(outlet, levels = c("Fox News", "The New York Times")),
+    
+    # For monthly volume
+    tooltip_text_monthly = paste0(outlet, "\nMonth: ", format(month, "%b %Y"), "\nArticles: ", monthly_n),
+    data_id_monthly = paste(outlet, "Monthly", format(month, "%Y-%m"), monthly_n, sep = "_"),
+
+    # For cumulative
+    tooltip_text_c = paste0(outlet, "\nMonth: ", format(month, "%b %Y"), "\nArticles: ", cumulative_n),
+    data_id_c = paste(outlet, "Cumulative", format(month, "%Y-%m"), cumulative_n, sep = "_")
   )
 
-# Final interactive plot
-coverage_trend_plot <- ggplot(facet_data, aes(x = month, y = n, group = outlet)) +
+```
+
+To trace how attention fluctuated over time, we first examined monthly trends in article publication. Both *Fox News* and *The New York Times* exhibited visible surges in abortion-related reporting across the 2020–2024 period. While our primary focus is on the [*Dobbs v. Jackson Women’s Health Organization*](https://www.supremecourt.gov/opinions/21pdf/19-1392_6j37.pdf) decision and its aftermath, earlier spikes in coverage are also notable. Attention intensified sharply in **September 2021** with the enactment of [Texas’s SB8 “heartbeat bill”](https://capitol.texas.gov/tlodocs/87R/billtext/pdf/SB00008I.pdf), surged again in **May 2022** when *Politico* [leaked the Supreme Court’s draft opinion](https://www.politico.com/news/2022/05/02/supreme-court-abortion-draft-opinion-00029473) in *Dobbs*, and peaked in **June 2022** when the Court [officially overturned *Roe v. Wade*](https://www.supremecourt.gov/opinions/21pdf/19-1392_6j37.pdf).
+
+```{r}
+#| label: monthly-plot
+#| fig.height: 3.5
+
+# Build the plot
+monthly_plot <- ggplot(monthly_data_2, aes(x = month, y = monthly_n, group = outlet)) +
   geom_area_interactive(
-    aes(
-      fill = outlet,
-      tooltip = tooltip_text,
-      data_id = data_id
-    ),
+    aes(fill = outlet, tooltip = tooltip_text_monthly, data_id = data_id_monthly),
     alpha = 0.35, position = "identity"
   ) +
   geom_line_interactive(
-    aes(
-      color = outlet,
-      tooltip = tooltip_text,
-      data_id = data_id
-    ),
+    aes(color = outlet, tooltip = tooltip_text_monthly, data_id = data_id_monthly),
     linewidth = 1.2
-  ) +
-  # NEW: Add invisible points to enable precise tooltips
-  geom_point_interactive(
-    aes(
-      color = outlet,
-      tooltip = tooltip_text,
-      data_id = data_id
-    ),
-    size = 2, alpha = 0  # keep them invisible but interactive
   ) +
   geom_vline(
     xintercept = as.Date("2022-06-24"),
     linetype = "dashed",
-    color = "gray40",
+    color = "grey80",
     linewidth = 0.8
   ) +
-  facet_wrap(~measure, scales = "free_y", ncol = 1, strip.position = "top") +
   scale_fill_manual(values = fill_colors) +
   scale_color_manual(values = line_colors) +
   scale_x_date(date_breaks = "1 month", date_labels = "%b'%y") +
   labs(
-    title = "Abortion-Related Article Coverage Over Time",
+    title = "Monthly Volume of Abortion Coverage",
     x = "Date", y = "Number of Articles",
     fill = "Outlet", color = "Outlet"
   ) +
-  theme_light() +
+  theme_light(base_family = "News Cycle") +
   theme(
-    text = element_text(family = "News Cycle"),
-    plot.title = element_text(face = "bold", size = 18),
     legend.position = "top",
     legend.title = element_blank(),
-    strip.background = element_rect(fill = "#666666", color = NA),
-    strip.text = element_text(color = "white", face = "bold", family = "News Cycle"),
-    panel.border = element_rect(color = "gray50", fill = NA),
-    axis.title.y = element_text(size = 12),
-    axis.text.x = element_text(size = 6, angle = 90, hjust = 1, family = "News Cycle"),
-    panel.spacing = unit(1.2, "lines"),
+    plot.title = element_text(face = "bold", size = 18),
+    axis.text.x = element_text(size = 6, angle = 90, hjust = 1),
+    panel.border = element_rect(color = "grey80", fill = NA),
     plot.margin = margin(10, 15, 10, 15)
   )
 
-# Interactive render
+# Render
 girafe(
-  ggobj = coverage_trend_plot,
+  ggobj = monthly_plot,
   options = list(
     opts_hover(css = "stroke-width:2;"),
     opts_tooltip(css = "background-color:white;padding:5px;border:1px solid gray;border-radius:4px;font-family:'News Cycle';"),
@@ -264,31 +241,63 @@ girafe(
 )
 ```
 
-To trace how attention fluctuated over time, we first examined monthly
-trends in article publication. Both Fox News and The New York Times
-exhibited visible surges in abortion-related reporting across the
-2020-2024 period. While our primary focus is on the Dobbs v. Jackson
-Women’s Health Organization decision and its aftermath, earlier spikes
-in coverage are also notable. Attention intensified sharply in September
-2021 with the enactment of Texas’s SB8 “heartbeat bill”, surged again in
-May 2022 when Politico leaked the Supreme Court’s draft opinion in
-Dobbs, and peaked in June 2022 when the Court officially overturned Roe
-v. Wade. Additional upticks are visible during the November 2022 midterm
-elections, where abortion rights featured prominently on state ballots,
-and during the August 2023 Ohio special election focused on abortion
-protections.
+Beyond the immediate aftermath of *Dobbs*, two additional peaks in abortion-related media coverage align with major electoral moments. The first appears in **November 2022**, during the [U.S. midterm elections](https://www.npr.org/2022/11/09/1135345050/abortion-rights-state-ballots-election-results), when abortion rights were a central issue on state ballots across the country. Notably, *Fox News* overtook *The New York Times* in article volume — a reversal from earlier months when *The Times* had led during key judicial moments. This surge in Fox’s reporting likely reflects heightened partisan framing around abortion’s political salience, especially in contested states.
 
-Interestingly, while monthly patterns highlight media reactions to
-specific events, they do not fully capture the overall scale of
-coverage. To provide a cumulative perspective, we plotted the running
-total of abortion-related articles over time. Although The New York
-Times often displayed sharper monthly peaks, the cumulative view reveals
-a different story: over the long term, Fox News produced a significantly
-larger volume of abortion-related coverage. Following the Dobbs
-decision, the total number of articles rose sharply for both outlets,
-but Fox News continued to publish abortion-related content at a faster
-pace. By the end of 2024, Fox News had amassed a much larger body of
-coverage compared to The New York Times.
+A second uptick occurs in **August 2023**, during the [Ohio special election](https://www.nytimes.com/2023/08/08/us/ohio-abortion-constitution-vote.html), when voters decided whether to raise the threshold for constitutional amendments. The measure was widely understood as a proxy battle over abortion rights. While both outlets covered the vote, the media response was more subdued than in 2022 — perhaps due to its more localized scope despite national implications.
+
+The most recent spike emerges in **late 2024**, with *The New York Times* reclaiming the lead in coverage volume. This increase likely corresponds with renewed national focus on abortion in the lead-up to the [2024 U.S. presidential election](https://www.nytimes.com/interactive/2024/us/elections/calendar.html), where reproductive rights once again became a central campaign issue.
+
+While monthly patterns highlight media reactions to key events, they don’t fully capture the broader arc of attention. To provide a cumulative perspective, we plotted the running total of abortion-related articles over time. Although *The New York Times* often displayed sharper monthly peaks, the cumulative view reveals a different pattern: over the long term, *Fox News* produced a significantly larger volume of abortion-related coverage. Following the *Dobbs* decision, both outlets showed a sharp rise in article counts, but *Fox News* continued publishing abortion-related content at a faster pace. By the end of 2024, *Fox News* had amassed a much larger body of coverage compared to *The New York Times*.
+
+```{r}
+#| label: cumulative-plot
+#| fig.height: 3.5
+
+# Build interactive plot
+cumulative_plot <- ggplot(monthly_data_2, aes(x = month, y = cumulative_n, group = outlet)) +
+  geom_area_interactive(
+    aes(fill = outlet, tooltip = tooltip_text_c, data_id = data_id_c),
+    alpha = 0.35, position = "identity"
+  ) +
+  geom_line_interactive(
+    aes(color = outlet, tooltip = tooltip_text_c, data_id = data_id_c),
+    linewidth = 1.2
+  ) +
+  geom_vline(
+    xintercept = as.Date("2022-06-24"),
+    linetype = "dashed",
+    color = "grey80",
+    linewidth = 0.8
+  ) +
+  scale_fill_manual(values = fill_colors) +
+  scale_color_manual(values = line_colors) +
+  scale_x_date(date_breaks = "1 month", date_labels = "%b'%y") +
+  labs(
+    title = "Cumulative Abortion Coverage Over Time",
+    x = "Date", y = "Cumulative Number of Articles",
+    fill = "Outlet", color = "Outlet"
+  ) +
+  theme_light(base_family = "News Cycle") +
+  theme(
+    legend.position = "top",
+    legend.title = element_blank(),
+    plot.title = element_text(face = "bold", size = 18),
+    axis.text.x = element_text(size = 6, angle = 90, hjust = 1),
+    panel.border = element_rect(color = "grey80", fill = NA),
+    plot.margin = margin(10, 15, 10, 15)
+  )
+
+# Render
+girafe(
+  ggobj = cumulative_plot,
+  options = list(
+    opts_hover(css = "stroke-width:2;"),
+    opts_tooltip(css = "background-color:white;padding:5px;border:1px solid gray;border-radius:4px;font-family:'News Cycle';"),
+    opts_toolbar(saveaspng = TRUE),
+    opts_sizing(rescale = TRUE)
+  )
+)
+```
 
 ## A Calendar of Changing Narratives
 
@@ -296,13 +305,22 @@ To understand how language and sentiment around abortion shifted in the
 media before and after the Supreme Court’s landmark decision in Dobbs v.
 Jackson Women’s Health Organization, we mapped article sentiment scores
 across the two major outlets in a calendar heatmap format spanning 2020
-to 2024.
+to 2024. Since we’ve been talking about how Fox News devoted a large volume of coverage to abortion, let’s first take a closer look at the tone of that coverage.
 
-### Fox News
+From 2020 to early 2024, Fox News’s sentiment trends tell a story of measured reporting occasionally pierced by sharp reactions. The early years — 2020 and 2021 — are relatively quiet. The sentiment tiles are mostly pale, which indicates mostly neutral-toned articles with only the occasional dip into negative or positive language. Abortion, at this point, seemed to be a non-headline driver, and Fox’s emotional engagement with the topic remained limited.
+
+That changes dramatically in 2022. The calendar lights up in early summer, just as the Supreme Court decision in Dobbs v. Jackson Women’s Health Organization overturned Roe v. Wade. Around June, the heatmap becomes a patchwork of red and blue — days of intense negativity followed by equally charged positivity. The tonal whiplash reflects a polarized editorial moment: some coverage framed the ruling as a conservative victory; other stories emphasized the backlash, protests, and uncertainty that followed.
+
+After the Dobbs ruling, the emotional peaks become more sporadic. In 2023 and 2024, the calendar shows fewer intense days, but when they appear, they’re sharper. It suggests that while abortion may not have remained a daily front-page story, the days it did appear were often tied to high-stakes developments — like new state laws, political campaigns, or anniversary reflections.
+
+Unlike some coverage cycles, the sentiment doesn’t follow a weekly rhythm. Some Mondays are sharply negative, others are quiet. What we see instead is a reactive pattern: Fox’s sentiment spikes in response to external shocks, not internal scheduling. It’s not an even pulse; it’s a media heartbeat that jumps in moments of national tension.
+
+So while the quantity of coverage tells us that Fox News paid close attention to abortion, the sentiment heatmap reveals when that attention turned emotional — and just how sharply it swung.
 
 ```{r}
-#| label: fox-calendar
-#| echo: false
+#| label: fox-calendar-heatmap
+#| fig.height: 6
+
 
 # Tokenize and assign article ID
 fox <- as.data.table(fox)
@@ -320,7 +338,7 @@ article_scores <- article_words |>
   group_by(article_id, pub_date) |>
   summarise(article_sentiment = sum(value), .groups = "drop")
 
-# Floor timestamps, then average per day
+# Floor timestamps, then average sentiment per day
 fox_sentiment <- article_scores |>
   mutate(pub_day = as.Date(pub_date)) |>
   group_by(pub_day) |>
@@ -333,7 +351,7 @@ calendar_fox <- data.table(
   date = seq(min(fox_sentiment$date), max(fox_sentiment$date), by = "day")
 )
 
-# Merge + interpolate missing values
+# Merge and interpolate missing days
 calendar_fox <- merge(calendar_fox, fox_sentiment, by = "date", all.x = TRUE)
 calendar_fox[, sentiment_score := na.approx(sentiment_score, na.rm = FALSE)]
 calendar_fox[is.na(sentiment_score), sentiment_score := 0]
@@ -342,21 +360,40 @@ calendar_fox[is.na(sentiment_score), sentiment_score := 0]
 calendar_fox[, ':='(
   Year = as.integer(format(date, "%Y")),
   month = as.integer(format(date, "%m")),
-  week = as.integer(format(date, "%V"))
+  week = as.integer(format(date, "%V")),
+  weekday = as.integer(format(date, "%u")),
+  weekofyear = as.integer(format(date, "%V"))
 )]
 calendar_fox[is.na(week) | week <= 0, week := 1]
+calendar_fox[is.na(weekofyear) | weekofyear <= 0, weekofyear := 1]
 
-# Create labels for month axis
-MonthLabels <- calendar_fox[, .(meanWkofYr = mean(week)), by = month][
-  , month := month.abb[month]
-]
+# Add interpretation
+calendar_fox[, interpretation := fifelse(
+  sentiment_score > 10, "Positive",
+  fifelse(sentiment_score < -10, "Negative", "Neutral")
+)]
 
-# Dynamically compute sentiment range for color scale
+# Create tooltip and data_id
+calendar_fox[, tooltip := paste0(
+  "Date: ", format(date, "%B %d, %Y"),
+  "\nSentiment Score: ", round(sentiment_score, 2),
+  "\nInterpretation: ", interpretation
+)]
+calendar_fox[, data_id := paste0("day_", date)]
+
+# Dynamically compute sentiment range
 range_max <- ceiling(max(abs(calendar_fox$sentiment_score), na.rm = TRUE))
 
-#: Plot final calendar heatmap
-ggplot(data = calendar_fox, aes(date = date, fill = sentiment_score)) + 
-  stat_calendar_heatmap(colour = "grey80", linewidth = 0.1) + 
+# Build interactive ggplot
+calendar_plot_fox <- ggplot(calendar_fox, aes(x = weekofyear, y = 8 - weekday)) +
+  geom_tile_interactive(
+    aes(
+      fill = sentiment_score,
+      tooltip = tooltip,
+      data_id = data_id
+    ),
+    color = "grey80"
+  ) +
   scale_fill_gradient2(
     low = "#cf1322",
     mid = "white",
@@ -364,51 +401,53 @@ ggplot(data = calendar_fox, aes(date = date, fill = sentiment_score)) +
     midpoint = 0,
     limits = c(-range_max, range_max),
     breaks = c(-100, 0, 100),
-    labels = c("More Negative", "Neutral", "More Positive"),
+    labels = c("Negative", "Neutral", "Positive"),
     name = "Sentiment"
-  ) + 
-  labs(fill = "Sentiment Score") +
-  guides(fill = guide_colorbar(
-    direction = "horizontal",
-    title.position = "top",
-    title.hjust = 0.5,
-    barwidth = 15,
-    barheight = 0.8,
-    label = TRUE,
-    ticks = TRUE,
-    label.position = "bottom"
-  )) +
+  ) +
+  facet_wrap(~Year, ncol = 1, strip.position = "right") +
   scale_y_continuous(
     name = NULL,
-    breaks = seq(7, 1, -1),
-    labels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
-  ) + 
+    breaks = 1:7,
+    labels = c("Sun", "Sat", "Fri", "Thu", "Wed", "Tue", "Mon")
+  ) +
   scale_x_continuous(
-    name = NULL,
-    breaks = MonthLabels$meanWkofYr,
-    labels = MonthLabels$month,
+    name = "Week of Year",
     expand = c(0, 0)
-  ) + 
-  facet_wrap(~Year, ncol = 1, strip.position = "right") + 
+  ) +
+  theme_minimal(base_family = "News Cycle") +
   theme(
-    panel.background = element_blank(),
-    panel.border = element_blank(),
-    strip.background = element_blank(),
+    legend.position = "bottom",
+    axis.text = element_text(size = 8),
     strip.text = element_text(size = 13, face = "plain", color = "black"),
-    axis.line = element_line(colour = "black", linewidth = 0.25),
-    axis.title = element_text(size = 10, face = "plain", color = "black"),
-    axis.text = element_text(size = 10, face = "plain", color = "black"),
-    legend.position = "bottom"
+    plot.margin = margin(10, 15, 10, 15)
   )
 
-
+# Render with girafe
+girafe(
+  ggobj = calendar_plot_fox,
+  options = list(
+    opts_hover(css = "fill-opacity:0.8;stroke:black;stroke-width:0.5px;"),
+    opts_tooltip(css = "background-color:white;padding:5px;border:1px solid gray;border-radius:4px;font-family:'News Cycle';"),
+    opts_toolbar(saveaspng = TRUE),
+    opts_sizing(rescale = TRUE)
+  )
+)
 ```
 
-### The New York Times
+After exploring how Fox News covered abortion in both volume and tone, it’s worth asking: how does The New York Times compare? While Fox’s sentiment calendar pulsed with emotional spikes tied to legal and political flashpoints, The Times paints a different picture.
+
+Across five years of reporting, the Times’ calendar heatmap reveals a remarkably consistent tone, with most days hovering in the neutral-to-slightly-negative range. There’s none of the whiplash of bright reds or deep blues that characterized Fox’s reporting. Even in 2022 — the year of Dobbs v. Jackson — the Times maintains a calm visual register. A brief streak of dark red appears in late spring, which is likely tied to leaked drafts and early reactions to the Supreme Court’s decision, but it fades quickly. The overwhelming majority of tiles are beige or pale pink: stories that may be emotionally charged in content, but are tempered in language.
+
+In fact, the New York Times appears to approach abortion coverage with a kind of editorial evenness. Unlike Fox News, which tends to react forcefully to political developments and court rulings, the Times reflects a more sustained and balanced journalistic rhythm. Coverage is spread consistently across the year, not just clustered around high-profile events, and sentiment rarely escalates into extremes.
+
+What’s particularly striking is that one of the Times’ most positive sentiment spikes doesn’t occur after the Dobbs decision, but before it. On April 18, 2022, the sentiment score soars to 366.5 — unusually high, and notably upbeat for such a politically charged moment. One might expect coverage in this lead-up period to lean negative or cautious. Instead, this burst of positivity suggests a different editorial choice — perhaps highlighting stories of resilience, advocacy gains, or early signs of political mobilization.
+
 
 ```{r}
-#| label: nyt-calendar
-#| echo: false
+#| label: nyt-calendar-heatmap
+#| warnings: false
+#| messages: false
+#| fig.height: 6
 
 # Tokenize and assign article ID
 nyt <- as.data.table(nyt)
@@ -426,7 +465,7 @@ article_scores_nyt <- article_words_nyt |>
   group_by(article_id, pub_date) |>
   summarise(article_sentiment = sum(value), .groups = "drop")
 
-# Floor timestamps, then average per day
+# Floor timestamps, then average sentiment per day
 nyt_sentiment <- article_scores_nyt |>
   mutate(pub_day = as.Date(pub_date)) |>
   group_by(pub_day) |>
@@ -439,7 +478,7 @@ calendar_nyt <- data.table(
   date = seq(min(nyt_sentiment$date), max(nyt_sentiment$date), by = "day")
 )
 
-# Merge + interpolate missing values
+# Merge and interpolate missing days
 calendar_nyt <- merge(calendar_nyt, nyt_sentiment, by = "date", all.x = TRUE)
 calendar_nyt[, sentiment_score := na.approx(sentiment_score, na.rm = FALSE)]
 calendar_nyt[is.na(sentiment_score), sentiment_score := 0]
@@ -448,63 +487,79 @@ calendar_nyt[is.na(sentiment_score), sentiment_score := 0]
 calendar_nyt[, ':='(
   Year = as.integer(format(date, "%Y")),
   month = as.integer(format(date, "%m")),
-  week = as.integer(format(date, "%V"))
+  week = as.integer(format(date, "%V")),
+  weekday = as.integer(format(date, "%u")),
+  weekofyear = as.integer(format(date, "%V"))
 )]
 calendar_nyt[is.na(week) | week <= 0, week := 1]
+calendar_nyt[is.na(weekofyear) | weekofyear <= 0, weekofyear := 1]
 
-# Create labels for month axis
-MonthLabels_nyt <- calendar_nyt[, .(meanWkofYr = mean(week)), by = month][
-  , month := month.abb[month]
-]
+# Add interpretation
+calendar_nyt[, interpretation := fifelse(
+  sentiment_score > 10, "Positive",
+  fifelse(sentiment_score < -10, "Negative", "Neutral")
+)]
 
-# Dynamically compute sentiment range for color scale
+# Create tooltip and data_id
+calendar_nyt[, tooltip := paste0(
+  "Date: ", format(date, "%B %d, %Y"),
+  "\nSentiment Score: ", round(sentiment_score, 2),
+  "\nInterpretation: ", interpretation
+)]
+calendar_nyt[, data_id := paste0("day_", date)]
+
+# Dynamically compute sentiment range
 range_max_nyt <- ceiling(max(abs(calendar_nyt$sentiment_score), na.rm = TRUE))
 
-ggplot(data = calendar_nyt, aes(date = date, fill = sentiment_score)) + 
-  stat_calendar_heatmap(colour = "grey80", linewidth = 0.1) + 
+# Build interactive ggplot
+calendar_plot_nyt <- ggplot(calendar_nyt, aes(x = weekofyear, y = 8 - weekday)) +
+  geom_tile_interactive(
+    aes(
+      fill = sentiment_score,
+      tooltip = tooltip,
+      data_id = data_id
+    ),
+    color = "grey80"
+  ) +
   scale_fill_gradient2(
     low = "#cf1322",
     mid = "white",
     high = "#003f5c",
     midpoint = 0,
-    limits = c(-range_max, range_max),
+    limits = c(-range_max_nyt, range_max_nyt),
     breaks = c(-100, 0, 100),
     labels = c("More Negative", "Neutral", "More Positive"),
     name = "Sentiment"
-  ) + 
-  labs(fill = "Sentiment Score") +
-  guides(fill = guide_colorbar(
-    direction = "horizontal",
-    title.position = "top",
-    title.hjust = 0.5,
-    barwidth = 15,
-    barheight = 0.8,
-    label = TRUE,
-    ticks = TRUE,
-    label.position = "bottom"
-  )) +
+  ) +
+  facet_wrap(~Year, ncol = 1, strip.position = "right") +
   scale_y_continuous(
     name = NULL,
-    breaks = seq(7, 1, -1),
-    labels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
-  ) + 
+    breaks = 1:7,
+    labels = c("Sun", "Sat", "Fri", "Thu", "Wed", "Tue", "Mon")
+  ) +
   scale_x_continuous(
-    name = NULL,
-    breaks = MonthLabels$meanWkofYr,
-    labels = MonthLabels$month,
+    name = "Week of Year",
     expand = c(0, 0)
-  ) + 
-  facet_wrap(~Year, ncol = 1, strip.position = "right") + 
+  ) +
+  theme_minimal(base_family = "News Cycle") +
   theme(
-    panel.background = element_blank(),
-    panel.border = element_blank(),
-    strip.background = element_blank(),
+    legend.position = "bottom",
+    axis.text = element_text(size = 8),
     strip.text = element_text(size = 13, face = "plain", color = "black"),
-    axis.line = element_line(colour = "black", linewidth = 0.25),
-    axis.title = element_text(size = 10, face = "plain", color = "black"),
-    axis.text = element_text(size = 10, face = "plain", color = "black"),
-    legend.position = "bottom"
+    plot.margin = margin(10, 15, 10, 15)
   )
 
-
+# Render with girafe
+girafe(
+  ggobj = calendar_plot_nyt,
+  options = list(
+    opts_hover(css = "fill-opacity:0.8;stroke:black;stroke-width:0.5px;"),
+    opts_tooltip(css = "background-color:white;padding:5px;border:1px solid gray;border-radius:4px;font-family:'News Cycle';"),
+    opts_toolbar(saveaspng = TRUE),
+    opts_sizing(rescale = TRUE)
+  )
+)
 ```
+
+
+
