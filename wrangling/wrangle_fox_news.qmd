@@ -205,6 +205,7 @@ sentiment_analyis_description <- fox_meta4|>
   summarise(description_sent_score = sum(value))
 
 
+#This gets the inital sentiment analysis and the sentiment scores through the afinn sentiment package 
 fox_meta5 <- fox_meta3 |> 
   left_join(sentiment_analyis_text)|> 
   left_join(sentiment_analyis_description) |> 
@@ -215,7 +216,8 @@ fox_meta5 <- fox_meta3 |>
   mutate(np_po = if_else(sentiment_score > 2, "positive", "zero"))|>
   mutate(np_po = if_else(sentiment_score < -2, "negative", np_po))|> 
   mutate(roe_status = if_else(str_detect(roe_status, "Pre"), "Pre-Roe", roe_status))
-  
+ 
+#This analysis looks through the text for more specific tags such as religious, medical, and legal taggs 
 fox_text_content <- fox_meta5 |> 
   mutate(pub_date = as.Date(pub_date)) |> 
   mutate(tagging = if_else(str_detect(text, regex("supreme.*court|court.*supreme", ignore_case = TRUE)), "SC", NA)) |> 
@@ -236,6 +238,46 @@ fox_government_analysis <- fox_meta5 |>
   mutate(pub_date = as.Date(pub_date))
   
   
+
+```
+
+## 6. Analysis for Sentiment Around Gender 
+In this section we did a sentiment analysis with the mentions women and females dive into the sentiment of the abortion narratives around women in more conservative media
+```{r}
+fox_gender_analysis <- fox_meta3 |> 
+  select(title, text, description) |> 
+  unnest_tokens(sentence, text, token = "sentences") |> 
+  filter(
+    str_detect(sentence, "women") |
+      str_detect(sentence, "woman") |
+      str_detect(sentence, "female")
+  ) |> 
+  unnest_tokens(word, sentence) |> 
+  left_join(afinn, by = "word") |> 
+  group_by(title)|>
+  filter(!is.na(value)) |> 
+  summarise(sent_analysis = sum(value))
+
+fox_gender_analysis <- left_join(fox_gender_analysis, fox_meta3, by = "title") |>
+  mutate(roe_status = if_else(str_detect(roe_status, "Pre"), "Pre-Roe", roe_status)) |> 
+  mutate(np_po = if_else(sent_analysis > 2, "positive", "zero"))|>
+  mutate(np_po = if_else(sent_analysis < -2, "negative", np_po))
+
+
+genderedAnalysis <- ggplot(fox_gender_analysis, aes(x = `title`, y = `sent_analysis`, fill = `roe_status`)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Sentiment Around Female Experience in Fox News Articles", 
+       x = "Title", y = "Sentiment Score", fill = "Pre/Post Roe Status") +
+  facet_grid(~roe_status)
+genderedAnalysis
+
+g2 <- fox_gender_analysis |> 
+  filter(np_po != "zero") |>
+  ggplot(aes(x = `pub_date`, color = `roe_status`)) +
+  geom_histogram()+
+  facet_grid(~np_po)
+g2
+
 
 ```
 
@@ -288,7 +330,7 @@ top_junk <- c("news", "said", "people", "mr", "fox", "u.s", "including", "justic
 custom_stop <- tibble(word = top_junk)
 all_stops <- bind_rows(stop_words, custom_stop)
 
-fox_meta6 <- fox_meta3 |> 
+fox_meta_topwords <- fox_gender_analysis |> 
   unnest_tokens(word, text_clean, token = "ngrams", n= 1) |> 
   filter(!word %in% top_junk) |> 
   group_by(title) |> 
