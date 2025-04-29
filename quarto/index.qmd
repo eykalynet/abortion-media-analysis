@@ -49,6 +49,11 @@ library(zoo)
 library(data.table)
 library(RColorBrewer)
 library(scico)  
+library(patchwork)
+library(showtext)
+library(ggiraph)
+library(gdtools)
+library(gfonts)
 
 # Load cleaned datasets
 nyt <- read_csv("../data/wrangled/nyt_news_data_wrangled.csv")
@@ -57,16 +62,15 @@ fox <- read_csv("../data/wrangled/fox_news_data_wrangled.csv")
 
 # Combine NYT and Fox together
 articles <- bind_rows(
-  nyt |> mutate(outlet = "NYT"),
-  fox |> mutate(outlet = "Fox")
+  nyt |> mutate(outlet = "The New York Times"),
+  fox |> mutate(outlet = "Fox News")
 ) |> 
   mutate(pub_date = as.Date(pub_date)) |> 
-  filter(!is.na(pub_date))  # Just to be safe
-
+  filter(!is.na(pub_date))
 ```
 
 ```{r}
-#| label: top-words-check
+#| label: initial-tokens
 #| include: false
 
 # Tokenize text into individual words
@@ -100,6 +104,56 @@ tokens2 <- bind_rows(
   anti_join(custom_stopwords)      # Remove custom filler/irrelevant words
 ```
 
+```{r}
+#| label: monthly-data
+#| include: false
+
+monthly_data <- articles |> 
+  mutate(month = floor_date(pub_date, unit = "month")) |> 
+  count(outlet, month, name = "monthly_n") |> 
+  arrange(outlet, month) |> 
+  group_by(outlet) |> 
+  mutate(cumulative_n = cumsum(monthly_n)) |> 
+  ungroup()
+
+facet_data <- monthly_data |> 
+  pivot_longer(
+    cols = c(monthly_n, cumulative_n),
+    names_to = "measure",
+    values_to = "n"
+  ) |> 
+  mutate(measure = recode(
+    measure,
+    monthly_n = "Monthly Volume",
+    cumulative_n = "Cumulative Coverage"
+  ))
+```
+
+```{r}
+#| label: color-choices-yay
+
+# Color palette 
+fill_colors <- c(
+  "Fox News" = "#fccfd1",
+  "The New York Times" = "#bfd7ea"
+)
+
+line_colors <- c(
+  "Fox News" = "#e57373",
+  "The New York Times" = "#5a8ca4"
+)
+```
+
+```{r}
+#| label: themes
+
+# Load News Cycle from Google Fonts
+font_add_google("News Cycle")
+showtext_auto()
+
+gdtools::register_gfont("News Cycle")
+```
+
 ## Introduction
 
 Long a topic of debate across law, medicine, gender, and religion,
@@ -107,7 +161,7 @@ abortion has remained one of the most polarizing issues in American
 public life. That polarization deepened in June 2022, when the Supreme
 Court’s decision in Dobbs v. Jackson Women’s Health Organization
 overturned Roe v. Wade, the 1973 ruling that had established a
-constitutional right to abortion.The decision unsettled not only the
+constitutional right to abortion. The decision unsettled not only the
 legal framework around abortion, but also the way the issue is discussed
 across the country. As states move in sharply different directions,
 media coverage has had to grapple with new divisions, new language, and
@@ -150,6 +204,93 @@ from early 2020 through late 2024. Together, these articles provide a
 window into how two major media outlets approached abortion coverage
 across a period of significant legal and political change.
 
+```{r}
+#| label: eda-graph
+#| warnings: false
+#| mesages: false
+#| fig.height: 5.5
+
+#| label: eda-graph
+#| warnings: false
+#| messages: false
+#| fig.height: 5.5
+
+# Add unique point-level data_id and tooltip
+facet_data <- facet_data |>
+  mutate(
+    tooltip_text = paste0(outlet, "\n", measure, "\nMonth: ", format(month, "%b %Y"), "\nArticles: ", n),
+    data_id = paste(outlet, measure, format(month, "%Y-%m"), n, sep = "_")
+  )
+
+# Final interactive plot
+coverage_trend_plot <- ggplot(facet_data, aes(x = month, y = n, group = outlet)) +
+  geom_area_interactive(
+    aes(
+      fill = outlet,
+      tooltip = tooltip_text,
+      data_id = data_id
+    ),
+    alpha = 0.35, position = "identity"
+  ) +
+  geom_line_interactive(
+    aes(
+      color = outlet,
+      tooltip = tooltip_text,
+      data_id = data_id
+    ),
+    linewidth = 1.2
+  ) +
+  # NEW: Add invisible points to enable precise tooltips
+  geom_point_interactive(
+    aes(
+      color = outlet,
+      tooltip = tooltip_text,
+      data_id = data_id
+    ),
+    size = 2, alpha = 0  # keep them invisible but interactive
+  ) +
+  geom_vline(
+    xintercept = as.Date("2022-06-24"),
+    linetype = "dashed",
+    color = "gray40",
+    linewidth = 0.8
+  ) +
+  facet_wrap(~measure, scales = "free_y", ncol = 1, strip.position = "top") +
+  scale_fill_manual(values = fill_colors) +
+  scale_color_manual(values = line_colors) +
+  scale_x_date(date_breaks = "1 month", date_labels = "%b'%y") +
+  labs(
+    title = "Abortion-Related Article Coverage Over Time",
+    x = "Date", y = "Number of Articles",
+    fill = "Outlet", color = "Outlet"
+  ) +
+  theme_light() +
+  theme(
+    text = element_text(family = "News Cycle"),
+    plot.title = element_text(face = "bold", size = 18),
+    legend.position = "top",
+    legend.title = element_blank(),
+    strip.background = element_rect(fill = "#666666", color = NA),
+    strip.text = element_text(color = "white", face = "bold", family = "News Cycle"),
+    panel.border = element_rect(color = "gray50", fill = NA),
+    axis.title.y = element_text(size = 12),
+    axis.text.x = element_text(size = 6, angle = 90, hjust = 1, family = "News Cycle"),
+    panel.spacing = unit(1.2, "lines"),
+    plot.margin = margin(10, 15, 10, 15)
+  )
+
+# Interactive render
+girafe(
+  ggobj = coverage_trend_plot,
+  options = list(
+    opts_hover(css = "stroke-width:2;"),
+    opts_tooltip(css = "background-color:white;padding:5px;border:1px solid gray;border-radius:4px;font-family:'News Cycle';"),
+    opts_toolbar(saveaspng = TRUE),
+    opts_sizing(rescale = TRUE)
+  )
+)
+```
+
 To trace how attention fluctuated over time, we first examined monthly
 trends in article publication. Both Fox News and The New York Times
 exhibited visible surges in abortion-related reporting across the
@@ -164,51 +305,6 @@ elections, where abortion rights featured prominently on state ballots,
 and during the August 2023 Ohio special election focused on abortion
 protections.
 
-```{r}
-#| label: num-articles-over-time
-#| echo: false
-#| warnings: false
-#| messages: false 
-
-# Make sure pub_date is Date type
-articles <- articles |> mutate(pub_date = ymd(pub_date))
-
-# Count articles per month and outlet
-articles_monthly <- articles |> 
-  mutate(month = floor_date(pub_date, "month")) |> 
-  count(month, outlet, roe_status)
-
-# Create a nicer outlet label
-articles_monthly <- articles_monthly |> 
-  mutate(outlet = case_when(
-    outlet == "Fox" ~ "Fox News",
-    outlet == "NYT" ~ "The New York Times",
-    TRUE ~ outlet
-  ))
-
-ggplot(articles_monthly, aes(x = month, y = n, group = outlet)) +
-  geom_area(aes(fill = outlet), alpha = 0.25, position = "identity") +
-  geom_line(aes(color = outlet), linewidth = 1.2) +
-  geom_vline(xintercept = as.Date("2022-06-24"), linetype = "dashed", color = "gray40") +
-  scale_color_manual(values = c(
-    "Fox News" = "#cf1322", 
-    "The New York Times" = "#003f5c"
-  )) +
-  scale_fill_manual(values = c(
-    "Fox News" = "#cf1322", 
-    "The New York Times" = "#003f5c"
-  )) +
-  labs(
-    title = "Abortion-Related Articles Over Time",
-    x = "Month", y = "Number of Articles",
-    color = "Outlet", fill = "Outlet"
-  ) + theme_minimal() + 
-  theme(
-    legend.position = "top",
-    legend.title = element_blank()
-  )
-```
-
 Interestingly, while monthly patterns highlight media reactions to
 specific events, they do not fully capture the overall scale of
 coverage. To provide a cumulative perspective, we plotted the running
@@ -220,41 +316,6 @@ decision, the total number of articles rose sharply for both outlets,
 but Fox News continued to publish abortion-related content at a faster
 pace. By the end of 2024, Fox News had amassed a much larger body of
 coverage compared to The New York Times.
-
-```{r}
-#| label: cumulative-articles 
-#| echo: false
-#| warnings: false
-#| messages: false 
-
-articles_monthly_cum <- articles_monthly |>
-  group_by(outlet) |>
-  arrange(month) |>
-  mutate(cumulative_articles = cumsum(n))
-
-# Then plot
-ggplot(articles_monthly_cum, aes(x = month, y = cumulative_articles, group = outlet)) +
-  geom_area(aes(fill = outlet), alpha = 0.25, position = "identity") +
-  geom_line(aes(color = outlet), linewidth = 1.2) +
-  geom_vline(xintercept = as.Date("2022-06-24"), linetype = "dashed", color = "gray40") +
-  scale_color_manual(values = c(
-    "Fox News" = "#cf1322",
-    "The New York Times" = "#003f5c"
-  )) +
-  scale_fill_manual(values = c(
-    "Fox News" = "#cf1322",
-    "The New York Times" = "#003f5c"
-  )) +
-  labs(
-    title = "Cumulative Abortion-Related Coverage Over Time",
-    x = "Year", y = "Cumulative Number of Articles",
-    color = "Outlet", fill = "Outlet"
-  ) + theme_minimal() + 
-  theme(
-    legend.position = "top",
-    legend.title = element_blank()
-  ) 
-```
 
 ## A Calendar of Changing Narratives
 
