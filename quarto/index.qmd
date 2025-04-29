@@ -5,7 +5,7 @@ author:
 - "Erika Salvador"
 - "Emilie Ward"
 - "Maigan Lafontant"
-abstract: "A brief abstract summarizing your project is required here. This abstract, along with the first image or figure in your blog, will be used as a preview to your blog on the course's landing page for all the blogs."
+abstract: "This blog investigates how abortion is framed in the media by analyzing coverage from two ideologically opposed outlets: Fox News and The New York Times. Using text and sentiment analysis, topic modeling, and geographic policy data from the Guttmacher Institute, we examine shifts in media narratives before and after the 2022 Supreme Court decision in Dobbs v. Jackson Women’s Health Organization."
 editor: 
   markdown: 
     wrap: 72
@@ -146,6 +146,7 @@ line_colors <- c(
 
 ```{r}
 #| label: themes
+#| include: false
 
 # Load News Cycle from Google Fonts
 font_add_google("News Cycle")
@@ -168,32 +169,28 @@ media coverage has had to grapple with new divisions, new language, and
 new stakes.
 
 At its core, the public debate still turns on a simple but deeply
-charged question: is abortion good or bad? How that question gets
+charged question: **is abortion good or bad?** How that question gets
 answered–or even framed–depends heavily on where one looks. News
 coverage of abortion varies sharply by ideological leaning. Conservative
 media outlets often emphasize religious and legal arguments by focusing
-on fetal personhood, state-level bans, and moral appeals (Williams,
-2024). In contrast, liberal media frequently frame abortion in terms of
-bodily autonomy, healthcare access, and gender justice, while
-emphasizing the disproportionate impact of abortion restrictions on
-marginalized communities (Human Rights Watch, 2023). These competing
-narratives do more than reflect existing viewpoints but actively shape
-public perception of abortion legislation.
+on fetal personhood, state-level bans, and moral appeals
+\citep{jenssen2013broadcast}. In contrast, liberal media frequently
+frame abortion in terms of bodily autonomy, healthcare access, and
+gender justice, while emphasizing the disproportionate impact of
+abortion restrictions on marginalized communities
+\citep{rohlinger2015abortion}. These competing narratives do more than
+reflect existing viewpoints but actively shape public perception of
+abortion legislation.
 
 In this blog, we examine how abortion is framed by two ideologically
 distinct media outlets: Fox News and The New York Times. To trace how
 these narratives evolved, we analyzed abortion-related news coverage
 from both sources before and after the Dobbs decision. These platforms
 were chosen not only for their national prominence and broad audiences,
-but also for their well-documented political leanings–Fox News is widely
-recognized as a conservative outlet, while The New York Times is
-identified as liberal-leaning (Pew Research Center, 2014; Mitchell et
-al., 2020). By comparing these two sources, we aim to better understand
-how media framing reflects and reinforces broader ideological divides
-around abortion. Using text and sentiment analysis, topic modeling, and
-geographic data from the Guttmacher Institute, we explore how media
-narratives align with state-level abortion laws and how discourse
-evolves in response to shifting legal landscapes.
+but also for their well-documented political leanings–\href{https://www.foxnews.com}{Fox News} is widely recognized as a conservative outlet, while \href{https://www.nytimes.com}{The New York Times} is identified as liberal-leaning \citep{pew2014,mitchell2020}. By comparing these two sources, we aim to better understand how media framing
+reflects and reinforces broader ideological divides around abortion.We also use geographic data from the \href{https://www.guttmacher.org}{Guttmacher Institute}, a leading research and policy organization on reproductive health. Using text and sentiment analysis, topic modeling, and geographic data from the Guttmacher Institute, we explore how media narratives align
+with state-level abortion laws and how discourse evolves in response to
+shifting legal landscapes.
 
 ## A First Look at the Coverage
 
