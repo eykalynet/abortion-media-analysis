@@ -332,21 +332,9 @@ girafe(
 
 ## A Calendar of Changing Narratives
 
-To understand how language and sentiment around abortion shifted in the
-media before and after the Supreme Court’s landmark decision in Dobbs v.
-Jackson Women’s Health Organization, we mapped article sentiment scores
-across the two major outlets in a calendar heatmap format spanning 2020
-to 2024. Since we’ve been talking about how Fox News devoted a large volume of coverage to abortion, let’s first take a closer look at the tone of that coverage.
+To understand how language and sentiment around abortion shifted in the media before and after the Supreme Court’s landmark decision in *[Dobbs v. Jackson Women’s Health Organization](https://www.oyez.org/cases/2021/19-1392)*, we mapped article [AFINN](https://en.wikipedia.org/wiki/AFINN) sentiment scores across the two major outlets in a calendar heatmap format spanning 2020 to 2024.
 
-From 2020 to early 2024, Fox News’s sentiment trends tell a story of measured reporting occasionally pierced by sharp reactions. The early years — 2020 and 2021 — are relatively quiet. The sentiment tiles are mostly pale, which indicates mostly neutral-toned articles with only the occasional dip into negative or positive language. Abortion, at this point, seemed to be a non-headline driver, and Fox’s emotional engagement with the topic remained limited.
-
-That changes dramatically in 2022. The calendar lights up in early summer, just as the Supreme Court decision in Dobbs v. Jackson Women’s Health Organization overturned Roe v. Wade. Around June, the heatmap becomes a patchwork of red and blue — days of intense negativity followed by equally charged positivity. The tonal whiplash reflects a polarized editorial moment: some coverage framed the ruling as a conservative victory; other stories emphasized the backlash, protests, and uncertainty that followed.
-
-After the Dobbs ruling, the emotional peaks become more sporadic. In 2023 and 2024, the calendar shows fewer intense days, but when they appear, they’re sharper. It suggests that while abortion may not have remained a daily front-page story, the days it did appear were often tied to high-stakes developments — like new state laws, political campaigns, or anniversary reflections.
-
-Unlike some coverage cycles, the sentiment doesn’t follow a weekly rhythm. Some Mondays are sharply negative, others are quiet. What we see instead is a reactive pattern: Fox’s sentiment spikes in response to external shocks, not internal scheduling. It’s not an even pulse; it’s a media heartbeat that jumps in moments of national tension.
-
-So while the quantity of coverage tells us that Fox News paid close attention to abortion, the sentiment heatmap reveals when that attention turned emotional — and just how sharply it swung.
+Since we’ve been talking about how *Fox News* devoted a large volume of coverage to abortion, let’s first take a closer look at the tone of that coverage.
 
 ```{r}
 #| label: fox-calendar-heatmap
@@ -465,14 +453,13 @@ girafe(
 )
 ```
 
-After exploring how Fox News covered abortion in both volume and tone, it’s worth asking: how does The New York Times compare? While Fox’s sentiment calendar pulsed with emotional spikes tied to legal and political flashpoints, The Times paints a different picture.
+While *Fox News* consistently produced abortion-related articles throughout the 2020–2024 period, its emotional tone varied more subtly than expected. Most days register as light red or pale blue, which indicates slightly negative or slightly positive sentiment, with fewer extreme spikes than one might assume for such a polarizing topic.
 
-Across five years of reporting, the Times’ calendar heatmap reveals a remarkably consistent tone, with most days hovering in the neutral-to-slightly-negative range. There’s none of the whiplash of bright reds or deep blues that characterized Fox’s reporting. Even in 2022 — the year of Dobbs v. Jackson — the Times maintains a calm visual register. A brief streak of dark red appears in late spring, which is likely tied to leaked drafts and early reactions to the Supreme Court’s decision, but it fades quickly. The overwhelming majority of tiles are beige or pale pink: stories that may be emotionally charged in content, but are tempered in language.
+In 2022, around the time of the *Dobbs* decision that overturned *Roe v. Wade*, we observe scattered patches of deeper red and blue. However, rather than clustering tightly around key events, these peaks appear spread out across weeks. 
 
-In fact, the New York Times appears to approach abortion coverage with a kind of editorial evenness. Unlike Fox News, which tends to react forcefully to political developments and court rulings, the Times reflects a more sustained and balanced journalistic rhythm. Coverage is spread consistently across the year, not just clustered around high-profile events, and sentiment rarely escalates into extremes.
+> Interestingly, sentiment remained relatively stable in 2023 and 2024, with more diffuse tonal variation. This could imply that while the political salience of abortion persisted, the emotional framing of *Fox News* coverage settled into a more routine cadence post-*Dobbs*.
 
-What’s particularly striking is that one of the Times’ most positive sentiment spikes doesn’t occur after the Dobbs decision, but before it. On April 18, 2022, the sentiment score soars to 366.5 — unusually high, and notably upbeat for such a politically charged moment. One might expect coverage in this lead-up period to lean negative or cautious. Instead, this burst of positivity suggests a different editorial choice — perhaps highlighting stories of resilience, advocacy gains, or early signs of political mobilization.
-
+After exploring how *Fox News* covered abortion in both volume and tone, it’s worth asking: **how does *The New York Times* compare?**
 
 ```{r}
 #| label: nyt-calendar-heatmap
@@ -592,5 +579,12 @@ girafe(
 )
 ```
 
+Surprisingly, it’s *The New York Times* that reads as more restrained. In contrast to *Fox’s* more visibly fluctuating sentiment, the *Times* displays a remarkably steady emotional cadence in its abortion coverage from 2020 through 2024. Most days are washed in muted reds and pale blues. There is consistently neutral or mildly toned language across the board.
 
+The only noticeable deviation appears in spring 2022, just before the Supreme Court officially decided *Dobbs v. Jackson Women’s Health Organization*. Being a liberal-leaning outlet, and one generally supportive of abortion rights, we expected the *New York Times* to lean more negative in tone around the *Dobbs* decision. So it’s surprising to see a spike in **positive sentiment** in the weeks *before* the ruling.
 
+> That moment of optimism might feel out of place given the looming loss of constitutional protections — but it likely reflects the way the stories were framed: not with defeat, but with **mobilization**. Articles during that time may have highlighted state-level protections, legal challenges, or grassroots organizing, which could register as “positive” in sentiment scoring, even if the context was defensive or reactive.
+
+For example, an article celebrating the swift passage of abortion protections in certain states might score as "positive" based on language even though it was prompted by a national-level loss. Similarly, a story framing a restrictive abortion law as "historic" or "a major success" (even if opposed editorially) could also register as positive if the wording carried emotional approval.
+
+Even as article volume rises again toward the end of 2024, likely tracking with presidential election season, the emotional register stays steady. The *New York Times* seems to maintain its editorial evenness throughout.
