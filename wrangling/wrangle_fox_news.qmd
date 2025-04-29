@@ -310,15 +310,15 @@ fox_meta_topwords <- fox_meta3 |>
   summarize(text_cleaned = paste(word, collapse = " "),.groups = "drop") 
   
   
-g_topwords <- fox_meta_topwords |> 
-  unnest_tokens(word, text_cleaned, token = "ngrams", n= 1) |>
-  filter(word != "life" | word != "wade") |> 
-  count(word, sort = TRUE) |>
-  slice_max(n, n = 15) |>
-  ggplot(aes(n, reorder(word, n))) +
-  geom_col(fill = "steelblue") +
-  labs(title = "Most Frequent Words", x = "Count", y = "")
-g_topwords
+# g_topwords <- fox_meta_topwords |> 
+#   unnest_tokens(word, text_cleaned, token = "ngrams", n= 1) |>
+#   filter(word != "life" | word != "wade") |> 
+#   count(word, sort = TRUE) |>
+#   slice_max(n, n = 15) |>
+#   ggplot(aes(n, reorder(word, n))) +
+#   geom_col(fill = "steelblue") +
+#   labs(title = "Most Frequent Words", x = "Count", y = "")
+# g_topwords
 
 g_topbigram <- fox_meta_topwords |>
   unnest_tokens(bigram, text_cleaned, token = "ngrams", n = 2) |>
@@ -358,14 +358,51 @@ prolifeAnalysis <- ggplot(fox_pro_life_analysis, aes(x = `title`, y = `sent_anal
   facet_grid(~roe_status)
 prolifeAnalysis
 
+#pro-choice
+fox_pro_choice_analysis <- fox_meta3 |> 
+  select(title, text, description) |> 
+  unnest_tokens(sentence, text, token = "sentences") |> 
+  filter(
+    str_detect(sentence, "pro-choice")
+  ) |> 
+  unnest_tokens(word, sentence) |> 
+  left_join(afinn, by = "word") |> 
+  group_by(title)|>
+  filter(!is.na(value)) |> 
+  summarise(sent_analysis = sum(value))
+
+fox_pro_choice_analysis <- left_join(fox_pro_choice_analysis, fox_meta3, by = "title") |>
+  mutate(roe_status = if_else(str_detect(roe_status, "Pre"), "Pre-Roe", roe_status)) |> 
+  mutate(np_po = if_else(sent_analysis > 2, "positive", "zero"))|>
+  mutate(np_po = if_else(sent_analysis < -2, "negative", np_po))
+
+# proChoiceAnalysis <- ggplot(fox_pro_choice_analysis, aes(x = `title`, y = `sent_analysis`, fill = `roe_status`)) +
+#   geom_bar(stat = "identity") +
+#   labs(title = "Sentiment Around Female Experience in Fox News Articles", 
+#        x = "Title", y = "Sentiment Score", fill = "Pre/Post Roe Status") +
+#   facet_grid(~roe_status)
+# proChoiceAnalysis
+
+
+# I like this analysis
 g3 <- fox_pro_life_analysis |> 
-  filter(np_po != "zero") |>
+  # filter(np_po != "zero") |>
   ggplot(aes(x = `pub_date`, color = `roe_status`)) +
-  geom_histogram()+
-  facet_grid(~np_po)
+  geom_density()+
+  facet_grid(~np_po) +
+  labs(title = "Pro-life occurance analysis")
 g3
+
+g4 <- fox_pro_choice_analysis |> 
+  # filter(np_po != "zero") |>
+  ggplot(aes(x = `pub_date`, color = `roe_status`)) +
+  geom_density()+
+  facet_grid(~np_po) +
+  labs(title = "Pro-choice occurance analysis")
+g4
 ```
 
+## 6. "Over-turning Analysis
 ```{r}
 
 fox_overturning_analysis <- fox_meta3 |> 
@@ -428,7 +465,20 @@ g3 <- fox_overturning_analysis |>
   theme_classic()
 g3
 
+g3 <- fox_overturning_analysis |> 
+  filter(np_po != "neutral") |>
+  ggplot(aes(x = `pub_date`, y = sent_analysis)) +
+  geom_point()
+g3
+
 ```
+```{r}
+
+```
+
+
+## 6. White House Analysis
+
 ```{r}
 
 # I should make a timeline plot for this one
@@ -456,11 +506,20 @@ PPAnalysis <- ggplot(fox_PP_analysis, aes(x = `title`, y = `sent_analysis`, fill
   facet_grid(~roe_status)
 PPAnalysis
 
+fox_PP_analysis$pub_date <- as.Date(fox_PP_analysis$pub_date)
+fox_PP_analysis$month_year <- paste(month(fox_PP_analysis$pub_date), year(fox_PP_analysis$pub_date), sep = "-")
+
+
+fox_PP_analysis <- fox_PP_analysis |> 
+  # mutate(pub_date = paste(month, year, sep = "-")) |> 
+  group_by(month_year) |> 
+  summarise(sent_analysis = sum(sent_analysis))
+
+
 g3 <- fox_PP_analysis |> 
-  filter(np_po != "neutral") |>
-  ggplot(aes(x = `pub_date`, color = `np_po`)) +
-  geom_histogram()+
-  facet_grid(~roe_status)
+  # filter(np_po != "neutral") |>
+  ggplot(aes(x = `month_year`, y = sent_analysis)) +
+  geom_point()
 g3
 
 ```
