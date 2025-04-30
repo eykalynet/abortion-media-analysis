@@ -56,6 +56,7 @@ library(showtext)
 library(ggiraph)
 library(gdtools)
 library(gfonts)
+library(textmineR)
 
 # Load cleaned datasets
 nyt <- read_csv("../data/wrangled/nyt_news_data_wrangled.csv")
@@ -150,14 +151,43 @@ gdtools::register_gfont("News Cycle")
 
 ## Introduction
 
-Long a topic of debate across law, medicine, gender, and religion, abortion remains one of the most polarizing issues in American public life. That polarization deepened in June 2022, when the Supreme Court’s decision in [*Dobbs v. Jackson Women’s Health Organization*](https://www.oyez.org/cases/2021/19-1392) overturned [*Roe v. Wade*](https://www.oyez.org/cases/1971/70-18), the 1973 ruling that had established a constitutional right to abortion. The decision unsettled not only the legal framework around abortion, but also the broader discourse surrounding it. As states move in sharply different directions, media coverage has had to grapple with new divisions, new language, and new stakes.
+Long a topic of debate across law, medicine, gender, and religion,
+abortion remains one of the most polarizing issues in American public
+life. That polarization deepened in June 2022, when the Supreme Court’s
+decision in [*Dobbs v. Jackson Women’s Health
+Organization*](https://www.oyez.org/cases/2021/19-1392) overturned [*Roe
+v. Wade*](https://www.oyez.org/cases/1971/70-18), the 1973 ruling that
+had established a constitutional right to abortion. The decision
+unsettled not only the legal framework around abortion, but also the
+broader discourse surrounding it. As states move in sharply different
+directions, media coverage has had to grapple with new divisions, new
+language, and new stakes.
 
-At its core, the public debate still turns on a simple but deeply charged question: **is abortion good or bad?** How that question gets answered—or even framed—depends heavily on where one looks. News coverage of abortion varies sharply by ideological leaning. Conservative media outlets often emphasize religious and legal arguments, focusing on fetal personhood, state-level bans, and moral appeals [@jenssen2013broadcast]. In contrast, liberal media frequently frame abortion in terms of bodily autonomy, healthcare access, and gender justice, while highlighting the disproportionate impact of abortion restrictions on marginalized communities [@rohlinger2015abortion].
+At its core, the public debate still turns on a simple but deeply
+charged question: **is abortion good or bad?** How that question gets
+answered—or even framed—depends heavily on where one looks. News
+coverage of abortion varies sharply by ideological leaning. Conservative
+media outlets often emphasize religious and legal arguments, focusing on
+fetal personhood, state-level bans, and moral appeals
+[@jenssen2013broadcast]. In contrast, liberal media frequently frame
+abortion in terms of bodily autonomy, healthcare access, and gender
+justice, while highlighting the disproportionate impact of abortion
+restrictions on marginalized communities [@rohlinger2015abortion].
 
-In this blog, we examine how abortion is framed by two ideologically distinct media outlets: [Fox News](https://www.foxnews.com) and [The New York Times](https://www.nytimes.com). These platforms were selected for their national prominence, wide readership, and well-documented political leanings—Fox News is widely recognized as a conservative outlet, while The New York Times is identified as liberal-leaning [@pew2014; @mitchell2020].
+In this blog, we examine how abortion is framed by two ideologically
+distinct media outlets: [Fox News](https://www.foxnews.com) and [The New
+York Times](https://www.nytimes.com). These platforms were selected for
+their national prominence, wide readership, and well-documented
+political leanings—Fox News is widely recognized as a conservative
+outlet, while The New York Times is identified as liberal-leaning
+[@pew2014; @mitchell2020].
 
-We complement this analysis with geographic policy data from the [Guttmacher Institute](https://www.guttmacher.org), a leading research organization on reproductive health. Using tools such as sentiment analysis, topic modeling, and spatial comparison, we explore how media narratives align with state-level abortion laws and how discourse evolves in response to shifting legal landscapes.
-
+We complement this analysis with geographic policy data from the
+[Guttmacher Institute](https://www.guttmacher.org), a leading research
+organization on reproductive health. Using tools such as sentiment
+analysis, topic modeling, and spatial comparison, we explore how media
+narratives align with state-level abortion laws and how discourse
+evolves in response to shifting legal landscapes.
 
 ## A First Look at the Coverage
 
@@ -174,71 +204,88 @@ across a period of significant legal and political change.
 #| mesages: false
 #| include: false
 
-# Prepare interactive tooltip columns (do once)
+# Create new dataset for plotting
 monthly_data_2 <- monthly_data |>
   mutate(
     outlet = factor(outlet, levels = c("Fox News", "The New York Times")),
-    
-    # Monthly
-    tooltip_text_monthly = paste0(outlet, "\nMonth: ", format(month, "%b %Y"), "\nArticles: ", monthly_n),
+
+    # Tooltip & ID for monthly plot
+    tooltip_text_monthly = paste0(
+      outlet, "\nMonth: ", format(month, "%b %Y"),
+      "\nArticles: ", monthly_n
+    ),
     data_id_monthly = paste(outlet, "Monthly", format(month, "%Y-%m"), monthly_n, sep = "-"),
-    
-    # Cumulative
-    tooltip_text_c = paste0(outlet, "\nMonth: ", format(month, "%b %Y"), "\nArticles: ", cumulative_n),
-    data_id_c = paste(outlet, "Cumulative", format(month, "%Y-%m"), cumulative_n, sep = "-")
+
+    # Tooltip & ID for cumulative plot
+    tooltip_text_cumulative = paste0(
+      outlet, "\nMonth: ", format(month, "%b %Y"),
+      "\nArticles: ", cumulative_n
+    ),
+    data_id_cumulative = paste(outlet, "Cumulative", format(month, "%Y-%m"), cumulative_n, sep = "-")
   )
 
-# Split data
-fox_data_m <- monthly_data_2 |> filter(outlet == "Fox News")
-nyt_data_m <- monthly_data_2 |> filter(outlet == "The New York Times")
+# Split for monthly plot
+fox_monthly <- monthly_data_2 |> filter(outlet == "Fox News")
+nyt_monthly <- monthly_data_2 |> filter(outlet == "The New York Times")
 
-fox_data_c <- fox_data_m
-nyt_data_c <- nyt_data_m
+# Split for cumulative plot (reuse same df but different y-values)
+fox_cumulative <- monthly_data_2 |> filter(outlet == "Fox News")
+nyt_cumulative <- monthly_data_2 |> filter(outlet == "The New York Times")
 ```
 
-To trace how attention fluctuated over time, we first examined monthly trends in article publication. Both *Fox News* and *The New York Times* exhibited visible surges in abortion-related reporting across the 2020–2024 period. While our primary focus is on the [*Dobbs v. Jackson Women’s Health Organization*](https://www.supremecourt.gov/opinions/21pdf/19-1392_6j37.pdf) decision and its aftermath, earlier spikes in coverage are also notable. Attention intensified sharply in **September 2021** with the enactment of [Texas’s SB8 “heartbeat bill”](https://capitol.texas.gov/tlodocs/87R/billtext/pdf/SB00008I.pdf), surged again in **May 2022** when *Politico* [leaked the Supreme Court’s draft opinion](https://www.politico.com/news/2022/05/02/supreme-court-abortion-draft-opinion-00029473) in *Dobbs*, and peaked in **June 2022** when the Court [officially overturned *Roe v. Wade*](https://www.supremecourt.gov/opinions/21pdf/19-1392_6j37.pdf).
+To trace how attention fluctuated over time, we first examined monthly
+trends in article publication. Both *Fox News* and *The New York Times*
+exhibited visible surges in abortion-related reporting across the
+2020–2024 period. While our primary focus is on the [*Dobbs v. Jackson
+Women’s Health
+Organization*](https://www.supremecourt.gov/opinions/21pdf/19-1392_6j37.pdf)
+decision and its aftermath, earlier spikes in coverage are also notable.
+Attention intensified sharply in **September 2021** with the enactment
+of [Texas’s SB8 “heartbeat
+bill”](https://capitol.texas.gov/tlodocs/87R/billtext/pdf/SB00008I.pdf),
+surged again in **May 2022** when *Politico* [leaked the Supreme Court’s
+draft
+opinion](https://www.politico.com/news/2022/05/02/supreme-court-abortion-draft-opinion-00029473)
+in *Dobbs*, and peaked in **June 2022** when the Court [officially
+overturned *Roe v.
+Wade*](https://www.supremecourt.gov/opinions/21pdf/19-1392_6j37.pdf).
 
 ```{r}
 #| label: monthly-plot
 #| fig.height: 3.5
+#| warning: false
+#| message: false 
 
-# Build the plot
 monthly_plot <- ggplot() +
   geom_area_interactive(
-    data = fox_data_m,
-    aes(x = month, y = monthly_n, fill = outlet, tooltip = tooltip_text_monthly, data_id = data_id_monthly),
+    data = rbind(fox_monthly, nyt_monthly),
+    aes(
+      x = month, y = monthly_n,
+      fill = outlet, tooltip = tooltip_text_monthly, data_id = data_id_monthly
+    ),
     alpha = 0.35
   ) +
   geom_line_interactive(
-    data = fox_data_m,
-    aes(x = month, y = monthly_n, color = outlet, tooltip = tooltip_text_monthly, data_id = data_id_monthly),
+    data = rbind(fox_monthly, nyt_monthly),
+    aes(x = month, y = monthly_n, color = outlet),
     linewidth = 1.2
   ) +
   geom_point_interactive(
-    data = fox_data_m,
+    data = rbind(fox_monthly, nyt_monthly),
     aes(x = month, y = monthly_n, color = outlet, tooltip = tooltip_text_monthly, data_id = data_id_monthly),
     size = 2, alpha = 0
   ) +
-  geom_area_interactive(
-    data = nyt_data_m,
-    aes(x = month, y = monthly_n, fill = outlet, tooltip = tooltip_text_monthly, data_id = data_id_monthly),
-    alpha = 0.35
+  geom_vline(
+    xintercept = as.Date("2022-06-24"),
+    linetype = "dashed", color = "grey80"
   ) +
-  geom_line_interactive(
-    data = nyt_data_m,
-    aes(x = month, y = monthly_n, color = outlet, tooltip = tooltip_text_monthly, data_id = data_id_monthly),
-    linewidth = 1.2
-  ) +
-  geom_point_interactive(
-    data = nyt_data_m,
-    aes(x = month, y = monthly_n, color = outlet, tooltip = tooltip_text_monthly, data_id = data_id_monthly),
-    size = 2, alpha = 0
-  ) +
-  geom_vline(xintercept = as.Date("2022-06-24"), linetype = "dashed", color = "grey80", linewidth = 0.8) +
-  scale_fill_manual(values = fill_colors) +
-  scale_color_manual(values = line_colors) +
+  scale_fill_manual(values = fill_colors, drop = FALSE) +
+  scale_color_manual(values = line_colors, drop = FALSE) +
   scale_x_date(date_breaks = "1 month", date_labels = "%b'%y") +
-  labs(title = "Monthly Volume of Abortion Coverage", x = "Date", y = "Number of Articles", fill = "Outlet", color = "Outlet") +
+  labs(
+    title = "Monthly Volume of Abortion Coverage",
+    x = "Date", y = "Number of Articles"
+  ) +
   theme_light(base_family = "News Cycle") +
   theme(
     legend.position = "top",
@@ -254,61 +301,86 @@ girafe(
   ggobj = monthly_plot,
   options = list(
     opts_hover(css = "stroke-width:2;"),
-    opts_tooltip(css = "background-color:white;padding:5px;border:1px solid gray;border-radius:4px;font-family:'News Cycle';"),
-    opts_toolbar(saveaspng = TRUE),
-    opts_sizing(rescale = TRUE)
+    opts_tooltip(css = "background:white;padding:5px;border:1px solid gray;border-radius:4px;"),
+    opts_toolbar(saveaspng = TRUE)
   )
 )
 ```
 
-Beyond the immediate aftermath of *Dobbs*, two additional peaks in abortion-related media coverage align with major electoral moments. The first appears in **November 2022**, during the [U.S. midterm elections](https://www.npr.org/2022/11/09/1135345050/abortion-rights-state-ballots-election-results), when abortion rights were a central issue on state ballots across the country. Notably, *Fox News* overtook *The New York Times* in article volume — a reversal from earlier months when *The Times* had led during key judicial moments. This surge in Fox’s reporting likely reflects heightened partisan framing around abortion’s political salience, especially in contested states.
+Beyond the immediate aftermath of *Dobbs*, two additional peaks in
+abortion-related media coverage align with major electoral moments. The
+first appears in **November 2022**, during the [U.S. midterm
+elections](https://www.npr.org/2022/11/09/1135345050/abortion-rights-state-ballots-election-results),
+when abortion rights were a central issue on state ballots across the
+country. Notably, *Fox News* overtook *The New York Times* in article
+volume — a reversal from earlier months when *The Times* had led during
+key judicial moments. This surge in Fox’s reporting likely reflects
+heightened partisan framing around abortion’s political salience,
+especially in contested states.
 
-A second uptick occurs in **August 2023**, during the [Ohio special election](https://www.nytimes.com/2023/08/08/us/ohio-abortion-constitution-vote.html), when voters decided whether to raise the threshold for constitutional amendments. The measure was widely understood as a proxy battle over abortion rights. While both outlets covered the vote, the media response was more subdued than in 2022 — perhaps due to its more localized scope despite national implications.
+A second uptick occurs in **August 2023**, during the [Ohio special
+election](https://www.nytimes.com/2023/08/08/us/ohio-abortion-constitution-vote.html),
+when voters decided whether to raise the threshold for constitutional
+amendments. The measure was widely understood as a proxy battle over
+abortion rights. While both outlets covered the vote, the media response
+was more subdued than in 2022 — perhaps due to its more localized scope
+despite national implications.
 
-The most recent spike emerges in **late 2024**, with *The New York Times* reclaiming the lead in coverage volume. This increase likely corresponds with renewed national focus on abortion in the lead-up to the [2024 U.S. presidential election](https://www.nytimes.com/interactive/2024/us/elections/calendar.html), where reproductive rights once again became a central campaign issue.
+The most recent spike emerges in **late 2024**, with *The New York
+Times* reclaiming the lead in coverage volume. This increase likely
+corresponds with renewed national focus on abortion in the lead-up to
+the [2024 U.S. presidential
+election](https://www.nytimes.com/interactive/2024/us/elections/calendar.html),
+where reproductive rights once again became a central campaign issue.
 
-While monthly patterns highlight media reactions to key events, they don’t fully capture the broader arc of attention. To provide a cumulative perspective, we plotted the running total of abortion-related articles over time. Although *The New York Times* often displayed sharper monthly peaks, the cumulative view reveals a different pattern: over the long term, *Fox News* produced a significantly larger volume of abortion-related coverage. Following the *Dobbs* decision, both outlets showed a sharp rise in article counts, but *Fox News* continued publishing abortion-related content at a faster pace. By the end of 2024, *Fox News* had amassed a much larger body of coverage compared to *The New York Times*.
+While monthly patterns highlight media reactions to key events, they
+don’t fully capture the broader arc of attention. To provide a
+cumulative perspective, we plotted the running total of abortion-related
+articles over time. Although *The New York Times* often displayed
+sharper monthly peaks, the cumulative view reveals a different pattern:
+over the long term, *Fox News* produced a significantly larger volume of
+abortion-related coverage. Following the *Dobbs* decision, both outlets
+showed a sharp rise in article counts, but *Fox News* continued
+publishing abortion-related content at a faster pace. By the end of
+2024, *Fox News* had amassed a much larger body of coverage compared to
+*The New York Times*.
 
 ```{r}
 #| label: cumulative-plot
 #| fig.height: 3.5
+#| warning: false
+#| message: false 
 
 cumulative_plot <- ggplot() +
   geom_area_interactive(
-    data = fox_data_c,
-    aes(x = month, y = cumulative_n, fill = outlet, tooltip = tooltip_text_c, data_id = data_id_c),
+    data = rbind(fox_cumulative, nyt_cumulative),
+    aes(
+      x = month, y = cumulative_n,
+      fill = outlet, tooltip = tooltip_text_cumulative, data_id = data_id_cumulative
+    ),
     alpha = 0.35
   ) +
   geom_line_interactive(
-    data = fox_data_c,
-    aes(x = month, y = cumulative_n, color = outlet, tooltip = tooltip_text_c, data_id = data_id_c),
+    data = rbind(fox_cumulative, nyt_cumulative),
+    aes(x = month, y = cumulative_n, color = outlet),
     linewidth = 1.2
   ) +
   geom_point_interactive(
-    data = fox_data_c,
-    aes(x = month, y = cumulative_n, color = outlet, tooltip = tooltip_text_c, data_id = data_id_c),
+    data = rbind(fox_cumulative, nyt_cumulative),
+    aes(x = month, y = cumulative_n, color = outlet, tooltip = tooltip_text_cumulative, data_id = data_id_cumulative),
     size = 2, alpha = 0
   ) +
-  geom_area_interactive(
-    data = nyt_data_c,
-    aes(x = month, y = cumulative_n, fill = outlet, tooltip = tooltip_text_c, data_id = data_id_c),
-    alpha = 0.35
+  geom_vline(
+    xintercept = as.Date("2022-06-24"),
+    linetype = "dashed", color = "grey80"
   ) +
-  geom_line_interactive(
-    data = nyt_data_c,
-    aes(x = month, y = cumulative_n, color = outlet, tooltip = tooltip_text_c, data_id = data_id_c),
-    linewidth = 1.2
-  ) +
-  geom_point_interactive(
-    data = nyt_data_c,
-    aes(x = month, y = cumulative_n, color = outlet, tooltip = tooltip_text_c, data_id = data_id_c),
-    size = 2, alpha = 0
-  ) +
-  geom_vline(xintercept = as.Date("2022-06-24"), linetype = "dashed", color = "grey80", linewidth = 0.8) +
-  scale_fill_manual(values = fill_colors) +
-  scale_color_manual(values = line_colors) +
+  scale_fill_manual(values = fill_colors, drop = FALSE) +
+  scale_color_manual(values = line_colors, drop = FALSE) +
   scale_x_date(date_breaks = "1 month", date_labels = "%b'%y") +
-  labs(title = "Cumulative Abortion Coverage Over Time", x = "Date", y = "Cumulative Number of Articles", fill = "Outlet", color = "Outlet") +
+  labs(
+    title = "Cumulative Abortion Coverage Over Time",
+    x = "Date", y = "Cumulative Number of Articles"
+  ) +
   theme_light(base_family = "News Cycle") +
   theme(
     legend.position = "top",
@@ -319,34 +391,31 @@ cumulative_plot <- ggplot() +
     plot.margin = margin(10, 15, 10, 15)
   )
 
+# Render
 girafe(
   ggobj = cumulative_plot,
   options = list(
     opts_hover(css = "stroke-width:2;"),
-    opts_tooltip(css = "background-color:white;padding:5px;border:1px solid gray;border-radius:4px;font-family:'News Cycle';"),
-    opts_toolbar(saveaspng = TRUE),
-    opts_sizing(rescale = TRUE)
+    opts_tooltip(css = "background:white;padding:5px;border:1px solid gray;border-radius:4px;"),
+    opts_toolbar(saveaspng = TRUE)
   )
 )
+
 ```
 
 ## A Calendar of Changing Narratives
 
 To understand how language and sentiment around abortion shifted in the
-media before and after the Supreme Court’s landmark decision in Dobbs v.
-Jackson Women’s Health Organization, we mapped article sentiment scores
+media before and after the Supreme Court’s landmark decision in [*Dobbs
+v. Jackson Women’s Health
+Organization*](https://www.oyez.org/cases/2021/19-1392), we mapped
+article [AFINN](https://en.wikipedia.org/wiki/AFINN) sentiment scores
 across the two major outlets in a calendar heatmap format spanning 2020
-to 2024. Since we’ve been talking about how Fox News devoted a large volume of coverage to abortion, let’s first take a closer look at the tone of that coverage.
+to 2024.
 
-From 2020 to early 2024, Fox News’s sentiment trends tell a story of measured reporting occasionally pierced by sharp reactions. The early years — 2020 and 2021 — are relatively quiet. The sentiment tiles are mostly pale, which indicates mostly neutral-toned articles with only the occasional dip into negative or positive language. Abortion, at this point, seemed to be a non-headline driver, and Fox’s emotional engagement with the topic remained limited.
-
-That changes dramatically in 2022. The calendar lights up in early summer, just as the Supreme Court decision in Dobbs v. Jackson Women’s Health Organization overturned Roe v. Wade. Around June, the heatmap becomes a patchwork of red and blue — days of intense negativity followed by equally charged positivity. The tonal whiplash reflects a polarized editorial moment: some coverage framed the ruling as a conservative victory; other stories emphasized the backlash, protests, and uncertainty that followed.
-
-After the Dobbs ruling, the emotional peaks become more sporadic. In 2023 and 2024, the calendar shows fewer intense days, but when they appear, they’re sharper. It suggests that while abortion may not have remained a daily front-page story, the days it did appear were often tied to high-stakes developments — like new state laws, political campaigns, or anniversary reflections.
-
-Unlike some coverage cycles, the sentiment doesn’t follow a weekly rhythm. Some Mondays are sharply negative, others are quiet. What we see instead is a reactive pattern: Fox’s sentiment spikes in response to external shocks, not internal scheduling. It’s not an even pulse; it’s a media heartbeat that jumps in moments of national tension.
-
-So while the quantity of coverage tells us that Fox News paid close attention to abortion, the sentiment heatmap reveals when that attention turned emotional — and just how sharply it swung.
+Since we’ve been talking about how *Fox News* devoted a large volume of
+coverage to abortion, let’s first take a closer look at the tone of that
+coverage.
 
 ```{r}
 #| label: fox-calendar-heatmap
@@ -465,14 +534,24 @@ girafe(
 )
 ```
 
-After exploring how Fox News covered abortion in both volume and tone, it’s worth asking: how does The New York Times compare? While Fox’s sentiment calendar pulsed with emotional spikes tied to legal and political flashpoints, The Times paints a different picture.
+While *Fox News* consistently produced abortion-related articles
+throughout the 2020–2024 period, its emotional tone varied more subtly
+than expected. Most days register as light red or pale blue, which
+indicates slightly negative or slightly positive sentiment, with fewer
+extreme spikes than one might assume for such a polarizing topic.
 
-Across five years of reporting, the Times’ calendar heatmap reveals a remarkably consistent tone, with most days hovering in the neutral-to-slightly-negative range. There’s none of the whiplash of bright reds or deep blues that characterized Fox’s reporting. Even in 2022 — the year of Dobbs v. Jackson — the Times maintains a calm visual register. A brief streak of dark red appears in late spring, which is likely tied to leaked drafts and early reactions to the Supreme Court’s decision, but it fades quickly. The overwhelming majority of tiles are beige or pale pink: stories that may be emotionally charged in content, but are tempered in language.
+In 2022, around the time of the *Dobbs* decision that overturned *Roe v.
+Wade*, we observe scattered patches of deeper red and blue. However,
+rather than clustering tightly around key events, these peaks appear
+spread out across weeks.
 
-In fact, the New York Times appears to approach abortion coverage with a kind of editorial evenness. Unlike Fox News, which tends to react forcefully to political developments and court rulings, the Times reflects a more sustained and balanced journalistic rhythm. Coverage is spread consistently across the year, not just clustered around high-profile events, and sentiment rarely escalates into extremes.
+> Interestingly, sentiment remained relatively stable in 2023 and 2024,
+> with more diffuse tonal variation. This could imply that while the
+> political salience of abortion persisted, the emotional framing of
+> *Fox News* coverage settled into a more routine cadence post-*Dobbs*.
 
-What’s particularly striking is that one of the Times’ most positive sentiment spikes doesn’t occur after the Dobbs decision, but before it. On April 18, 2022, the sentiment score soars to 366.5 — unusually high, and notably upbeat for such a politically charged moment. One might expect coverage in this lead-up period to lean negative or cautious. Instead, this burst of positivity suggests a different editorial choice — perhaps highlighting stories of resilience, advocacy gains, or early signs of political mobilization.
-
+After exploring how *Fox News* covered abortion in both volume and tone,
+it’s worth asking: **how does *The New York Times* compare?**
 
 ```{r}
 #| label: nyt-calendar-heatmap
@@ -592,5 +671,37 @@ girafe(
 )
 ```
 
+Surprisingly, it’s *The New York Times* that reads as more restrained.
+In contrast to *Fox’s* more visibly fluctuating sentiment, the *Times*
+displays a remarkably steady emotional cadence in its abortion coverage
+from 2020 through 2024. Most days are washed in muted reds and pale
+blues. There is consistently neutral or mildly toned language across the
+board.
 
+The only noticeable deviation appears in spring 2022, just before the
+Supreme Court officially decided *Dobbs v. Jackson Women’s Health
+Organization*. Being a liberal-leaning outlet, and one generally
+supportive of abortion rights, we expected the *New York Times* to lean
+more negative in tone around the *Dobbs* decision. So it’s surprising to
+see a spike in **positive sentiment** in the weeks *before* the ruling.
+
+> That moment of optimism might feel out of place given the looming loss
+> of constitutional protections — but it likely reflects the way the
+> stories were framed: not with defeat, but with **mobilization**.
+> Articles during that time may have highlighted state-level
+> protections, legal challenges, or grassroots organizing, which could
+> register as “positive” in sentiment scoring, even if the context was
+> defensive or reactive.
+
+For example, an article celebrating the swift passage of abortion
+protections in certain states might score as "positive" based on
+language even though it was prompted by a national-level loss.
+Similarly, a story framing a restrictive abortion law as "historic" or
+"a major success" (even if opposed editorially) could also register as
+positive if the wording carried emotional approval.
+
+Even as article volume rises again toward the end of 2024, likely
+tracking with presidential election season, the emotional register stays
+steady. The *New York Times* seems to maintain its editorial evenness
+throughout.
 
