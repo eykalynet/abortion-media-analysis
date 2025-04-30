@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2025-04-26">
+<meta name="dcterms.date" content="2025-04-30">
 
 <title>Methodology – Website title</title>
 <style>
@@ -67,6 +67,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<link href="https://fonts.googleapis.com/css2?family=News+Cycle&amp;display=swap" rel="stylesheet">
 
 
 </head>
@@ -119,9 +120,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#data-collection" id="toc-data-collection" class="nav-link active" data-scroll-target="#data-collection">Data Collection</a></li>
-  <li><a href="#tools-and-workflow" id="toc-tools-and-workflow" class="nav-link" data-scroll-target="#tools-and-workflow">Tools and Workflow</a></li>
-  <li><a href="#analytical-strategy" id="toc-analytical-strategy" class="nav-link" data-scroll-target="#analytical-strategy">Analytical Strategy</a></li>
+  <li><a href="#data-collection" id="toc-data-collection" class="nav-link active" data-scroll-target="#data-collection">1. Data Collection</a></li>
+  <li><a href="#variables-and-measures" id="toc-variables-and-measures" class="nav-link" data-scroll-target="#variables-and-measures">2. Variables and Measures</a></li>
+  <li><a href="#data-analysis" id="toc-data-analysis" class="nav-link" data-scroll-target="#data-analysis">3. Data Analysis</a></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">4. Limitations</a></li>
+  <li><a href="#future-work" id="toc-future-work" class="nav-link" data-scroll-target="#future-work">5. Future Work</a></li>
   </ul>
 </nav>
     </div>
@@ -141,7 +144,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Last updated</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 26, 2025</p>
+      <p class="date">April 30, 2025</p>
     </div>
   </div>
   
@@ -153,43 +156,36 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="data-collection" class="level2">
-<h2 class="anchored" data-anchor-id="data-collection">Data Collection</h2>
-<p>This project examines abortion-related media coverage from <strong>Fox News</strong> and <strong>The New York Times</strong> between <strong>January 1, 2020</strong> and <strong>December 31, 2024</strong>. This period captures narratives both before and after the Supreme Court’s <em>Dobbs v. Jackson Women’s Health Organization</em> decision.</p>
-<p>We employed distinct scraping strategies for each outlet due to differences in their online archive structures.<br>
-- For <strong>The New York Times</strong>, we retrieved articles by crawling search results generated from <a href="https://www.nytimes.com/search?query=abortion&amp;startDate=2020-01-01&amp;endDate=2024-12-31">the Times’ internal search portal</a> using the query term “abortion.” - For <strong>Fox News</strong>, we extracted articles directly from <a href="https://www.foxnews.com/category/politics/judiciary/abortion">the abortion topic page</a> under the Politics section.</p>
-<p>We also collected <strong>state-level abortion policy data</strong> from the <a href="https://www.guttmacher.org/">Guttmacher Institute</a>. This supplementary dataset provides context for the evolving legal environment surrounding abortion access.</p>
-<p>We conducted scraping and extraction with <strong>Python 3.11</strong>. The final corpus consists of <strong>[will update]</strong> articles from <em>Fox News</em>, <strong>[will update]</strong> articles from <em>The New York Times</em>, and a set of Guttmacher policy documents.</p>
+<section id="data-collection" class="level3">
+<h3 class="anchored" data-anchor-id="data-collection">1. Data Collection</h3>
+<p>This study examines abortion-related media coverage from <a href="https://www.foxnews.com/category/politics/judiciary/abortion"><em>Fox News</em></a> and <a href="https://www.nytimes.com/search?query=abortion&amp;startDate=2020-01-01&amp;endDate=2024-12-31"><em>The New York Times</em></a>. We focus on the period from January 2020 to December 2024. These two outlets were selected due to their national visibility and ideological contrast, and thus, we believe they were ideal for comparative analysis across a politically contentious issue.</p>
+<p>To gather the articles, we developed two independent scraping pipelines. For <em>The New York Times</em>, we queried the internal search portal using the term “abortion,” restricted to the specified date range and English-language results. The search was sorted chronologically to allow the collection of complete temporal data. For <em>Fox News</em>, we accessed the abortion category under the Politics &gt; Judiciary section, where articles tagged by the editorial team were archived. To collect them, we built custom Python scripts that acted like virtual readers: they opened each site through a simulated browser, clicked through dynamic pages, and followed internal links just as a human user would. Behind the scenes, the scripts routed all traffic through the <strong>Tor network</strong> to anonymize activity and avoid being blocked. Using <a href="https://pypi.org/project/selenium-driverless/"><code>selenium-driverless</code></a>, we intercepted each site’s internal API calls and extracted article content in full.</p>
+<p>Included in the dataset were articles categorized as news reports, editorials, and features, provided they contained substantive textual content. Articles that were duplicates, excessively brief, or consisted primarily of video embeds were excluded to preserve analytical quality. We also incorporated state-level abortion policy data from the <a href="https://www.guttmacher.org/">Guttmacher Institute</a>. This dataset provides information on bans, gestational limits, and trigger laws.</p>
+<p>All content was scraped from publicly available webpages and accessed in accordance with each outlet’s <a href="https://www.robotstxt.org/"><code>robots.txt</code></a> file. Our scripts mimicked respectful user behavior and made no attempt to access paywalled or private content. No user data or personal identifiers were collected at any point. All scraping and analysis were conducted locally, and results were used exclusively for non-commercial purposes.</p>
 </section>
-<section id="tools-and-workflow" class="level2">
-<h2 class="anchored" data-anchor-id="tools-and-workflow">Tools and Workflow</h2>
-<p>Although R was emphasized throughout the course for data analysis, we used <strong>Python</strong> for the web scraping stage. Python offered stronger support for interacting with dynamic websites, handling JavaScript-rendered content, managing browsing sessions, and automating browser behavior. These tasks would have been more limited or unstable if performed in R.</p>
-<p>We used the following open-source Python libraries:</p>
-<ul>
-<li><p><code>selenium</code>:<br>
-This library automates web browsers. It mimics human behavior such as scrolling, clicking, and loading dynamic content.</p></li>
-<li><p><code>beautifulsoup4</code>:<br>
-This library parses HTML documents and extracts specific elements such as article text, publication dates, and authorship information.</p></li>
-<li><p><code>requests</code>:<br>
-This library sends direct HTTP requests to retrieve static web pages without needing a full browser.</p></li>
-<li><p><code>stem</code> (Tor network):<br>
-This library controls Tor circuits and connections. It routes scraping traffic through anonymous Tor relays to minimize the risk of IP blocking and to enhance anonymity during data collection.</p></li>
-<li><p><code>curl_cffi</code>:<br>
-This library provides a Python interface to <code>libcurl</code>, a low-level tool for making fast, secure HTTP requests. It allows more reliable downloading of web content, especially from websites that block basic requests or require advanced TLS handling.</p></li>
-</ul>
-<p>After collecting the data, we structured metadata fields (title, date, author, URL) and article full texts into standardized datasets for further analysis.</p>
+<section id="variables-and-measures" class="level3">
+<h3 class="anchored" data-anchor-id="variables-and-measures">2. Variables and Measures</h3>
+<p>Each article served as an individual unit of analysis. For each piece, we recorded the article title, publication date, and source outlet. While we originally intended to classify articles by type (e.g., news, feature, or opinion), structural inconsistencies across both websites limited our ability to do so during scraping; we plan to revisit this classification in future iterations. The full article body was extracted and processed using <a href="https://www.nltk.org/"><code>nltk</code></a>. Then, we created a binary indicator to distinguish whether an article was published before or after the June 24, 2022 <em>Dobbs</em> decision. Cleaned text was used to compute word counts and to generate unigrams and bigrams by frequency and TF-IDF weighting.</p>
+<p>The outcome of interest was article-level sentiment, calculated using the <a href="https://github.com/fnielsen/afinn">AFINN lexicon</a>. Each word in AFINN is assigned a sentiment score between –5 (strongly negative) and +5 (strongly positive). While individual word scores fall within this fixed range, the aggregated sentiment scores we computed at the article level based on the mean of all matched terms could extend beyond these bounds depending on the length and density of sentiment-bearing language.</p>
 </section>
-<section id="analytical-strategy" class="level2">
-<h2 class="anchored" data-anchor-id="analytical-strategy">Analytical Strategy</h2>
-<p>We designed our analytical approach to integrate major techniques covered in class, including <strong>spatial analysis</strong>, <strong>text analysis</strong>, and <strong>unsupervised learning</strong>.</p>
-<ul>
-<li><p><strong>Spatial Analysis</strong>:<br>
-We created a map of reproductive health laws across the United States. We geocoded policy data from the Guttmacher Institute and mapped it to highlight regional variation in abortion restrictions and protection.</p></li>
-<li><p><strong>Text Analysis</strong>:<br>
-We conducted sentiment analysis with <code>AFINN</code> to measure emotional tone in articles from <em>Fox News</em> and <em>The New York Times</em>. We also extracted the most frequent bigrams and keywords to compare dominant narrative structures before and after the <em>Dobbs</em> decision.</p></li>
-<li><p><strong>Unsupervised Learning</strong>:<br>
-We applied Latent Dirichlet Allocation (LDA) topic modeling with <code>gensim</code>. We trained separate models for the pre-<em>Dobbs</em> and post-<em>Dobbs</em> periods to see shifts in dominant topics and thematic emphases across media outlets.</p></li>
-</ul>
+<section id="data-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="data-analysis">3. Data Analysis</h3>
+<p>After wrangling, we performed lexicon-based sentiment analysis, topic modeling, co-occurrence network construction, and legal-geographic mapping.</p>
+<p>Sentiment was measured by averaging AFINN scores across all matched words per article. Though this approach does not capture context or rhetorical nuance, it provides a method for comparing tone across time and outlet.</p>
+<p>We ran <strong>Latent Dirichlet Allocation (LDA)</strong> topic models separately by outlet and by pre-/post-<em>Dobbs</em> period to identify recurring thematic structures. The resulting topic-term and document-topic distributions were interpreted to assess how media framing shifted over time. LDA modeling was conducted using the <a href="https://cran.r-project.org/web/packages/topicmodels/index.html"><code>topicmodels</code></a> package in R and <a href="https://radimrehurek.com/gensim/"><code>gensim</code></a> in Python.</p>
+<p>To visualize linguistic associations, we built <strong>word co-occurrence networks</strong> from bigram frequencies. Nodes represented terms, while edge weight reflected co-occurrence strength. These networks were rendered using force-directed layouts to highlight topic clusters and central vocabulary implemented using <a href="https://igraph.org/"><code>igraph</code></a> and <a href="https://ggraph.data-imaginist.com/"><code>ggraph</code></a>.</p>
+<p>Finally, we used the Guttmacher dataset to draft a <strong>U.S. abortion ban map</strong>, illustrating which states implemented total or near-total abortion restrictions post-<em>Dobbs</em>. This map was integrated with the media timeline to support interpretive framing.</p>
+<p>All analyses were conducted using Python (for scraping) and R (for wrangling, modeling, visualization, and reporting).</p>
+</section>
+<section id="limitations" class="level3">
+<h3 class="anchored" data-anchor-id="limitations">4. Limitations</h3>
+<p>Lexicon-based sentiment scoring is limited in scope and does not account for the syntactic or rhetorical context in which words appear. As such, emotion may be misrepresented in articles with subtle or indirect tone. Differences in article length, editorial style, and formatting between <em>The New York Times</em> and <em>Fox News</em> may also affect comparisons of sentiment scores.</p>
+<p>As discussed in the main content of the blog, we observed that some articles, particularly pre-<em>Dobbs</em> features from <em>The New York Times</em>, appeared to carry a broadly positive tone based on sentiment scoring. However, closer reading revealed that this positivity often stemmed from emotionally charged language (e.g., words like “hope,” “support,” or “freedom”) used in quoting abortion rights advocates. Lexicon-based sentiment scoring, such as with AFINN, does not account for the context in which words appear. As a result, articles that include supportive quotes or passionate language even when the broader framing is neutral or critical may be mischaracterized in tone.</p>
+<p>While our dataset is limited to just two outlets and is not intended to represent the full diversity of the U.S. media landscape, we view this work as a step toward more expansive analyses. We hope it can inform and inspire future projects that broaden the scope of media coverage.</p>
+</section>
+<section id="future-work" class="level3">
+<h3 class="anchored" data-anchor-id="future-work">5. Future Work</h3>
+<p>Given the scope and limitations of this project, several potential improvements come to mind. Future projects could include additional news sources such as, but not limited to, regional papers, cable news transcripts, and digital-native platforms to increase breadth and representativeness. We are also interested in experimenting with alternative sentiment models and topic modeling techniques that better analyze rhetorical nuance and evolving language use.</p>
 
 
 </section>
