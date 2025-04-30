@@ -56,6 +56,7 @@ library(showtext)
 library(ggiraph)
 library(gdtools)
 library(gfonts)
+library(textmineR)
 
 # Load cleaned datasets
 nyt <- read_csv("../data/wrangled/nyt_news_data_wrangled.csv")
@@ -704,41 +705,3 @@ tracking with presidential election season, the emotional register stays
 steady. The *New York Times* seems to maintain its editorial evenness
 throughout.
 
-```{r}
-tokens_bigrams2 <- bind_rows(
-  nyt |> mutate(outlet = "NYT"),
-  fox |> mutate(outlet = "Fox")
-) |>
-  mutate(week = lubridate::floor_date(as.Date(pub_date), "week")) |>
-  unnest_tokens(bigram, text, token = "ngrams", n = 2) |>
-  separate(bigram, into = c("word1", "word2"), sep = " ") |>
-  filter(!word1 %in% stop_words$word,
-         !word2 %in% stop_words$word,
-         !word1 %in% custom_stopwords$word,
-         !word2 %in% custom_stopwords$word) |>
-  unite(bigram, word1, word2, sep = " ") |>
-  count(week, bigram, sort = TRUE)
-
-top_bigrams_weekly <- tokens_bigrams2 |>
-  group_by(week) |>
-  slice_max(n, n = 15, with_ties = FALSE) |>
-  mutate(rank = row_number()) |>
-  ungroup()
-
-p <- ggplot(top_bigrams_weekly, aes(x = -rank, y = n, fill = bigram)) +
-  geom_col(show.legend = FALSE) +
-  geom_text(aes(label = bigram, y = 0), hjust = 1, size = 4) +
-  coord_flip(clip = "off") +
-  scale_x_continuous(breaks = NULL) +
-  labs(
-    title = "Top Bigrams in News Articles ({closest_state})",
-    subtitle = "Weekly Frequency of Bigrams | NYT & Fox",
-    x = NULL, y = "Count"
-  ) +
-  theme_minimal(base_size = 14) +
-  transition_states(week, transition_length = 3, state_length = 1) +
-  ease_aes('cubic-in-out')
-
-animate(p, fps = 10, width = 800, height = 600, duration = 30, renderer = gifski_renderer("bigrams_bar_chart_race.gif"))
-
-```
