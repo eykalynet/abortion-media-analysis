@@ -143,6 +143,7 @@ fox_meta3 <- fox_meta2 |>
 write_csv(fox_meta3, "../data/wrangled/fox_news_data_wrangled.csv")
 ```
 
+
 ## 5. Text Analysis
 
 ```{r}
@@ -174,110 +175,71 @@ fox_meta3 |>
 ```
 
 ```{r}
-#| label: tf-idf
-
-
-```
-
-
-```{r}
 #| label: afinn
 afinn <- get_sentiments("afinn")
 
-fox_meta4 <- fox_meta3 |> 
-  unnest_tokens(word, text_clean) |> 
-  left_join(afinn, by = "word")
+#This analysis looks through the text for more specific tags such as religious, medical, gender, and legal tags 
+top_junk <- c("news", "said", "people", "mr", "fox", "u.s", "including", "justice", "a", "the", "abortion", "supreme", "court", "it's")
+health <- c("health", "clinic", "medicine", "pills", "planned parenthood")
+gender <- c("female", "females", "women", "woman", "girl", "girls")
+legal <- c("illegal", "legal", "court", "ruling", "law")
 
-sentiment_analyis_text <- fox_meta4|> 
-  group_by(title)|>
-  filter(!is.na(value)) |> 
-  summarise(text_sent_score = sum(value))
-
-
-
-fox_meta4 <- fox_meta3 |> 
-  unnest_tokens(word, description) |> 
-  left_join(afinn, by = "word")
-
-sentiment_analyis_description <- fox_meta4|> 
-  group_by(title)|>
-  filter(!is.na(value)) |> 
-  summarise(description_sent_score = sum(value))
-
-
-#This gets the inital sentiment analysis and the sentiment scores through the afinn sentiment package 
-fox_meta5 <- fox_meta3 |> 
-  left_join(sentiment_analyis_text)|> 
-  left_join(sentiment_analyis_description) |> 
-  mutate(sentiment_score = 
-           if_else(is.na(description_sent_score), 0, description_sent_score) + 
-           if_else(is.na(text_sent_score), 0, text_sent_score))|> 
-  select(-url) |> 
-  mutate(np_po = if_else(sentiment_score > 2, "positive", "zero"))|>
-  mutate(np_po = if_else(sentiment_score < -2, "negative", np_po))|> 
-  mutate(roe_status = if_else(str_detect(roe_status, "Pre"), "Pre-Roe", roe_status))
- 
-#This analysis looks through the text for more specific tags such as religious, medical, and legal taggs 
-fox_text_content <- fox_meta5 |> 
-  mutate(pub_date = as.Date(pub_date)) |> 
-  mutate(tagging = if_else(str_detect(text, regex("supreme.*court|court.*supreme", ignore_case = TRUE)), "SC", NA)) |> 
-  mutate(tagging = if_else(str_detect(text,regex(
-    "catholic.*christian.*religion|catholic.*religion.*christian|christian.*catholic.*religion|christian.*religion.*catholic|religion.*catholic.*christian|religion.*christian.*catholic", ignore_case = TRUE)), 
-    if_else(is.na(tagging), "R", paste(tagging, "R", sep = ", ")), tagging)) |> 
-  mutate(tagging = if_else(str_detect(text,regex(
-    "medicine.*health.*clinic|medicine.*clinic.*health|health.*medicine.*clinic|health.*clinic.*medicine|clinic.*medicine.*health|clinic.*health.*medicine", 
-                                                  ignore_case = TRUE)), 
-                           if_else(is.na(tagging), "H", 
-                                   paste(tagging, "H", sep = ", ")), tagging)) |> 
-  mutate(tagging = if_else(str_detect(text,regex(
-    "Planned Parenthood", ignore_case = TRUE)), if_else(is.na(tagging), "H", 
-                                   paste(tagging, "H", sep = ", ")), tagging)) 
-
-
-fox_government_analysis <- fox_meta5 |> 
-  mutate(pub_date = as.Date(pub_date))
+fox_text_content <- fox_meta3 |> 
+  unnest_tokens(sentence, text, token = "sentences")|> 
+  mutate(terms = if_else(str_detect(sentence, str_c(health, collapse = "|")), 
+                           "Health", NA)) |>
+  mutate(terms = if_else(
+    str_detect(sentence, str_c(gender, collapse = "|")), if_else(is.na(terms), "Gender", 
+                                   paste(terms, "Gender", sep = ", ")), terms))|> 
+  mutate(terms = if_else(
+    str_detect(sentence, str_c(legal, collapse = "|")), if_else(is.na(terms), "Legal", 
+                                   paste(terms, "Legal", sep = ", ")), terms))
   
-  
+fox_text_content <- fox_text_content|> 
+  filter(!is.na(terms))
+
+fox_text_content |> 
+  group_by(terms) |> 
+  summarise(occurance = n()) |>
+  kable()
 
 ```
 
-## 6. Analysis for Sentiment Around Gender 
-In this section we did a sentiment analysis with the mentions women and females dive into the sentiment of the abortion narratives around women in more conservative media
+In this next part of the key word analysis we will take a look the words in the sentences with these tags to understand what are the general topics and points of conversation around these keywords. 
+
 ```{r}
-fox_gender_analysis <- fox_meta3 |> 
-  select(title, text, description) |> 
-  unnest_tokens(sentence, text, token = "sentences") |> 
-  filter(
-    str_detect(sentence, "women") |
-      str_detect(sentence, "woman") |
-      str_detect(sentence, "female")
-  ) |> 
+word_freq <- fox_text_content |>
   unnest_tokens(word, sentence) |> 
-  left_join(afinn, by = "word") |> 
-  group_by(title)|>
-  filter(!is.na(value)) |> 
-  summarise(sent_analysis = sum(value))
+  anti_join(stop_words) 
 
-fox_gender_analysis <- left_join(fox_gender_analysis, fox_meta3, by = "title") |>
-  mutate(roe_status = if_else(str_detect(roe_status, "Pre"), "Pre-Roe", roe_status)) |> 
-  mutate(np_po = if_else(sent_analysis > 2, "positive", "zero"))|>
-  mutate(np_po = if_else(sent_analysis < -2, "negative", np_po))
+set.seed(53)
 
+png("/Users/emilieward/Desktop/gendercloud.png", width = 500, height = 500)
+word_freq_gender <- word_freq |> 
+  filter(str_detect(terms, "Gender")) |> 
+  filter(!str_detect(word, str_c(top_junk, collapse =  "|"))) |> 
+  filter(!str_detect(word, str_c(gender, collapse =  "|")))|> 
+  count(word, sort = TRUE) |> 
+  with(wordcloud(words = word, freq = n, max.words = 50))
+dev.off()
 
-genderedAnalysis <- ggplot(fox_gender_analysis, aes(x = `title`, y = `sent_analysis`, fill = `roe_status`)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Sentiment Around Female Experience in Fox News Articles", 
-       x = "Title", y = "Sentiment Score", fill = "Pre/Post Roe Status") +
-  facet_grid(~roe_status)
-genderedAnalysis
+png("/Users/emilieward/Desktop/healthcloud.png", width = 500, height = 500)
+word_freq_health <- word_freq |> 
+  filter(str_detect(terms, "Health")) |> 
+  filter(!str_detect(word, str_c(top_junk, collapse =  "|")))|> 
+  filter(!str_detect(word, str_c(health, collapse =  "|")))|> 
+  count(word, sort = TRUE) |> 
+  with(wordcloud(words = word, freq = n, max.words = 50))
+dev.off()
 
-g2 <- fox_gender_analysis |> 
-  filter(np_po != "zero") |>
-  ggplot(aes(x = `pub_date`, color = `roe_status`)) +
-  geom_histogram()+
-  facet_grid(~np_po)
-g2
-
+png("/Users/emilieward/Desktop/legalcloud.png", width = 500, height = 500)
+word_freq_law <- word_freq |> 
+  filter(str_detect(terms, "Legal")) |> 
+  filter(!str_detect(word, str_c(top_junk, collapse =  "|")))|> 
+  filter(!str_detect(word, str_c(legal, collapse =  "|")))|> 
+  count(word, sort = TRUE) |> 
+  with(wordcloud(words = word, freq = n, max.words = 50))
+dev.off()
 
 ```
 
@@ -309,7 +271,6 @@ fox_meta_topwords <- fox_meta3 |>
   group_by(title) |> 
   summarize(text_cleaned = paste(word, collapse = " "),.groups = "drop") 
   
-  
 # g_topwords <- fox_meta_topwords |> 
 #   unnest_tokens(word, text_cleaned, token = "ngrams", n= 1) |>
 #   filter(word != "life" | word != "wade") |> 
@@ -320,6 +281,7 @@ fox_meta_topwords <- fox_meta3 |>
 #   labs(title = "Most Frequent Words", x = "Count", y = "")
 # g_topwords
 
+
 g_topbigram <- fox_meta_topwords |>
   unnest_tokens(bigram, text_cleaned, token = "ngrams", n = 2) |>
   count(bigram, sort = TRUE) |>
@@ -329,198 +291,9 @@ g_topbigram <- fox_meta_topwords |>
   labs(title = "Top Bigrams", x = "Count", y = "")
 g_topbigram
 
+ggsave("/Users/emilieward/Desktop/bigrams.png", plot = g_topbigram, width = 8, height = 6)
 ```
 
-```{r}
-#| label: Looking at sentiment around pro-life
-
-fox_pro_life_analysis <- fox_meta3 |> 
-  select(title, text, description) |> 
-  unnest_tokens(sentence, text, token = "sentences") |> 
-  filter(
-    str_detect(sentence, "pro-life")
-  ) |> 
-  unnest_tokens(word, sentence) |> 
-  left_join(afinn, by = "word") |> 
-  group_by(title)|>
-  filter(!is.na(value)) |> 
-  summarise(sent_analysis = sum(value))
-
-fox_pro_life_analysis <- left_join(fox_pro_life_analysis, fox_meta3, by = "title") |>
-  mutate(roe_status = if_else(str_detect(roe_status, "Pre"), "Pre-Roe", roe_status)) |> 
-  mutate(np_po = if_else(sent_analysis > 2, "positive", "zero"))|>
-  mutate(np_po = if_else(sent_analysis < -2, "negative", np_po))
-
-prolifeAnalysis <- ggplot(fox_pro_life_analysis, aes(x = `title`, y = `sent_analysis`, fill = `roe_status`)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Sentiment Around Female Experience in Fox News Articles", 
-       x = "Title", y = "Sentiment Score", fill = "Pre/Post Roe Status") +
-  facet_grid(~roe_status)
-prolifeAnalysis
-
-#pro-choice
-fox_pro_choice_analysis <- fox_meta3 |> 
-  select(title, text, description) |> 
-  unnest_tokens(sentence, text, token = "sentences") |> 
-  filter(
-    str_detect(sentence, "pro-choice")
-  ) |> 
-  unnest_tokens(word, sentence) |> 
-  left_join(afinn, by = "word") |> 
-  group_by(title)|>
-  filter(!is.na(value)) |> 
-  summarise(sent_analysis = sum(value))
-
-fox_pro_choice_analysis <- left_join(fox_pro_choice_analysis, fox_meta3, by = "title") |>
-  mutate(roe_status = if_else(str_detect(roe_status, "Pre"), "Pre-Roe", roe_status)) |> 
-  mutate(np_po = if_else(sent_analysis > 2, "positive", "zero"))|>
-  mutate(np_po = if_else(sent_analysis < -2, "negative", np_po))
-
-# proChoiceAnalysis <- ggplot(fox_pro_choice_analysis, aes(x = `title`, y = `sent_analysis`, fill = `roe_status`)) +
-#   geom_bar(stat = "identity") +
-#   labs(title = "Sentiment Around Female Experience in Fox News Articles", 
-#        x = "Title", y = "Sentiment Score", fill = "Pre/Post Roe Status") +
-#   facet_grid(~roe_status)
-# proChoiceAnalysis
-
-
-# I like this analysis
-g3 <- fox_pro_life_analysis |> 
-  # filter(np_po != "zero") |>
-  ggplot(aes(x = `pub_date`, color = `roe_status`)) +
-  geom_density()+
-  facet_grid(~np_po) +
-  labs(title = "Pro-life occurance analysis")
-g3
-
-g4 <- fox_pro_choice_analysis |> 
-  # filter(np_po != "zero") |>
-  ggplot(aes(x = `pub_date`, color = `roe_status`)) +
-  geom_density()+
-  facet_grid(~np_po) +
-  labs(title = "Pro-choice occurance analysis")
-g4
-```
-
-## 6. "Over-turning Analysis
-```{r}
-
-fox_overturning_analysis <- fox_meta3 |> 
-  select(title, text, description) |> 
-  unnest_tokens(sentence, text, token = "sentences") |> 
-  filter(
-    str_detect(sentence, regex("overturn.*roe|roe*overturn", ignore_case = TRUE))
-  ) |> 
-  unnest_tokens(word, sentence) |> 
-  left_join(afinn, by = "word") |> 
-  group_by(title)|>
-  filter(!is.na(value)) |> 
-  summarise(sent_analysis = sum(value))
-
-fox_overturning_analysis <- left_join(fox_overturning_analysis, fox_meta3, by = "title") |>
-  mutate(roe_status = if_else(str_detect(roe_status, "Pre"), "Pre-Roe", roe_status)) |> 
-  mutate(np_po = if_else(sent_analysis > 2, "positive", "neutral"))|>
-  mutate(np_po = if_else(sent_analysis < -2, "negative", np_po))
-
-overturningAnalysis <- ggplot(fox_overturning_analysis, aes(x = `title`, y = `sent_analysis`, fill = `roe_status`)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Sentiment Around Female Experience in Fox News Articles", 
-       x = "Title", y = "Sentiment Score", fill = "Pre/Post Roe Status") +
-  facet_grid(~roe_status)
-overturningAnalysis
-
-#making a data set for area plot:
-aritcles_per_year <- fox_overturning_analysis |> 
-  mutate(pub_date = as.Date(pub_date))|>
-  group_by(pub_date)|>
-  summarize(noA = n())
-
-area_data <- fox_overturning_analysis |> 
-  mutate(pub_date = as.Date(pub_date)) |>
-  group_by(pub_date, np_po) |> 
-  summarise(n = n()) 
-  
-area_data <- left_join(area_data, aritcles_per_year)
-area_data <- area_data |> 
-  mutate(percentage = n/noA)
-
-
-g3 <- area_data |> 
-  ggplot(aes(x = pub_date, y = percentage, fill = np_po)) +
-  geom_area(stat = "identity", position = "stack")
-g3
-
-g4 <- area_data |> 
-  ggplot(aes(x = pub_date, y = n, color = np_po)) +
-  geom_line(stat = "identity", position = "stack")
-g4
-
-#this makes the good graph 
-g3 <- fox_overturning_analysis |> 
-  rename("Sentiment Groups" = "np_po")|>
-  ggplot(aes(x = sent_analysis, color = `Sentiment Groups`)) +
-  geom_density() +
-  facet_grid(~roe_status) +
-  labs(x = "Sentiment Score", y = "", title = "Articles Sentiments around overturning Roe vs. Wade") +
-  theme_classic()
-g3
-
-g3 <- fox_overturning_analysis |> 
-  filter(np_po != "neutral") |>
-  ggplot(aes(x = `pub_date`, y = sent_analysis)) +
-  geom_point()
-g3
-
-```
-```{r}
-
-```
-
-
-## 6. White House Analysis
-
-```{r}
-
-# I should make a timeline plot for this one
-fox_PP_analysis <- fox_meta3 |> 
-  select(title, text, description) |> 
-  unnest_tokens(sentence, text, token = "sentences") |> 
-  filter(
-    str_detect(sentence, regex("white.*house|house*white", ignore_case = TRUE))
-  ) |> 
-  unnest_tokens(word, sentence) |> 
-  left_join(afinn, by = "word") |> 
-  group_by(title)|>
-  filter(!is.na(value)) |> 
-  summarise(sent_analysis = sum(value))
-
-fox_PP_analysis <- left_join(fox_PP_analysis, fox_meta3, by = "title") |>
-  mutate(roe_status = if_else(str_detect(roe_status, "Pre"), "Pre-Roe", roe_status)) |> 
-  mutate(np_po = if_else(sent_analysis > 2, "positive", "neutral"))|>
-  mutate(np_po = if_else(sent_analysis < -2, "negative", np_po))
-
-PPAnalysis <- ggplot(fox_PP_analysis, aes(x = `title`, y = `sent_analysis`, fill = `roe_status`)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Sentiment Around Female Experience in Fox News Articles", 
-       x = "Title", y = "Sentiment Score", fill = "Pre/Post Roe Status") +
-  facet_grid(~roe_status)
-PPAnalysis
-
-fox_PP_analysis$pub_date <- as.Date(fox_PP_analysis$pub_date)
-fox_PP_analysis$month_year <- paste(month(fox_PP_analysis$pub_date), year(fox_PP_analysis$pub_date), sep = "-")
-
-
-fox_PP_analysis <- fox_PP_analysis |> 
-  # mutate(pub_date = paste(month, year, sep = "-")) |> 
-  group_by(month_year) |> 
-  summarise(sent_analysis = sum(sent_analysis))
-
-
-g3 <- fox_PP_analysis |> 
-  # filter(np_po != "neutral") |>
-  ggplot(aes(x = `month_year`, y = sent_analysis)) +
-  geom_point()
-g3
 
 ```
 
