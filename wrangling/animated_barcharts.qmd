@@ -189,9 +189,10 @@ nyt_plot <- ggplot(nyt_top_bigrams, aes(x = -rank, y = n, fill = sentiment)) +
   view_follow(fixed_x = TRUE) +
   ease_aes("cubic-in-out")
 
+
 animate(nyt_plot,
         fps = 30, duration = 60, width = 800, height = 600,
-        renderer = gifski_renderer("nyt_sentiment_bigrams_per_month.gif"))
+                renderer = gifski_renderer("../quarto/images/nyt_sentiment_bigrams_per_month.gif"))
 ```
 space
 ```{r}
@@ -333,7 +334,7 @@ fox_plot <- ggplot(fox_top_bigrams, aes(x = -rank, y = n, fill = sentiment)) +
 ```{r}
 animate(fox_plot,
         fps = 30, duration = 60, width = 800, height = 600,
-        renderer = gifski_renderer("fox_sentiment_bigrams_per_month.gif"))
+        renderer = gifski_renderer("../quarto/images/fox_sentiment_bigrams_per_month.gif"))
 ```
 
 
