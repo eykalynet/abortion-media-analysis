@@ -709,6 +709,8 @@ throughout.
 
 To visualize how *The New York Times’* framing of abortion evolved over time, we animated the top bigrams appearing in abortion-related articles each month from **2020** to **2024**.
 
+![Animated NYT Bigrams](images/nyt_sentiment_bigrams_per_month.gif)
+
 In **early 2020**, bigrams like *health care*, *pro life*, and *reproductive rights* were prominent, reflecting a healthcare- and ideologically-focused framing of abortion. In **September 2021**, with [Texas’s SB8 law](https://en.wikipedia.org/wiki/Texas_Senate_Bill_8) going into effect, terms like *texas law* and *planned parenthood* surged.
 
 By **May and June 2022**, during the [leaked draft opinion of *Dobbs v. Jackson Women's Health Organization*](https://www.politico.com/news/2022/05/02/supreme-court-abortion-draft-opinion-00029473) and the eventual [Dobbs decision](https://www.supremecourt.gov/opinions/21pdf/19-1392_6j37.pdf), legal terms like *overturn roe* and *court decision* became prominent, marking a shift to more court-centric framing of abortion discourse.
@@ -719,9 +721,10 @@ The presence of terms like *12 weeks*, *15 weeks*, *shield laws*, and *aid acces
 
 **Overall**, we see how *The New York Times* coverage adapted in real time to political events—shifting from national healthcare debates to increasingly legal and rights-based discourse.
 
-![Animated NYT Bigrams](images/nyt_sentiment_bigrams_per_month.gif)
 
 We did the similar thing for Fox News. 
+
+![Animated Fox Bigrams](images/fox_sentiment_bigrams_per_month.gif)
 We consistently see *health care* as a primary focus each year, but especially in **2020**, there was a heightened emphasis on *public care*, with frequent mentions of phrases like *affordable care*, *care access*, and *medical progress*.
 
 A more *narrative-driven* framing emerges at the start of **2021**, with top bigrams in **February 2021** such as *lives matter* and *killed babies*, followed by *moral evil* and *spiritual harm* in **April** and **May**. While **2020** centered more on *medicine*, *public health*, and social institutions impacted by abortion laws, **2021** marks a shift toward individual experiences and the *moral and social opinion* surrounding abortion.
@@ -732,6 +735,18 @@ After the [*Dobbs v. Jackson Women's Health Organization* decision](https://www.
 
 This wider thematic spread reflects the surge in *media attention* and *public discourse* in the lead-up to and aftermath of the overturning of [*Roe v. Wade*](https://www.oyez.org/cases/1971/70-18)—capturing debates around health care, law, religion, and personal trauma in equal measure.
 
-![Animated Fox Bigrams](images/fox_sentiment_bigrams_per_month.gif)
+::: {.callout-tip title="What’s Next?"}
+
+With everything ramping up toward the end of the semester (finals, projects, life), there are still a few things we want to finish up.
+
+We’re planning to **run topic modeling** (basically like clustering, but for text) by media outlet and pre-/post-*Dobbs*, then generate word clouds to help visualize recurring themes. We also want to **create a U.S. state-level abortion ban map** using data from the [Guttmacher Institute](https://www.guttmacher.org/) to show geographic patterns in post-*Dobbs* restrictions.
+
+We’re also hoping to **add more annotations** to our graphs to mark key policy changes across the timeline again using Guttmacher’s policy tracker to help explain some of the sharper shifts in language or focus.
+
+Lastly (and maybe a stretch, but we’ll see), we’re exploring how to **make the animated bar graphs interactive**, so viewers can pause, replay, or jump to specific months.
+
+:::
+
+
 
 
