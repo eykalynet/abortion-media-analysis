@@ -1,0 +1,226 @@
+---
+title: "animated_barcharts"
+format: html
+---
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(tidytext)
+library(lubridate)
+library(gganimate)
+library(gifski)
+library(ggtext)
+library(showtext)
+library(sysfonts)
+library(gdtools)
+library(magick)
+
+# Font setup
+font_add_google("News Cycle", "news")
+showtext_auto()
+register_gfont("News Cycle")
+
+# Custom stopwords
+top_junk <- c("news", "said", "people", "mr", "times", "u.s", "including", 
+              "justice", "article", "new", "york", "it’s", "don’t", 
+              "abortions", "week", "that's", "ms", "supreme", "court", "abortion")
+custom_stop <- tibble(word = top_junk)
+data("stop_words")
+all_stops <- bind_rows(stop_words, custom_stop)
+
+# Sentiment fill colors
+fill_colors <- c(
+  "negative" = "#f28ca0",
+  "positive" = "#7aaed6"
+)
+
+# Dobbs decision
+dobbs_date <- as.Date("2022-06-01")
+```
+
+space
+space
+
+```{r}
+#| label: nyt-bigrams
+
+nyt <- read_csv("../data/wrangled/nyt_news_data_wrangled.csv") |>
+  mutate(pub_date = as.Date(pub_date),
+         month = floor_date(pub_date, unit = "month"))
+
+nyt_bigrams <- nyt |>
+  unnest_tokens(bigram, text, token = "ngrams", n = 2)
+```
+
+space
+
+```{r}
+# AFINN sentiment scoring
+afinn <- get_sentiments("afinn")
+
+nyt_bigrams_sentiment <- nyt_bigrams |>
+  separate(bigram, into = c("word1", "word2"), sep = " ") |>
+  filter(!word1 %in% all_stops$word,
+         !word2 %in% all_stops$word) |>
+  left_join(afinn, by = c("word1" = "word")) |> rename(score1 = value) |>
+  left_join(afinn, by = c("word2" = "word")) |> rename(score2 = value) |>
+  mutate(
+    avg_score = rowMeans(cbind(score1, score2), na.rm = TRUE),
+    sentiment = case_when(
+      avg_score > 0 ~ "positive",
+      avg_score < 0 ~ "negative",
+      TRUE ~ NA_character_
+    )
+  ) |>
+  filter(!is.na(sentiment)) |>
+  unite(bigram, word1, word2, sep = " ") |>
+  count(month, bigram, sentiment, sort = TRUE)
+```
+
+space
+
+```{r}
+#| label: monthly-animation-nyt
+
+top_n <- 10
+
+nyt_top_bigrams <- nyt_bigrams_sentiment |>
+  group_by(month) |>
+  slice_max(n, n = top_n, with_ties = FALSE) |>
+  ungroup() |>
+  group_by(month) |>
+  mutate(rank = rank(-n, ties.method = "first")) |>
+  ungroup() |>
+  mutate(n = round(n))
+
+nyt_top_bigrams <- nyt_bigrams_sentiment |>
+  group_by(month) |>
+  slice_max(n, n = 10, with_ties = FALSE) |>
+  ungroup() |>
+  group_by(month) |>
+  mutate(rank = rank(-n, ties.method = "first")) |>
+  ungroup() |>
+  mutate(n = round(n))
+
+# Animated bar chart
+nyt_plot <- ggplot(nyt_top_bigrams, aes(x = -rank, y = n, fill = sentiment)) +
+  geom_col(width = 0.8, show.legend = TRUE) +
+  coord_flip(clip = "off") +
+  geom_text(aes(label = bigram), hjust = 1.05, size = 6, fontface = "bold", family = "news") +
+  geom_text(aes(label = formatC(n, format = "d")), hjust = -0.2, size = 6, family = "news") +
+  labs(
+    title = "New York Times: Top Sentiment Bigrams by Month",
+    subtitle = "Month of {format(frame_time, '%B %Y')}",
+    caption = "Sentiment scored via AFINN lexicon (average of 2 words) • Source: NYT articles",
+    x = NULL, y = NULL,
+    fill = "Sentiment"
+  ) +
+  scale_fill_manual(values = fill_colors) +
+  scale_y_continuous(limits = c(0, max(nyt_top_bigrams$n) + 5)) +
+  theme_minimal(base_family = "news") +
+  theme(
+    plot.title = element_text(size = 20, face = "bold"),
+    plot.subtitle = element_text(size = 16),
+    plot.caption = element_text(size = 10, face = "italic"),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    plot.margin = margin(1, 4, 1, 6, "cm")
+  ) +
+  transition_time(month) +          
+  view_follow(fixed_x = TRUE) +
+  ease_aes("cubic-in-out")
+
+animate(nyt_plot,
+        fps = 30, duration = 60, width = 800, height = 600,
+        renderer = gifski_renderer("nyt_sentiment_bigrams_per_month.gif"))
+```
+space
+
+```{r}
+#| label: fox-bigrams
+
+# Load Fox News data
+fox <- read_csv("../data/wrangled/fox_news_data_wrangled.csv") |>
+  mutate(pub_date = as.Date(pub_date),
+         month = floor_date(pub_date, unit = "month"))
+
+# Tokenize into bigrams
+fox_bigrams <- fox |>
+  unnest_tokens(bigram, text, token = "ngrams", n = 2)
+
+# AFINN sentiment scoring
+fox_bigrams_sentiment <- fox_bigrams |>
+  separate(bigram, into = c("word1", "word2"), sep = " ") |>
+  filter(!word1 %in% all_stops$word,
+         !word2 %in% all_stops$word) |>
+  left_join(afinn, by = c("word1" = "word")) |> rename(score1 = value) |>
+  left_join(afinn, by = c("word2" = "word")) |> rename(score2 = value) |>
+  mutate(
+    avg_score = rowMeans(cbind(score1, score2), na.rm = TRUE),
+    sentiment = case_when(
+      avg_score > 0 ~ "positive",
+      avg_score < 0 ~ "negative",
+      TRUE ~ NA_character_
+    )
+  ) |>
+  filter(!is.na(sentiment)) |>
+  unite(bigram, word1, word2, sep = " ") |>
+  count(month, bigram, sentiment, sort = TRUE)
+
+# Keep top 10 per month
+fox_top_bigrams <- fox_bigrams_sentiment |>
+  group_by(month) |>
+  slice_max(n, n = 10, with_ties = FALSE) |>
+  ungroup() |>
+  group_by(month) |>
+  mutate(rank = rank(-n, ties.method = "first")) |>
+  ungroup() |>
+  mutate(n = round(n))
+```
+
+
+
+space
+
+
+```{r}
+# Animated bar chart for Fox News
+fox_plot <- ggplot(fox_top_bigrams, aes(x = -rank, y = n, fill = sentiment)) +
+  geom_col(width = 0.8, show.legend = TRUE) +
+  coord_flip(clip = "off") +
+  geom_text(aes(label = bigram), hjust = 1.05, size = 6, fontface = "bold", family = "news") +
+  geom_text(aes(label = formatC(n, format = "d")), hjust = -0.2, size = 6, family = "news") +
+  labs(
+    title = "Fox News: Top Sentiment Bigrams by Month",
+    subtitle = "Month of {format(frame_time, '%B %Y')}",
+    caption = "Sentiment scored via AFINN lexicon (average of 2 words) • Source: Fox News articles",
+    x = NULL, y = NULL,
+    fill = "Sentiment"
+  ) +
+  scale_fill_manual(values = fill_colors) +
+  scale_y_continuous(limits = c(0, max(fox_top_bigrams$n) + 5)) +
+  theme_minimal(base_family = "news") +
+  theme(
+    plot.title = element_text(size = 20, face = "bold"),
+    plot.subtitle = element_text(size = 16),
+    plot.caption = element_text(size = 10, face = "italic"),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    plot.margin = margin(1, 4, 1, 6, "cm")
+  ) +
+  transition_time(month) +          
+  view_follow(fixed_x = TRUE) +
+  ease_aes("cubic-in-out")
+```
+
+
+
+```{r}
+animate(fox_plot,
+        fps = 30, duration = 60, width = 800, height = 600,
+        renderer = gifski_renderer("fox_sentiment_bigrams_per_month.gif"))
+```
+
+
+
