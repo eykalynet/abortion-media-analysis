@@ -149,8 +149,6 @@ write_csv(fox_meta3, "../data/wrangled/fox_news_data_wrangled.csv")
 ## 5. Text Analysis
 Here we investigate the Fox News Articles from 
 
-
-
 ```{r}
 #| label: bigrams
 
@@ -194,6 +192,8 @@ fox_text_content |>
   group_by(terms) |> 
   summarise(occurance = n()) |>
   kable()
+
+write.csv(fox_text_content, "/Users/emilieward/Documents/GitHub/blog-MEE.fox_text_content.csv")
 
 ```
 
