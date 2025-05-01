@@ -35,6 +35,8 @@ library(colorspace)
 library(jsonlite)
 library(tidytext)
 library(lubridate)
+library(gganimate)
+library(wordcloud)
 ```
 
 ## 1. Read and Prepare Raw JSON
@@ -145,19 +147,9 @@ write_csv(fox_meta3, "../data/wrangled/fox_news_data_wrangled.csv")
 
 
 ## 5. Text Analysis
+Here we investigate the Fox News Articles from 
 
-```{r}
-#| label: top-words
 
-fox_meta3 |>
-  unnest_tokens(word, text_clean) |>
-  filter(!word %in% stop_words$word, str_detect(word, "^[a-z]+$")) |>
-  count(word, sort = TRUE) |>
-  slice_max(n, n = 15) |>
-  ggplot(aes(n, reorder(word, n))) +
-  geom_col(fill = "steelblue") +
-  labs(title = "Most Frequent Words", x = "Count", y = "")
-```
 
 ```{r}
 #| label: bigrams
@@ -270,17 +262,7 @@ fox_meta_topwords <- fox_meta3 |>
   filter(!str_detect(word, "\\d+")) |>
   group_by(title) |> 
   summarize(text_cleaned = paste(word, collapse = " "),.groups = "drop") 
-  
-# g_topwords <- fox_meta_topwords |> 
-#   unnest_tokens(word, text_cleaned, token = "ngrams", n= 1) |>
-#   filter(word != "life" | word != "wade") |> 
-#   count(word, sort = TRUE) |>
-#   slice_max(n, n = 15) |>
-#   ggplot(aes(n, reorder(word, n))) +
-#   geom_col(fill = "steelblue") +
-#   labs(title = "Most Frequent Words", x = "Count", y = "")
-# g_topwords
-
+fox_meta4 <- left_join(fox_meta3, fox_meta_topwords)
 
 g_topbigram <- fox_meta_topwords |>
   unnest_tokens(bigram, text_cleaned, token = "ngrams", n = 2) |>
@@ -291,9 +273,63 @@ g_topbigram <- fox_meta_topwords |>
   labs(title = "Top Bigrams", x = "Count", y = "")
 g_topbigram
 
-ggsave("/Users/emilieward/Desktop/bigrams.png", plot = g_topbigram, width = 8, height = 6)
 ```
 
 
+
+
+
+## Animating the Bigram plot 
+Here we used the bigrams from the cleaned text in our previous analysis to analyze the changes in the top words used in fox articles throughou the month in 2020 to 2024. 
+```{r}
+# =================================================================
+# Creating the animated bigram figure
+# =================================================================
+
+# attach date and tokenize from our previously filtered data set
+bigram_formatted <- fox_meta4 |>
+  unnest_tokens(bigram, text_cleaned, token = "ngrams", n = 2) |>
+  mutate(month = floor_date(pub_date, "month")) |>
+  count(month, bigram, sort = TRUE) |>
+  group_by(month) |>
+  slice_max(n, n = 10, with_ties = FALSE) |>  # Top 10 bigrams per month
+  mutate(rank = rank(-n, ties.method = "first"),
+         Value_lbl = as.character(n)) |>
+  ungroup()
+
+
+#This created the static plot with all the different bigrams 
+staticplot <- ggplot(bigram_formatted,
+                     aes(rank, group = bigram,
+                         fill = as.factor(bigram), color = as.factor(bigram))) +
+  geom_tile(aes(y = n / 2, height = n, width = 0.9), alpha = 0.8, color = NA) +
+  geom_text(aes(y = 0, label = paste(bigram, " ")), hjust = 1, color = "black") +
+  geom_text(aes(y = n, label = Value_lbl), hjust = 0, color = "black") +
+  coord_flip(clip = "off", expand = FALSE) +
+  scale_x_reverse() +
+  guides(color = FALSE, fill = FALSE) +
+  theme_minimal(base_size = 15) +
+  theme(
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 24, face = "bold", hjust = 0.5, color = "gray20"),
+    plot.subtitle = element_text(size = 18, face = "italic", hjust = 0.5, color = "gray40"),
+    plot.caption = element_text(size = 10, face = "italic", hjust = 0.5, color = "gray40"),
+    plot.margin = margin(2, 2, 2, 4, "cm")
+  ) +
+  labs(title = "Top Bigrams in Fox Articles",
+       subtitle = 'Month: {closest_state}',
+       caption = "Data from Fox Roe Coverage",
+       x = "", y = "")
+
+#Created this so I can seperate the different months of the static plot and animate it
+animated_barchart <- staticplot +
+  transition_states(month, transition_length = 4, state_length = 1) +
+  ease_aes('cubic-in-out')
+
+animate(animated_barchart, fps = 10, duration = 40, width = 800, height = 600)
+
 ```
+
 
