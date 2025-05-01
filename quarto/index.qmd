@@ -714,3 +714,5 @@ To visualize how the New York Times’ framing of abortion evolved over time, we
 To compare this with Fox News’ framing over the same period:
 
 ![Animated Fox Bigrams](images/fox_sentiment_bigrams_per_month.gif)
+
+
