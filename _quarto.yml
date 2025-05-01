@@ -20,7 +20,7 @@ website:
         icon: gear
       - href: quarto/technical_appendix.qmd
         text: "Technical Appendix"
-        icon: quarto/pc-display-horizontal
+        icon: pc-display-horizontal
         
         
 format:
