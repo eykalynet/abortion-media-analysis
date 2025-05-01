@@ -707,3 +707,10 @@ throughout.
 
 # Running the Narrative Race
 
+To visualize how the New York Times’ framing of abortion evolved over time, we animated the top bigrams appearing in abortion-related articles each month from 2021 to 2024.
+
+![Animated NYT Bigrams](images/nyt_sentiment_bigrams_per_month.gif)
+
+To compare this with Fox News’ framing over the same period:
+
+![Animated Fox Bigrams](images/fox_sentiment_bigrams_per_month.gif)
