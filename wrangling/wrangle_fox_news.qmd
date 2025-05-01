@@ -146,7 +146,6 @@ fox_meta3 <- fox_meta2 |>
 fox_meta3 <- fox_meta3 |>
   select(pub_date, title, roe_status, url, description, text, text_clean, abortion_mentions)
 
-
 write_csv(fox_meta3, "../data/wrangled/fox_news_data_wrangled.csv")
 saveRDS(fox_meta3, "../data/wrangled/fox_news_data_wrangled.rds")
 ```

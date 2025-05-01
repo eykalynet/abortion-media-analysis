@@ -173,8 +173,11 @@ nyt_meta3 <- nyt_meta2 |>
       str_trim()                              # Remove trailing/leading spaces
   )
 
+# Reorder columns
+nyt_meta3 <- nyt_meta3 |>
+  select(pub_date, title, roe_status, url, description, text, text_clean, abortion_mentions)
+
 
 write.csv(nyt_meta3, "../data/wrangled/nyt_news_data_wrangled.csv")
+saveRDS(nyt_meta3, "../data/wrangled/nyt_news_data_wrangled.rds")
 ```
-
-## 
