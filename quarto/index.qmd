@@ -638,7 +638,7 @@ calendar_plot_nyt <- ggplot(calendar_nyt, aes(x = weekofyear, y = 8 - weekday)) 
     midpoint = 0,
     limits = c(-range_max_nyt, range_max_nyt),
     breaks = c(-100, 0, 100),
-    labels = c("More Negative", "Neutral", "More Positive"),
+    labels = c("Negative", "Neutral", "Positive"),
     name = "Sentiment"
   ) +
   facet_wrap(~Year, ncol = 1, strip.position = "right") +
