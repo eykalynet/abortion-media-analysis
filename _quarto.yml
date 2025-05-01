@@ -18,9 +18,9 @@ website:
       - href: quarto/methodology.qmd
         text: "Methodology"
         icon: gear
-      - href: quarto/yet-another-page.qmd
-        text: "Yet another page with a custom label and icon"
-        icon: quarto/arrow-through-heart-fill
+      - href: quarto/technical_appendix.qmd
+        text: "Technical Appendix"
+        icon: quarto/pc-display-horizontal
         
         
 format:
