@@ -500,7 +500,7 @@ calendar_plot_fox <- ggplot(calendar_fox, aes(x = weekofyear, y = 8 - weekday)) 
     high = "#003f5c",
     midpoint = 0,
     limits = c(-range_max, range_max),
-    breaks = c(-100, 0, 100),
+    breaks = c(-range_max, 0, range_max),
     labels = c("Negative", "Neutral", "Positive"),
     name = "Sentiment"
   ) +
@@ -637,7 +637,7 @@ calendar_plot_nyt <- ggplot(calendar_nyt, aes(x = weekofyear, y = 8 - weekday)) 
     high = "#003f5c",
     midpoint = 0,
     limits = c(-range_max_nyt, range_max_nyt),
-    breaks = c(-100, 0, 100),
+    breaks = c(-range_max_nyt, 0, range_max_nyt),
     labels = c("Negative", "Neutral", "Positive"),
     name = "Sentiment"
   ) +
