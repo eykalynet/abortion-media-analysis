@@ -1,0 +1,24 @@
+---
+title: "Generating N-Grams"
+subtitle: "STAT 231: Blog App"
+author: "Maigan Lafontant, Emilie Ward, and Erika Salvador"
+format: 
+  pdf
+header-includes: |
+  \usepackage{fvextra}
+  \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+---
+
+```{r}
+#| label: step-1
+# =================================================================
+# Step 1: Load Libraries and Data
+# =================================================================
+library(tidyverse)
+library(tidytext)
+library(readr)
+
+# Load cleaned datasets
+fox <- read_rds("../data/wrangled/fox_news_data_wrangled.rds")
+nyt <- read_rds("../data/wrangled/nyt_news_data_wrangled.rds")
+```
