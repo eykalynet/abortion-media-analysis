@@ -43,6 +43,64 @@ space
 space
 
 ```{r}
+#| eval: false
+#| label: orig-nyt-plot
+install.packages("gganimate")
+install.packages("gifski") 
+
+library(gganimate)
+
+# Tokenize bigrams and attach date
+bigram_formatted <- nyt_meta3 |>
+  unnest_tokens(bigram, text_clean, token = "ngrams", n = 2) |>
+  separate(bigram, into = c("word1", "word2"), sep = " ") |>
+  filter(!word1 %in% all_stops$word,
+         !word2 %in% all_stops$word) |>
+  unite(bigram, word1, word2, sep = " ") |>
+  mutate(month = floor_date(pub_date, "month")) |>
+  count(month, bigram, sort = TRUE) |>
+  group_by(month) |>
+  slice_max(n, n = 10, with_ties = FALSE) |>  # Top 10 bigrams per month
+  mutate(rank = rank(-n, ties.method = "first"),
+         Value_lbl = as.character(n)) |>
+  ungroup()
+
+
+# Step 2: Create the static plot template
+staticplot <- ggplot(bigram_formatted,
+                     aes(rank, group = bigram,
+                         fill = as.factor(bigram), color = as.factor(bigram))) +
+  geom_tile(aes(y = n / 2, height = n, width = 0.9), alpha = 0.8, color = NA) +
+  geom_text(aes(y = 0, label = paste(bigram, " ")), hjust = 1, color = "black") +
+  geom_text(aes(y = n, label = Value_lbl), hjust = 0, color = "black") +
+  coord_flip(clip = "off", expand = FALSE) +
+  scale_x_reverse() +
+  guides(color = FALSE, fill = FALSE) +
+  theme_minimal(base_size = 15) +
+  theme(
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 24, face = "bold", hjust = 0.5, color = "gray20"),
+    plot.subtitle = element_text(size = 18, face = "italic", hjust = 0.5, color = "gray40"),
+    plot.caption = element_text(size = 10, face = "italic", hjust = 0.5, color = "gray40"),
+    plot.margin = margin(2, 2, 2, 4, "cm")
+  ) +
+  labs(title = "Top Bigrams in NYT Articles",
+       subtitle = 'Month: {closest_state}',
+       caption = "Data from NYT Roe Coverage",
+       x = "", y = "")
+
+
+animate(animated_barchart, fps = 10, duration = 40, width = 800, height = 600)
+
+
+```
+
+space
+
+
+```{r}
 #| label: nyt-bigrams
 
 nyt <- read_csv("../data/wrangled/nyt_news_data_wrangled.csv") |>
@@ -136,6 +194,60 @@ animate(nyt_plot,
         renderer = gifski_renderer("nyt_sentiment_bigrams_per_month.gif"))
 ```
 space
+```{r}
+#| eval: false
+#| label: orig-fox-plot
+
+
+library(gganimate)
+
+# attach date and tokenize from our previously filtered data set
+bigram_formatted <- fox_meta4 |>
+  unnest_tokens(bigram, text_cleaned, token = "ngrams", n = 2) |>
+  mutate(month = floor_date(pub_date, "month")) |>
+  count(month, bigram, sort = TRUE) |>
+  group_by(month) |>
+  slice_max(n, n = 10, with_ties = FALSE) |>  # Top 10 bigrams per month
+  mutate(rank = rank(-n, ties.method = "first"),
+         Value_lbl = as.character(n)) |>
+  ungroup()
+
+
+#This created the static plot with all the different bigrams 
+staticplot <- ggplot(bigram_formatted,
+                     aes(rank, group = bigram,
+                         fill = as.factor(bigram), color = as.factor(bigram))) +
+  geom_tile(aes(y = n / 2, height = n, width = 0.9), alpha = 0.8, color = NA) +
+  geom_text(aes(y = 0, label = paste(bigram, " ")), hjust = 1, color = "black") +
+  geom_text(aes(y = n, label = Value_lbl), hjust = 0, color = "black") +
+  coord_flip(clip = "off", expand = FALSE) +
+  scale_x_reverse() +
+  guides(color = FALSE, fill = FALSE) +
+  theme_minimal(base_size = 15) +
+  theme(
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 24, face = "bold", hjust = 0.5, color = "gray20"),
+    plot.subtitle = element_text(size = 18, face = "italic", hjust = 0.5, color = "gray40"),
+    plot.caption = element_text(size = 10, face = "italic", hjust = 0.5, color = "gray40"),
+    plot.margin = margin(2, 2, 2, 4, "cm")
+  ) +
+  labs(title = "Top Bigrams in Fox Articles",
+       subtitle = 'Month: {closest_state}',
+       caption = "Data from Fox Roe Coverage",
+       x = "", y = "")
+
+#Created this so I can seperate the different months of the static plot and animate it
+animated_barchart <- staticplot +
+  transition_states(month, transition_length = 4, state_length = 1) +
+  ease_aes('cubic-in-out')
+
+animate(animated_barchart, fps = 10, duration = 40, width = 800, height = 600)
+
+```
+
+space
 
 ```{r}
 #| label: fox-bigrams
@@ -148,6 +260,8 @@ fox <- read_csv("../data/wrangled/fox_news_data_wrangled.csv") |>
 # Tokenize into bigrams
 fox_bigrams <- fox |>
   unnest_tokens(bigram, text, token = "ngrams", n = 2)
+
+afinn <- get_sentiments("afinn")
 
 # AFINN sentiment scoring
 fox_bigrams_sentiment <- fox_bigrams |>
@@ -221,6 +335,9 @@ animate(fox_plot,
         fps = 30, duration = 60, width = 800, height = 600,
         renderer = gifski_renderer("fox_sentiment_bigrams_per_month.gif"))
 ```
+
+
+
 
 
 
