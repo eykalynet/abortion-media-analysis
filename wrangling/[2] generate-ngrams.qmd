@@ -8,6 +8,34 @@ header-includes: |
   \usepackage{fvextra}
   \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
 ---
+```{r}
+#| label: setup
+#| include: false
+
+# set code chunk option defaults
+knitr::opts_chunk$set(
+  # display code as types
+  tidy = FALSE, 
+  # slightly smaller code font
+  size = "small",
+  # do not display messages in PDF
+  message = FALSE,
+# improve digit and NA display 
+  options(scipen = 1, knitr.kable.NA = ''))
+
+# Load required libraries
+library(tidyverse)
+library(httr)
+library(purrr)
+library(readr)
+library(stringr)
+library(tibble)
+library(kableExtra)
+library(tidytext)
+library(colorspace)
+library(jsonlite)
+library(lubridate)
+```
 
 ```{r}
 #| label: step-1
