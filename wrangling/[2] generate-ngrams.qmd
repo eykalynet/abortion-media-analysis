@@ -12,7 +12,7 @@ header-includes: |
 ```{r}
 #| label: step-1
 # =================================================================
-# Step 1: Load Libraries and Data
+# Load Libraries and Data
 # =================================================================
 library(tidyverse)
 library(tidytext)
@@ -22,3 +22,165 @@ library(readr)
 fox <- read_rds("../data/wrangled/fox_news_data_wrangled.rds")
 nyt <- read_rds("../data/wrangled/nyt_news_data_wrangled.rds")
 ```
+
+## 1. Read and Prepare
+
+We begin by importing cleaned article datasets saved as `.rds` files. Each entry includes metadata and a `text_clean` column that contains the full body of text. To support temporal comparisons and framing aligned with key legal changes surrounding Roe v. Wade, we also extract date components (`year`, `month`, and `month_label`) for use in later steps.
+
+```{r}
+#| label: step-1
+
+# =================================================================
+# Step 1: Read and Prepare
+# =================================================================
+fox <- read_rds("../data/wrangled/fox_news_data_wrangled.rds") |> 
+  mutate(pub_date = as.Date(pub_date),
+         year = year(pub_date),
+         month = month(pub_date, label = TRUE),
+         month_label = format(pub_date, "%Y-%m"))
+
+nyt <- read_rds("../data/wrangled/nyt_news_data_wrangled.rds") |> 
+  mutate(pub_date = as.Date(pub_date),
+         year = year(pub_date),
+         month = month(pub_date, label = TRUE),
+         month_label = format(pub_date, "%Y-%m"))
+```
+
+## 2. Define Stop Words
+
+We build a comprehensive list of stop words to clean our text data. This list includes both the standard `{tidytext}` stop words and a custom set of domain-specific terms like byline filler (e.g., “said”, “told”) and platform-specific tokens (e.g., “nyt”, “fox”). Importantly, we preserve the word “abortion” for relevance.
+
+```{r}
+#| label: step-2
+#
+# =================================================================
+# Step 2: Define Stop Words
+# =================================================================
+
+data("stop_words")
+
+custom_stop <- tibble(word = c(
+  "said", "ms", "mr", "mrs", "fox", "news", "nyt", "new", "york", "times",
+  "u.s", "one", "two", "also", "would", "including", "don’t", "that’s", "it’s",
+  "wrote", "told", "roe"
+))
+
+all_stops <- bind_rows(stop_words, custom_stop)
+```
+
+## 3. Generate and Clean Unigrams
+
+We tokenize each article’s `text_clean` column into unigrams—individual words. We then remove all stop words to retain only meaningful terms as to allow us to analyze topic prevalence across sources.
+
+```{r}
+#| label: step-3
+
+# =================================================================
+# Step 3: Generate Unigrams
+# =================================================================
+
+fox_unigrams <- fox |> 
+  unnest_tokens(unigram, text_clean, token = "words") |>
+  anti_join(all_stops, by = c("unigram" = "word"))
+
+nyt_unigrams <- nyt |> 
+  unnest_tokens(unigram, text_clean, token = "words") |>
+  anti_join(all_stops, by = c("unigram" = "word"))
+```
+
+## 4. Generate Raw Bigrams
+
+We extract bigrams (two-word phrases) from the cleaned text without applying any filtering. This provides a window into phrasing patterns and contextual relationships between words in their original form.
+
+```{r}
+#| label: step-4
+
+# =================================================================
+# Step 4: Generate Raw Bigrams
+# =================================================================
+
+fox_bigrams <- fox |> 
+  unnest_tokens(bigram, text_clean, token = "ngrams", n = 2)
+
+nyt_bigrams <- nyt |> 
+  unnest_tokens(bigram, text_clean, token = "ngrams", n = 2)
+```
+
+## 5. Filter Bigrams (Filtered)
+
+To ensure clarity and relevance, we remove bigrams that contain stop words in either position. This helps isolate more informative and content-driven two-word phrases for interpretation.
+
+```{r}
+#| label: step-5
+
+# =================================================================
+# Step 5: Filter Bigrams
+# =================================================================
+
+fox_bigrams_filtered <- fox_bigrams |> 
+  separate(bigram, into = c("word1", "word2"), sep = " ") |>
+  filter(!word1 %in% all_stops$word, !word2 %in% all_stops$word) |>
+  unite(bigram, word1, word2, sep = " ")
+
+nyt_bigrams_filtered <- nyt_bigrams |> 
+  separate(bigram, into = c("word1", "word2"), sep = " ") |>
+  filter(!word1 %in% all_stops$word, !word2 %in% all_stops$word) |>
+  unite(bigram, word1, word2, sep = " ")
+```
+
+## 6. Extract Top 1000 N-Grams
+
+Due to GitHub's file storage constraints, even with Git LFS, which imposes a 2GB per-file limit, we do not commit the full n-gram datasets. Instead, we extract the **top 1000 most frequent unigrams and bigrams** (both raw and filtered) for each media source.
+
+```{r}
+#| label: step-6
+
+# =================================================================
+# Step 6: Extract Top 1000 N-grams
+# =================================================================
+
+# Unigrams
+top1000_fox_unigrams <- fox_unigrams |> count(unigram, sort = TRUE) |> slice_head(n = 1000)
+top1000_nyt_unigrams <- nyt_unigrams |> count(unigram, sort = TRUE) |> slice_head(n = 1000)
+
+# Raw Bigrams
+top1000_fox_bigrams <- fox_bigrams |> count(bigram, sort = TRUE) |> slice_head(n = 1000)
+top1000_nyt_bigrams <- nyt_bigrams |> count(bigram, sort = TRUE) |> slice_head(n = 1000)
+
+# Filtered Bigrams
+top1000_fox_bigrams_filtered <- fox_bigrams_filtered |> count(bigram, sort = TRUE) |> slice_head(n = 1000)
+top1000_nyt_bigrams_filtered <- nyt_bigrams_filtered |> count(bigram, sort = TRUE) |> slice_head(n = 1000)
+
+```
+
+## 7. Save Final Outputs
+
+We save each of the n-gram objects in both `.csv` and `.rds` formats to support downstream work. The `.csv` files are human-readable and ideal for inspection, while `.rds` files are more compact and preserve structure for analysis in R.
+
+```{r}
+#| label: step-7
+
+# =================================================================
+# Step 7: Save Final Outputs
+# =================================================================
+
+# Unigrams
+write_csv(top1000_fox_unigrams, "../data/wrangled/top1000_fox_unigrams.csv")
+write_csv(top1000_nyt_unigrams, "../data/wrangled/top1000_nyt_unigrams.csv")
+write_rds(top1000_fox_unigrams, "../data/wrangled/top1000_fox_unigrams.rds")
+write_rds(top1000_nyt_unigrams, "../data/wrangled/top1000_nyt_unigrams.rds")
+
+# Raw Bigrams
+write_csv(top1000_fox_bigrams, "../data/wrangled/top1000_fox_bigrams.csv")
+write_csv(top1000_nyt_bigrams, "../data/wrangled/top1000_nyt_bigrams.csv")
+write_rds(top1000_fox_bigrams, "../data/wrangled/top1000_fox_bigrams.rds")
+write_rds(top1000_nyt_bigrams, "../data/wrangled/top1000_nyt_bigrams.rds")
+
+# Filtered Bigrams
+write_csv(top1000_fox_bigrams_filtered, "../data/wrangled/top1000_fox_bigrams_filtered.csv")
+write_csv(top1000_nyt_bigrams_filtered, "../data/wrangled/top1000_nyt_bigrams_filtered.csv")
+write_rds(top1000_fox_bigrams_filtered, "../data/wrangled/top1000_fox_bigrams_filtered.rds")
+write_rds(top1000_nyt_bigrams_filtered, "../data/wrangled/top1000_nyt_bigrams_filtered.rds")
+
+```
+
