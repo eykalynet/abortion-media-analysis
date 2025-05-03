@@ -31,6 +31,7 @@ library(forcats)        # Factor reordering
 library(broom)         
 library(textstem)       # Lemmatization
 library(readr)         
+library(jsonlite)
 ```
 
 ## 1. Reading in the Data
@@ -300,5 +301,91 @@ topic_labels <- tribble(
   "NYT",   "Pre-Roe",      5,   "White House & Party Messaging"
 )
 
+# Assign Descriptive Topic Names
+all_topics_named <- all_topics |> 
+  left_join(topic_labels, by = c("outlet", "period", "topic"))
+```
 
+## 10. Generate Data for Networks
+
+While our topic modeling and visualization were initially developed within R, our goal was to create interactive, web-based network visualizations that allow users to explore how each topic connects to its top bigrams. To achieve this level of customization, we decided to build our final interactive networks using ECharts, which is a powerful JavaScript visualization library.
+
+Since ECharts is built for the web, it expects data to be in standard JSON format. Therefore, we exported each topic–bigram network as a `.json` file using `jsonlite`, with nodes representing topics and bigrams, and edges weighted by the topic–word probability.
+
+```{r}
+
+# =================================================================
+# Step 10: Generate Data for Networks
+# =================================================================
+ 
+# Function to generate nodes and edges for a given outlet + period
+export_network_json <- function(df, outlet_input, period_input) {
+  df <- df |> filter(outlet == outlet_input, period == period_input)
+
+  # Topic colors (darker, since they're parent nodes)
+  topic_color <- case_when(
+    outlet_input == "Fox" & period_input == "Pre-Roe"  ~ "#c35b5b",  # medium red
+    outlet_input == "Fox" & period_input == "Post-Roe" ~ "#6a040f",  # deep red
+    outlet_input == "NYT" & period_input == "Pre-Roe"  ~ "#61a5c2",  # medium blue
+    outlet_input == "NYT" & period_input == "Post-Roe" ~ "#003049",  # deep navy
+    TRUE ~ "#cccccc"
+  )
+
+  # Bigram colors (lighter than topics for visual contrast)
+  bigram_color <- case_when(
+    outlet_input == "Fox" & period_input == "Pre-Roe"  ~ "#f4a5a5",  # light red
+    outlet_input == "Fox" & period_input == "Post-Roe" ~ "#9e2a2b",  # dark red
+    outlet_input == "NYT" & period_input == "Pre-Roe"  ~ "#a9d6e5",  # light blue
+    outlet_input == "NYT" & period_input == "Post-Roe" ~ "#1d3557",  # dark blue
+    TRUE ~ "#999999"
+  )
+
+  # Create topic nodes
+  topics <- df |> 
+    distinct(topic, topic_name) |> 
+    mutate(
+      name = topic_name,
+      category = "Topic",
+      symbolSize = 40,
+      itemStyle = list(color = topic_color)
+    )
+
+  # Create bigram nodes
+  bigrams <- df |> 
+    distinct(term) |> 
+    mutate(
+      name = term,
+      category = "Bigram",
+      symbolSize = 20,
+      itemStyle = list(color = bigram_color)
+    )
+
+  # Combine into one node list
+  nodes <- bind_rows(topics, bigrams) |> 
+    mutate(id = name) |> 
+    select(id, name, category, symbolSize, itemStyle)
+
+  # Edges
+  links <- df |> transmute(
+    source = topic_name,
+    target = term,
+    value = beta,
+    lineStyle = list(width = beta * 100)
+  )
+
+  list(nodes = nodes, links = links)
+}
+
+# Function to save JSON file to disk
+save_json <- function(df, outlet_input, period_input) {
+  net <- export_network_json(df, outlet_input, period_input)
+  filename <- paste0("network_", tolower(outlet_input), "_", tolower(gsub("-", "", period_input)), ".json")
+  write_json(net, file.path("../data/wrangled/networks", filename), pretty = TRUE, auto_unbox = TRUE)
+}
+
+# Export all four networks
+save_json(all_topics_named, "Fox", "Pre-Roe")
+save_json(all_topics_named, "Fox", "Post-Roe")
+save_json(all_topics_named, "NYT", "Pre-Roe")
+save_json(all_topics_named, "NYT", "Post-Roe")
 ```
