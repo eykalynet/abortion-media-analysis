@@ -1,5 +1,249 @@
 ---
-title: "topic_modelling"
-format: html
+title: "Topic Modeling"
+subtitle: "STAT 231: Blog App"
+author: "Maigan Lafontant, Emilie Ward, and Erika Salvador"
+format: 
+  pdf
+header-includes: |
+  \usepackage{fvextra}
+  \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
 ---
+
+```{r}
+#| label: setup
+#| include: false
+
+# Load libraries
+knitr::opts_chunk$set(
+  tidy = FALSE, 
+  size = "small",
+  message = FALSE,
+  options(scipen = 1, knitr.kable.NA = '')
+)
+
+library(tidyverse)
+library(tidytext)
+library(topicmodels)
+library(tm)
+library(readr)
+library(lubridate)
+library(ggplot2)
+library(forcats)
+library(broom)
+library(stringr)
+library(tidygraph)
+library(ggraph)
+library(igraph)
+library(ggtext)
+library(showtext)
+library(sysfonts)
+library(visNetwork)
+library(textstem)  # for lemmatization
+
+# Font setup
+font_add_google("News Cycle", "news")
+showtext_auto()
+register_gfont("News Cycle")
+```
+
+## 1. Reading in the Data
+
+We begin by importing cleaned Fox and NYT datasets with Roe status and publication date. This provides the base data for bigram extraction and topic modeling.
+
+```{r}
+#| label: step-1
+
+# =================================================================
+# Step 1: Read in wrangled news data for both outlets
+# =================================================================
+fox <- read_rds("../data/wrangled/fox_news_data_wrangled.rds") |> 
+  mutate(pub_date = as.Date(pub_date),
+         doc_id = row_number())
+
+nyt <- read_rds("../data/wrangled/nyt_news_data_wrangled.rds") |> 
+  mutate(pub_date = as.Date(pub_date),
+         doc_id = row_number())
+```
+
+## 2. Load top 1,000 bigrams
+
+We load pre-computed bigram lists for both Fox and NYT, which we, in earlier scripts, reduced to the 1,000 most relevant terms for clarity.
+
+```{r}
+#| label: step-2
+
+# =================================================================
+# Step 2: Load the top 1,000 bigrams per outlet (filtered)
+# =================================================================
+
+top1000_fox_bigrams_filtered <- read_rds("../data/wrangled/top1000_fox_bigrams_filtered.rds")
+top1000_nyt_bigrams_filtered <- read_rds("../data/wrangled/top1000_nyt_bigrams_filtered.rds")
+```
+
+## 3. Clean Roe Status Labels
+
+Trim stray whitespace from the `roe_status` column for consistent filtering by time period.
+
+```{r}
+#| label: step-3
+#
+# =================================================================
+# Step 3: Clean and assign period labels based on Roe status
+# =================================================================
+
+fox <- fox |> mutate(period = str_trim(roe_status))
+nyt <- nyt |> mutate(period = str_trim(roe_status))
+```
+
+## 4. Normalize and Tokenize Bigrams
+
+In our initial topic modeling run, we noticed a pattern: many semantically identical phrases were being treated as separate bigrams due to slight word-form variations. For example, the model viewed “abortion pill” and “abortion pills” as distinct, which diluted the topic coherence. The same applied to "supreme court" and "supreme court’s," which thus created a lot of redundancy across topic clusters.
+
+To address this, we implemented *lemmatization*, which is a text normalization step that reduces words to their base or dictionary form. By lemmatizing each word in our bigrams, we ensured that plural and possessive variations were consolidated into a single, consistent representation. 
+
+```{r}
+#| label: step-4
+
+# =================================================================
+# Step 4: Tokenize into bigrams, normalize terms, keep top 1000
+# =================================================================
+
+normalize_bigrams <- function(data) {
+  data |> 
+    separate(bigram, into = c("word1", "word2"), sep = " ", remove = FALSE) |>
+    mutate(
+      word1 = lemmatize_words(word1),
+      word2 = lemmatize_words(word2),
+      bigram = paste(word1, word2)
+    ) |>
+    select(-word1, -word2)
+}
+
+fox_bigrams <- fox |> 
+  unnest_tokens(bigram, text, token = "ngrams", n = 2) |> 
+  normalize_bigrams() |> 
+  filter(bigram %in% top1000_fox_bigrams_filtered$bigram)
+
+nyt_bigrams <- nyt |> 
+  unnest_tokens(bigram, text, token = "ngrams", n = 2) |> 
+  normalize_bigrams() |> 
+  filter(bigram %in% top1000_nyt_bigrams_filtered$bigram)
+```
+
+## 5. Define LDA Function
+
+Latent Dirichlet Allocation (LDA) is an unsupervised machine learning method for discovering abstract topics in a collection of documents. It assumes: that each document is a mixture of multiple topics, and each topic is a distribution over words.
+
+LDA works by inferring hidden topic structures based on which words frequently co-occur across the corpus. In our case, we apply LDA to detect patterns in abortion-related bigrams across two time periods (Pre- and Post-Roe), for both Fox News and the New York Times.
+
+The goal is to extract the top 10 bigrams per topic (ranked by probability \( \beta \)) so we can interpret and visualize each topic. These outputs form the basis of our faceted bar charts and interactive network graphs, which help us compare the thematic framing of abortion coverage across outlets and time.
+
+```{r}
+#| label: step-5
+
+# =================================================================
+# Step 5: Define helper function to fit LDA and return top bigrams
+# =================================================================
+
+fit_lda_by_period <- function(data, k = 5, seed = 123) {
+  dtm <- data |> 
+    count(doc_id, bigram) |> 
+    cast_dtm(document = doc_id, term = bigram, value = n)
+
+  lda_model <- LDA(dtm, k = k, control = list(seed = seed))
+
+  tidy(lda_model, matrix = "beta") |> 
+    group_by(topic) |> 
+    slice_max(beta, n = 10) |> 
+    ungroup()
+}
+```
+
+## 6. Fit LDA Models
+
+We now apply the `fit_lda_by_period()` function to each dataset, split by outlet and period. This yields four topic models: one for Fox Pre-Roe, one for Fox Post-Roe, one for NYT Pre-Roe, and one for NYT Post-Roe.
+
+```{r}
+#| label: step-6
+
+# =================================================================
+# Step 6: Fit LDA models for Fox and NYT, Pre- and Post-Roe
+# =================================================================
+
+fox_topics_pre <- fit_lda_by_period(
+  filter(fox_bigrams, period == "Pre-Roe")) |> 
+  mutate(period = "Pre-Roe", outlet = "Fox")
+
+fox_topics_post <- fit_lda_by_period(
+  filter(fox_bigrams, period == "Post-Roe")) |> 
+  mutate(period = "Post-Roe", outlet = "Fox")
+
+nyt_topics_pre <- fit_lda_by_period(
+  filter(nyt_bigrams, period == "Pre-Roe")) |> 
+  mutate(period = "Pre-Roe", outlet = "NYT")
+
+nyt_topics_post <- fit_lda_by_period(
+  filter(nyt_bigrams, period == "Post-Roe")) |> 
+  mutate(period = "Post-Roe", outlet = "NYT")
+```
+
+## 7. Combine All Topics
+
+We merge the four sets of topic-term results into a single dataset. This unified structure allows us to perform consistent downstream analysis and visual comparisons.
+
+```{r}
+#| label: step-7
+
+# =================================================================
+# Step 7: Combine all topic-term outputs
+# =================================================================
+
+all_topics <- bind_rows(
+  fox_topics_pre, fox_topics_post,
+  nyt_topics_pre, nyt_topics_post
+)
+```
+
+## 8. Visualize Top Bigrams per Topic (Split by Outlet)
+
+We first explore the top 10 bigrams in each topic using faceted bar plots for each outlet. This makes the results more readable and helps us draw clearer comparisons.
+
+```{r}
+#| label: step-8a
+all_topics |> 
+  filter(outlet == "Fox") |> 
+  mutate(term = reorder_within(term, beta, interaction(period, topic))) |> 
+  ggplot(aes(beta, term, fill = period)) +
+  geom_col() +
+  facet_wrap(~ period + topic, scales = "free", ncol = 2) +
+  scale_y_reordered() +
+  scale_fill_manual(values = c("Pre-Roe" = "#bbbdf6", "Post-Roe" = "#f28ca0")) +
+  labs(
+    title = "Fox News: Top 10 Bigrams per Topic",
+    x = "\u03B2 (topic\u2013word probability)",
+    y = NULL,
+    fill = "Period"
+  ) +
+  theme(strip.text = element_text(face = "bold", size = 10))
+```
+
+```{r}
+#| label: step-8b
+all_topics |> 
+  filter(outlet == "NYT") |> 
+  mutate(term = reorder_within(term, beta, interaction(period, topic))) |> 
+  ggplot(aes(beta, term, fill = period)) +
+  geom_col() +
+  facet_wrap(~ period + topic, scales = "free", ncol = 2) +
+  scale_y_reordered() +
+  scale_fill_manual(values = c("Pre-Roe" = "#bbbdf6", "Post-Roe" = "#f28ca0")) +
+  labs(
+    title = "New York Times: Top 10 Bigrams per Topic",
+    x = "\u03B2 (topic\u2013word probability)",
+    y = NULL,
+    fill = "Period"
+  ) +
+  theme(strip.text = element_text(face = "bold", size = 10))
+```
+
 
