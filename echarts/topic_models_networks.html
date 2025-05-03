@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Abortion Coverage Network Graph</title>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=News+Cycle&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'News Cycle', sans-serif;
+      background-color: #f9f9f9;
+    }
+    #controls {
+      padding: 10px;
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    #chart {
+      width: 100%;
+      height: 90vh;
+    }
+    select {
+      padding: 5px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="controls">
+  <label for="outletSelect">Outlet:</label>
+  <select id="outletSelect">
+    <option value="fox">Fox</option>
+    <option value="nyt">NYT</option>
+  </select>
+
+  <label for="periodSelect">Period:</label>
+  <select id="periodSelect">
+    <option value="preroe">Pre-Roe</option>
+    <option value="postroe">Post-Roe</option>
+  </select>
+</div>
+
+<div id="chart"></div>
+
+<script>
+  const chart = echarts.init(document.getElementById('chart'));
+
+  const outletSelect = document.getElementById('outletSelect');
+  const periodSelect = document.getElementById('periodSelect');
+
+  function loadGraph() {
+    const outlet = outletSelect.value;
+    const period = periodSelect.value;
+    const filePath = `../data/wrangled/networks/network_${outlet}_${period}.json`;
+
+    fetch(filePath)
+      .then(response => response.json())
+      .then(data => {
+        const option = {
+          tooltip: {
+            formatter: function (params) {
+              return params.data.name;
+            }
+          },
+          series: [{
+            type: 'graph',
+            layout: 'force',
+            data: data.nodes.map(node => ({
+              ...node,
+              label: {
+                show: true,
+                fontSize: 12,
+                color: '#000'
+              },
+              itemStyle: {
+                color: node.color
+              }
+            })),
+            links: data.links,
+            roam: true,
+            force: {
+              repulsion: 100,
+              edgeLength: [50, 150]
+            },
+            lineStyle: {
+              color: '#999',
+              width: 1,
+              opacity: 0.6
+            }
+          }]
+        };
+        chart.setOption(option);
+      })
+      .catch(error => {
+        console.error('Error loading the graph:', error);
+      });
+  }
+
+  outletSelect.addEventListener('change', loadGraph);
+  periodSelect.addEventListener('change', loadGraph);
+
+  // Initial load
+  loadGraph();
+</script>
+
+</body>
+</html>
