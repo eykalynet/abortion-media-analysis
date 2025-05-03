@@ -31,6 +31,7 @@ library(forcats)        # Factor reordering
 library(broom)         
 library(textstem)       # Lemmatization
 library(readr)         
+library(purrr)
 library(jsonlite)
 ```
 
@@ -347,7 +348,7 @@ export_network_json <- function(df, outlet_input, period_input) {
       name = topic_name,
       category = "Topic",
       symbolSize = 40,
-      itemStyle = list(color = topic_color)
+      itemStyle = map(topic_color, ~ list(color = .x))
     )
 
   # Create bigram nodes
@@ -357,7 +358,7 @@ export_network_json <- function(df, outlet_input, period_input) {
       name = term,
       category = "Bigram",
       symbolSize = 20,
-      itemStyle = list(color = bigram_color)
+      itemStyle = map(bigram_color, ~ list(color = .x))
     )
 
   # Combine into one node list

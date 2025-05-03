@@ -5,217 +5,279 @@
       "name": "Supreme Court & Leaks",
       "category": "Topic",
       "symbolSize": 40,
-      "itemStyle": "#c35b5b"
+      "itemStyle": {
+        "color": "#c35b5b"
+      }
     },
     {
       "id": "Moral Arguments",
       "name": "Moral Arguments",
       "category": "Topic",
       "symbolSize": 40,
-      "itemStyle": "#c35b5b"
+      "itemStyle": {
+        "color": "#c35b5b"
+      }
     },
     {
       "id": "Faith & Institutions",
       "name": "Faith & Institutions",
       "category": "Topic",
       "symbolSize": 40,
-      "itemStyle": "#c35b5b"
+      "itemStyle": {
+        "color": "#c35b5b"
+      }
     },
     {
       "id": "Clinic Laws & Enforcement",
       "name": "Clinic Laws & Enforcement",
       "category": "Topic",
       "symbolSize": 40,
-      "itemStyle": "#c35b5b"
+      "itemStyle": {
+        "color": "#c35b5b"
+      }
     },
     {
       "id": "Federal Debate & Drafts",
       "name": "Federal Debate & Drafts",
       "category": "Topic",
       "symbolSize": 40,
-      "itemStyle": "#c35b5b"
+      "itemStyle": {
+        "color": "#c35b5b"
+      }
     },
     {
       "id": "supreme court",
       "name": "supreme court",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "pro life",
       "name": "pro life",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "pro choice",
       "name": "pro choice",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "health care",
       "name": "health care",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "15 week",
       "name": "15 week",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "abortion provider",
       "name": "abortion provider",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "ban abortion",
       "name": "ban abortion",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "court decision",
       "name": "court decision",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "unborn child",
       "name": "unborn child",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "samuel alito",
       "name": "samuel alito",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "pro abortion",
       "name": "pro abortion",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "abortion access",
       "name": "abortion access",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "draft opinion",
       "name": "draft opinion",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "hyde amendment",
       "name": "hyde amendment",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "anti abortion",
       "name": "anti abortion",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "texas law",
       "name": "texas law",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "president trump",
       "name": "president trump",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "health organization",
       "name": "health organization",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "holy communion",
       "name": "holy communion",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "san francisco",
       "name": "san francisco",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "abortion clinic",
       "name": "abortion clinic",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "abortion ban",
       "name": "abortion ban",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "court justice",
       "name": "court justice",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "term abortion",
       "name": "term abortion",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "democratic party",
       "name": "democratic party",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     },
     {
       "id": "abortion law",
       "name": "abortion law",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#f4a5a5"
+      "itemStyle": {
+        "color": "#f4a5a5"
+      }
     }
   ],
   "links": [

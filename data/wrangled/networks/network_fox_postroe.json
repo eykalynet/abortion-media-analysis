@@ -5,224 +5,288 @@
       "name": "Court Decisions & Restrictions",
       "category": "Topic",
       "symbolSize": 40,
-      "itemStyle": "#6a040f"
+      "itemStyle": {
+        "color": "#6a040f"
+      }
     },
     {
       "id": "Pro-Life Messaging",
       "name": "Pro-Life Messaging",
       "category": "Topic",
       "symbolSize": 40,
-      "itemStyle": "#6a040f"
+      "itemStyle": {
+        "color": "#6a040f"
+      }
     },
     {
       "id": "Access & Enforcement",
       "name": "Access & Enforcement",
       "category": "Topic",
       "symbolSize": 40,
-      "itemStyle": "#6a040f"
+      "itemStyle": {
+        "color": "#6a040f"
+      }
     },
     {
       "id": "Political Rhetoric",
       "name": "Political Rhetoric",
       "category": "Topic",
       "symbolSize": 40,
-      "itemStyle": "#6a040f"
+      "itemStyle": {
+        "color": "#6a040f"
+      }
     },
     {
       "id": "Pregnancy Centers & Alternatives",
       "name": "Pregnancy Centers & Alternatives",
       "category": "Topic",
       "symbolSize": 40,
-      "itemStyle": "#6a040f"
+      "itemStyle": {
+        "color": "#6a040f"
+      }
     },
     {
       "id": "supreme court",
       "name": "supreme court",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "pro life",
       "name": "pro life",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "health care",
       "name": "health care",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "ban abortion",
       "name": "ban abortion",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "abortion ban",
       "name": "abortion ban",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "anti abortion",
       "name": "anti abortion",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "abortion provider",
       "name": "abortion provider",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "15 week",
       "name": "15 week",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "protect abortion",
       "name": "protect abortion",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "abortion clinic",
       "name": "abortion clinic",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "late term",
       "name": "late term",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "rape incest",
       "name": "rape incest",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "court decision",
       "name": "court decision",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "south carolina",
       "name": "south carolina",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "abortion restriction",
       "name": "abortion restriction",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "abortion access",
       "name": "abortion access",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "pro choice",
       "name": "pro choice",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "biden administration",
       "name": "biden administration",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "president biden",
       "name": "president biden",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "abortion law",
       "name": "abortion law",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "restrict abortion",
       "name": "restrict abortion",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "abortion pill",
       "name": "abortion pill",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "vice president",
       "name": "vice president",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "life movement",
       "name": "life movement",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "reproductive health",
       "name": "reproductive health",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "pregnancy center",
       "name": "pregnancy center",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     },
     {
       "id": "pro abortion",
       "name": "pro abortion",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#9e2a2b"
+      "itemStyle": {
+        "color": "#9e2a2b"
+      }
     }
   ],
   "links": [

@@ -5,322 +5,414 @@
       "name": "Courtroom & Legal Landscape",
       "category": "Topic",
       "symbolSize": 40,
-      "itemStyle": "#61a5c2"
+      "itemStyle": {
+        "color": "#61a5c2"
+      }
     },
     {
       "id": "Healthcare & Public Access",
       "name": "Healthcare & Public Access",
       "category": "Topic",
       "symbolSize": 40,
-      "itemStyle": "#61a5c2"
+      "itemStyle": {
+        "color": "#61a5c2"
+      }
     },
     {
       "id": "Legislative Pushback",
       "name": "Legislative Pushback",
       "category": "Topic",
       "symbolSize": 40,
-      "itemStyle": "#61a5c2"
+      "itemStyle": {
+        "color": "#61a5c2"
+      }
     },
     {
       "id": "Judicial Appointments",
       "name": "Judicial Appointments",
       "category": "Topic",
       "symbolSize": 40,
-      "itemStyle": "#61a5c2"
+      "itemStyle": {
+        "color": "#61a5c2"
+      }
     },
     {
       "id": "White House & Party Messaging",
       "name": "White House & Party Messaging",
       "category": "Topic",
       "symbolSize": 40,
-      "itemStyle": "#61a5c2"
+      "itemStyle": {
+        "color": "#61a5c2"
+      }
     },
     {
       "id": "supreme court",
       "name": "supreme court",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "texas law",
       "name": "texas law",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "ezra klein",
       "name": "ezra klein",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "abortion provider",
       "name": "abortion provider",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "15 week",
       "name": "15 week",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "s.b 8",
       "name": "s.b 8",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "ban abortion",
       "name": "ban abortion",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "abortion clinic",
       "name": "abortion clinic",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "federal court",
       "name": "federal court",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "women’s health",
       "name": "women’s health",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "anti abortion",
       "name": "anti abortion",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "pro life",
       "name": "pro life",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "health care",
       "name": "health care",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "birth control",
       "name": "birth control",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "pro choice",
       "name": "pro choice",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "legalize abortion",
       "name": "legalize abortion",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "abortion movement",
       "name": "abortion movement",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "latin america",
       "name": "latin america",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "legal abortion",
       "name": "legal abortion",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "abortion access",
       "name": "abortion access",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "abortion law",
       "name": "abortion law",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "medication abortion",
       "name": "medication abortion",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "abortion ban",
       "name": "abortion ban",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "abortion pill",
       "name": "abortion pill",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "chief justice",
       "name": "chief justice",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "judge barrett",
       "name": "judge barrett",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "justice alito",
       "name": "justice alito",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "amy coney",
       "name": "amy coney",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "coney barrett",
       "name": "coney barrett",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "justice thomas",
       "name": "justice thomas",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "justice roberts",
       "name": "justice roberts",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "law school",
       "name": "law school",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "ruth bader",
       "name": "ruth bader",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "white house",
       "name": "white house",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "president biden",
       "name": "president biden",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "support abortion",
       "name": "support abortion",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "draft opinion",
       "name": "draft opinion",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "republican party",
       "name": "republican party",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "democratic party",
       "name": "democratic party",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "oppose abortion",
       "name": "oppose abortion",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     },
     {
       "id": "vice president",
       "name": "vice president",
       "category": "Bigram",
       "symbolSize": 20,
-      "itemStyle": "#a9d6e5"
+      "itemStyle": {
+        "color": "#a9d6e5"
+      }
     }
   ],
   "links": [
