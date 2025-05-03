@@ -21,29 +21,16 @@ knitr::opts_chunk$set(
   options(scipen = 1, knitr.kable.NA = '')
 )
 
-library(tidyverse)
-library(tidytext)
-library(topicmodels)
-library(tm)
-library(readr)
-library(lubridate)
-library(ggplot2)
-library(forcats)
-library(broom)
-library(stringr)
-library(tidygraph)
-library(ggraph)
-library(igraph)
-library(ggtext)
-library(showtext)
-library(sysfonts)
-library(visNetwork)
-library(textstem)  # for lemmatization
-
-# Font setup
-font_add_google("News Cycle", "news")
-showtext_auto()
-register_gfont("News Cycle")
+library(tidyverse)      
+library(tidytext)       # Tokenization
+library(topicmodels)    # LDA model
+library(tm)             # Document-Term Matrix tools
+library(lubridate)      
+library(stringr)       
+library(forcats)        # Factor reordering
+library(broom)         
+library(textstem)       # Lemmatization
+library(readr)         
 ```
 
 ## 1. Reading in the Data
@@ -67,7 +54,9 @@ nyt <- read_rds("../data/wrangled/nyt_news_data_wrangled.rds") |>
 
 ## 2. Load top 1,000 bigrams
 
-We load pre-computed bigram lists for both Fox and NYT, which we, in earlier scripts, reduced to the 1,000 most relevant terms for clarity.
+To reduce noise and computational complexity, we previously filtered our tokenized bigrams down to the top 1,000 most frequent and contextually meaningful terms for each outlet. This step helps us focus our topic modeling on high-signal content while excluding rare or incidental phrases that are unlikely to contribute to coherent topics.
+
+Here, we load those pre-computed bigram lists for both Fox News and The New York Times.
 
 ```{r}
 #| label: step-2
@@ -82,7 +71,7 @@ top1000_nyt_bigrams_filtered <- read_rds("../data/wrangled/top1000_nyt_bigrams_f
 
 ## 3. Clean Roe Status Labels
 
-Trim stray whitespace from the `roe_status` column for consistent filtering by time period.
+During our earlier wrangling steps, we manually assigned Roe status labels as `"Pre-Roe"` and `"Post-Roe"` to distinguish articles published before and after the Supreme Court's decision. However, upon review, we noticed inconsistent whitespace in some entries which was likely introduced during file import or manipulation (e.g., `" Post-Roe"` with a leading space). Therefore, to make sure that filtering and grouping by period work correctly in later steps, we use `str_trim()` to remove any stray whitespace from the `roe_status` column. We then store the cleaned result in a new column called `period`, which becomes our primary time marker throughout the analysis.
 
 ```{r}
 #| label: step-3
@@ -97,9 +86,9 @@ nyt <- nyt |> mutate(period = str_trim(roe_status))
 
 ## 4. Normalize and Tokenize Bigrams
 
-In our initial topic modeling run, we noticed a pattern: many semantically identical phrases were being treated as separate bigrams due to slight word-form variations. For example, the model viewed “abortion pill” and “abortion pills” as distinct, which diluted the topic coherence. The same applied to "supreme court" and "supreme court’s," which thus created a lot of redundancy across topic clusters.
+In our initial topic modeling run, we noticed a pattern: many semantically identical phrases were being treated as separate bigrams due to slight word-form variations. For example, the model viewed “abortion pill” and “abortion pills” as distinct, which diluted the topic coherence. The same applied to "supreme court" and "supreme court’s," which introduced noise by splitting conceptually unified ideas across topics.
 
-To address this, we implemented *lemmatization*, which is a text normalization step that reduces words to their base or dictionary form. By lemmatizing each word in our bigrams, we ensured that plural and possessive variations were consolidated into a single, consistent representation. 
+To address this, we implemented *lemmatization*, which is a text normalization step that reduces words to their base or dictionary form. By lemmatizing each word in our bigrams, we ensured that plural and inflected forms were consolidated into a single representation. In addition to lemmatizing, we removed possessive suffixes (i.e., `'s`) prior to normalization. This was important because phrases like “court’s ruling” and “court ruling” often carry the same semantic meaning, yet would be treated as distinct terms by the model if the possessive marker remained.
 
 ```{r}
 #| label: step-4
@@ -111,6 +100,12 @@ To address this, we implemented *lemmatization*, which is a text normalization s
 normalize_bigrams <- function(data) {
   data |> 
     separate(bigram, into = c("word1", "word2"), sep = " ", remove = FALSE) |>
+    # Remove possessive 's
+    mutate(
+      word1 = str_remove(word1, "'s$"),
+      word2 = str_remove(word2, "'s$")
+    ) |>
+    # Lemmatize
     mutate(
       word1 = lemmatize_words(word1),
       word2 = lemmatize_words(word2),
@@ -132,11 +127,13 @@ nyt_bigrams <- nyt |>
 
 ## 5. Define LDA Function
 
-Latent Dirichlet Allocation (LDA) is an unsupervised machine learning method for discovering abstract topics in a collection of documents. It assumes: that each document is a mixture of multiple topics, and each topic is a distribution over words.
+Latent Dirichlet Allocation (LDA) is an unsupervised machine learning method that detects abstract thematic structures in a collection of documents. It assumes that each document is a mixture of multiple latent topics, and that each topic is a distribution over words.
 
-LDA works by inferring hidden topic structures based on which words frequently co-occur across the corpus. In our case, we apply LDA to detect patterns in abortion-related bigrams across two time periods (Pre- and Post-Roe), for both Fox News and the New York Times.
+In this context, we treat each article as a document composed of bigrams. LDA then solves for the clusters of bigrams that tend to co-occur, which thus lets us to infer underlying themes in abortion coverage. Because the model relies on word co-occurrence rather than labeled data, it’s useful for revealing implicit patterns and framing strategies without prior assumptions.
 
-The goal is to extract the top 10 bigrams per topic (ranked by probability \( \beta \)) so we can interpret and visualize each topic. These outputs form the basis of our faceted bar charts and interactive network graphs, which help us compare the thematic framing of abortion coverage across outlets and time.
+By defining a flexible helper function, `fit_lda_by_period()`, we can repeatedly apply LDA across different subsets of our data, specifically, by outlet (Fox or NYT) and time period (Pre- or Post-Roe). This modular structure ensures consistent model parameters and enables clear cross-group comparisons.
+
+Each time the model runs, we extract the top 10 bigrams per topic, ranked by their estimated probability β\betaβ. These top bigrams serve as the most representative language for each topic.
 
 ```{r}
 #| label: step-5
@@ -209,7 +206,12 @@ all_topics <- bind_rows(
 We first explore the top 10 bigrams in each topic using faceted bar plots for each outlet. This makes the results more readable and helps us draw clearer comparisons.
 
 ```{r}
-#| label: step-8a
+#| label: step-8
+
+# =================================================================
+# Step 8: Visualize Top Bigrams per Topic (Fox News)
+# =================================================================
+
 all_topics |> 
   filter(outlet == "Fox") |> 
   mutate(term = reorder_within(term, beta, interaction(period, topic))) |> 
@@ -229,6 +231,11 @@ all_topics |>
 
 ```{r}
 #| label: step-8b
+
+# =================================================================
+# Step 8: Visualize Top Bigrams per Topic (The New York Times)
+# =================================================================
+
 all_topics |> 
   filter(outlet == "NYT") |> 
   mutate(term = reorder_within(term, beta, interaction(period, topic))) |> 
@@ -246,4 +253,52 @@ all_topics |>
   theme(strip.text = element_text(face = "bold", size = 10))
 ```
 
+## 9. Manually Assign Topic Names
 
+Because LDA produces unlabeled clusters of bigrams, interpreting these topics requires a layer of human judgment. After reviewing the top 10 bigrams per topic across all four models, we revised our earlier topic labels to better reflect the patterns revealed in the visualizations.
+
+In this round, we carefully studied the semantic content of each cluster and assigned names that more accurately describe the prevailing discourse within each topic. For instance, in Fox News Post-Roe Topic 1, phrases like *“supreme court,” “ban abortion,”* and *“abortion restriction”* suggest a focus on institutional rulings and legal limitations, which we relabeled as **“Court Decisions & Restrictions.”** Meanwhile, Fox Topic 5’s emphasis on *“pregnancy center,” “pro life,”* and *“abortion pill”* led us to label it **“Pregnancy Centers & Alternatives.”**
+
+On the New York Times side, Post-Roe Topic 1 included strong representation of terms such as *“abortion pill,” “medication abortion,”* and *“abortion care,”* which is pointing clearly to **“Medication Abortion Access.”** Other topics emphasized legal interpretation, party alignment, or individual figures (e.g., *“Ezra Klein,” “Donald Trump,” “Supreme Court”*), which prompted labels like **“Opinion & Media Figures.”**
+
+```{r}
+#| label: step-9
+
+# =================================================================
+# Step 9: Manually Assign Topic Names
+# =================================================================
+
+topic_labels <- tribble(
+  ~outlet, ~period, ~topic, ~topic_name,
+
+  # Fox News — Post-Roe
+  "Fox",   "Post-Roe",     1,   "Court Decisions & Restrictions",
+  "Fox",   "Post-Roe",     2,   "Pro-Life Messaging",
+  "Fox",   "Post-Roe",     3,   "Access & Enforcement",
+  "Fox",   "Post-Roe",     4,   "Political Rhetoric",
+  "Fox",   "Post-Roe",     5,   "Pregnancy Centers & Alternatives",
+
+  # Fox News — Pre-Roe
+  "Fox",   "Pre-Roe",      1,   "Supreme Court & Leaks",
+  "Fox",   "Pre-Roe",      2,   "Moral Arguments",
+  "Fox",   "Pre-Roe",      3,   "Faith & Institutions",
+  "Fox",   "Pre-Roe",      4,   "Clinic Laws & Enforcement",
+  "Fox",   "Pre-Roe",      5,   "Federal Debate & Drafts",
+
+  # NYT — Post-Roe
+  "NYT",   "Post-Roe",     1,   "Medication Abortion Access",
+  "NYT",   "Post-Roe",     2,   "Pro-Life & Court Battles",
+  "NYT",   "Post-Roe",     3,   "Anti-Abortion Campaigns",
+  "NYT",   "Post-Roe",     4,   "Political Institutions & Response",
+  "NYT",   "Post-Roe",     5,   "Opinion & Media Figures",
+
+  # NYT — Pre-Roe
+  "NYT",   "Pre-Roe",      1,   "Courtroom & Legal Landscape",
+  "NYT",   "Pre-Roe",      2,   "Healthcare & Public Access",
+  "NYT",   "Pre-Roe",      3,   "Legislative Pushback",
+  "NYT",   "Pre-Roe",      4,   "Judicial Appointments",
+  "NYT",   "Pre-Roe",      5,   "White House & Party Messaging"
+)
+
+
+```
