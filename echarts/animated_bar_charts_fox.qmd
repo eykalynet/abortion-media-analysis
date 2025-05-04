@@ -172,8 +172,7 @@ fox_chart$x$opts$options <- map2(fox_chart$x$opts$options, title_texts_fox, ~{
       textStyle = list(
         fontSize = 28,
         fontFamily = "News Cycle",
-        fontWeight = "bold",
-        color = fox_darkred
+        color = "black"
       )
     ),
     .y

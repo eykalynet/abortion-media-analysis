@@ -172,8 +172,7 @@ nyt_chart$x$opts$options <- map2(nyt_chart$x$opts$options, title_texts, ~{
       textStyle = list(
         fontSize = 28,
         fontFamily = "News Cycle",
-        fontWeight = "bold",
-        color = nyt_darkblue
+        color = "black"
       )
     ),
     .y
