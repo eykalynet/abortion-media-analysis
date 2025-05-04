@@ -1,5 +1,5 @@
 ---
-title: "Animated Timeline of Abortion-Related Bigrams in The Nrew York Times (2020–2024)"
+title: "Animated Timeline of Abortion-Related Bigrams in The New York Times (2020–2024)"
 author: "Maigan Lafontant, Emilie Ward, and Erika Salvador"
 format:
   html:
