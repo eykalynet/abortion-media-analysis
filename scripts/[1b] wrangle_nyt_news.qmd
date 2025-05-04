@@ -1,0 +1,183 @@
+---
+title: "Wrangling NYT News Articles"
+subtitle: "STAT 231: Blog App"
+author: "Maigan Lafontant, Emilie Ward, and Erika Salvador"
+format: 
+  pdf
+header-includes: |
+  \usepackage{fvextra}
+  \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+# set code chunk option defaults
+knitr::opts_chunk$set(
+  # display code as types
+  tidy = FALSE, 
+  # slightly smaller code font
+  size = "small",
+  # do not display messages in PDF
+  message = FALSE,
+# improve digit and NA display 
+  options(scipen = 1, knitr.kable.NA = ''))
+
+# Load required libraries
+library(tidyverse)
+library(httr)
+library(purrr)
+library(readr)
+library(stringr)
+library(tibble)
+library(kableExtra)
+library(tidytext)
+library(colorspace)
+library(jsonlite)
+library(lubridate)
+```
+
+## 1. Read and Prepare Raw JSON
+
+In this step, we load the raw JSON file containing NYT articles. We first preserve its nested structure by setting `flatten = FALSE`. Because the JSON is deeply nested and large (\~596 entries), we avoid inspecting it directly and instead combine its elements into a single tibble using `map_dfr()`. Upon examining the structure, we notice that several fields, such as `creativeWorkHeadline`, are nested data.frames. To simplify analysis, we extract the `default` subfield (containing the main headline text) and unnest it into regular columns.
+
+```{r}
+#| label: step-1a
+
+## =================================================================
+# Step 1: Read and Prepare Raw JSON (flatten = FALSE)
+# =================================================================
+# Note: Setting flatten = FALSE is important here.
+#       It preserves nested structure and prevents JSON explosion,
+#       which allows for faster and more manageable parsing downstream.
+
+# Load JSON scraped from Python
+nyt_news <- fromJSON("../data/nyt_news_data.json", flatten = FALSE)
+
+# We suggest to avoid running `glimpse(nyt_news)` directly because it is a very
+# large list (~596 elements, deeply nested) and would result in an extremely
+# extremely long and overwhelming chunk output.
+
+# Instead, we first combine all the small data.frames inside `nyt_news`
+# into a single large tibble for easier handling.
+
+# Combine all the little data.frames into one big tibble
+nyt_news_df <- map_dfr(nyt_news, as_tibble)
+
+# View structure
+glimpse(nyt_news_df)
+```
+
+```{r}
+#| label: step-1b
+
+# We observed that the `creativeWorkHeadline` column in `nyt_news_df`
+# contains a nested data.frame with two subfields:
+# - `__typename`: metadata about the headline type
+# - `default`: the main headline text we want
+#
+# To simplify the dataset for analysis, we extract the `default` field
+# as a new column. If missing, we assign NA.
+# 
+# This step "unnests" the nested structure into regular columns.
+
+nyt_news_df <- nyt_news_df |>
+  unnest_wider(creativeWorkHeadline, names_sep = "_")
+```
+
+## 2. Subset Metadata
+
+In this step, we subset the New York Times dataset to retain only entries classified as articles. We then extract the relevant metadata, headline, publication date, URL, summary, and full text, and clean the publication date into a standard `Date` format for easier filtering later.
+
+```{r}
+#| label: step-2
+
+# =================================================================
+# Step 2: Subset Metadata
+# =================================================================
+
+nyt_meta <- nyt_news_df |>
+  # Keep only entries classified as Article
+  filter(`__typename` == "Article") |>
+  transmute(
+    title = creativeWorkHeadline_default,   # Article headline
+    publicationDate = firstPublished,        # Publication timestamp
+    url,                                     # Article URL
+    description = creativeWorkSummary,       # Short summary
+    text                                     # Full article body (if available)
+  ) |>
+  # Clean publication date format to Date class
+  mutate(
+    publicationDate = as.Date(publicationDate)
+  )
+
+```
+
+## 3. Filter Articles by Publication Year (2020-2024)
+
+In this step, we subset the dataset to include only articles published between 2020 and 2024. We first convert the `publicationDate` string into a proper datetime object using `lubridate::ymd_hms()`, then retain only those entries whose year falls within our desired range.
+
+```{r}
+#| label: step-3
+
+# =================================================================
+# Step 3: Filter Articles by Publication Year (2020-2024)
+# =================================================================
+
+nyt_meta2 <- nyt_meta |>
+  # Parse publication date (DATE ONLY)
+  mutate(pub_date = lubridate::ymd(publicationDate)) |>
+  
+  # Keep articles from 2020–2024
+  filter(lubridate::year(pub_date) >= 2020,
+         lubridate::year(pub_date) <= 2024) |>
+  
+  # Add Roe v. Wade overturning label
+  mutate(roe_status = if_else(
+    pub_date < as_date("2022-06-24"), 
+    "Pre-Roe", 
+    "Post-Roe"
+  )) |>
+  
+  # Drop original unparsed column
+  select(-publicationDate)
+```
+
+## 4. Clean Article Text
+
+Our first trial of scraping returned a cluttered dataset filled with interface fragments like “Subscribe Now” prompts, bylines such as “Written by,” and unrelated navigation blocks. Many entries pointed to videos or other media with no accompanying article text. After reviewing the site’s structure, we identified the correct CSS selector to isolate full article bodies. This allowed us to extract only the main text and avoid embedded noise from other page elements.
+
+At this stage, we removed articles with missing or empty text fields, most of which were media-only items such as video embeds or photo galleries that happened to be tagged with “abortion” but lacked any written content. We further limited the dataset to articles with at least five mentions of the word “abortion,” ensuring that each piece contributed substantively to the topic.
+
+```{r}
+#| label: step-4
+
+# =================================================================
+# Step 4: Clean Article Text
+# =================================================================
+nyt_meta3 <- nyt_meta2 |>
+  # Remove rows with missing or blank text
+  filter(!is.na(text), str_trim(text) != "") |>
+
+  # Count abortion mentions (case-insensitive) and filter for ≥ 5
+  mutate(abortion_mentions = str_count(str_to_lower(text), 
+                                       "\\babortion\\b")) |>
+  filter(abortion_mentions >= 5) |>
+
+  # Minimal cleaning
+  mutate(
+    text_clean = text |> 
+      str_replace_all("[\r\n\t]", " ") |>     # Normalize whitespace
+      str_replace_all(" +", " ") |>           # Collapse multiple spaces
+      str_trim()                              # Remove trailing/leading spaces
+  )
+
+# Reorder columns
+nyt_meta3 <- nyt_meta3 |>
+  select(pub_date, title, roe_status, url, description, text, text_clean, abortion_mentions)
+
+
+write.csv(nyt_meta3, "../data/wrangled/nyt_news_data_wrangled.csv")
+saveRDS(nyt_meta3, "../data/wrangled/nyt_news_data_wrangled.rds")
+```

@@ -1,0 +1,153 @@
+---
+title: "Wrangling Fox News Articles"
+subtitle: "STAT 231: Blog App"
+author: "Maigan Lafontant, Emilie Ward, and Erika Salvador"
+format: 
+  pdf
+header-includes: |
+  \usepackage{fvextra}
+  \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+# set code chunk option defaults
+knitr::opts_chunk$set(
+  # display code as types
+  tidy = FALSE, 
+  # slightly smaller code font
+  size = "small",
+  # do not display messages in PDF
+  message = FALSE,
+# improve digit and NA display 
+  options(scipen = 1, knitr.kable.NA = ''))
+
+# Load required libraries
+library(tidyverse)
+library(httr)
+library(readr)
+library(stringr)
+library(tibble)
+library(kableExtra)
+library(colorspace)
+library(jsonlite)
+library(tidytext)
+library(lubridate)
+library(gganimate)
+library(wordcloud)
+```
+
+## 1. Read and Prepare Raw JSON
+
+The JSON file `fox_news_data.json` was scraped from Fox News using a Python-based Tor-enabled web scraper. It includes article-level information such as titles, dates, body text, links, and images.
+
+```{r}
+#| label: step-1
+
+# =================================================================
+# Step 1: Read and Prepare Raw JSON (flatten = FALSE)
+# =================================================================
+# Note: Setting flatten = FALSE is important here.
+#       It preserves nested structure and prevents JSON explosion,
+#       which allows for faster and more manageable parsing downstream.
+
+# Load JSON scraped from Python
+fox_news <- fromJSON("../data/fox_news_data.json", flatten = FALSE)
+
+# Preview structure
+glimpse(fox_news)
+```
+
+## 2. Subset Metadata
+
+In this step, we subset and clean the raw Fox News data to retain only the important metadata fields needed for our analysis. Specifically, we extract the article title, description, full text, publication date, and URL. The `publicationDate` field is simplified by selecting only the first timestamp per article. Because the original `url` values are relative paths, we prepend the full domain (`https://www.foxnews.com`) to make them complete. The `authors` column is nested and occasionally malformed, so we use safety checks to extract and collapse the authors' names into a single string or return `NA` if no valid data is found.
+
+```{r}
+#| label: step-2
+
+# =================================================================
+# Step 2: Subset Metadata
+# =================================================================
+
+fox_meta <- fox_news |>
+  # Convert to tibble for easier manipulation
+  as_tibble() |>
+  transmute(
+    title,  # Article headline
+    # Use the first timestamp
+    publicationDate = map_chr(publicationDate, ~ .x[1]),  
+    # Convert relative to absolute URLs
+    url = paste0("https://www.foxnews.com", url),         
+    description,  # Short summary
+    text          # Full article body
+  )
+```
+
+## 3. Filter Articles by Publication Year (2020-2024)
+
+In this step, we subset the dataset to include only articles published between 2020 and 2024. We first convert the `publicationDate` string into a proper datetime object using `lubridate::ymd_hms()`, then retain only those entries whose year falls within our desired range.
+
+```{r}
+#| label: step-3
+
+# =================================================================
+# Step 3: Filter Articles by Publication Year (2020-2024)
+# =================================================================
+
+# Filter to articles published between 2020 and 2024
+fox_meta2 <- fox_meta |> 
+  
+  # Parse publication date
+  mutate(pub_date = lubridate::ymd_hms(publicationDate)) |>  
+  
+  # Keep 2020-2024
+  filter(lubridate::year(pub_date) >= 2020, 
+         lubridate::year(pub_date) <= 2024) |> 
+  
+  # Add Roe v. Wade overturning label
+  mutate(roe_status = if_else(pub_date < as_datetime("2022-06-24"), "
+                              Pre-Roe", "Post-Roe")) |> 
+  
+  # Drop original unparsed column
+  select(-publicationDate)  
+```
+
+## 4. Clean Article Text
+
+Our first trial of scraping returned a cluttered dataset filled with interface fragments such as “Subscribe Now” prompts, author bylines like “Written by,” and unrelated navigation blocks. Many entries pointed to videos or other media content that had no accompanying article text. After reviewing the structure of the site, we found the correct CSS selector for isolating full article bodies. This allowed us to extract only the article content and avoid the noise embedded in other page elements. At this point, we only needed to remove articles with missing or empty text fields, most of which corresponded to media-only items such as videos or photo galleries tagged with “abortion” but without any written content. We also limited our dataset to articles with at least five mentions of the word “abortion” to ensure that each piece contributed meaningfully to the topic.
+
+```{r}
+#| label: step-4
+
+# =================================================================
+# Step 4: Clean and Filter Article Text
+# =================================================================
+
+fox_meta3 <- fox_meta2 |>
+  # Remove rows with missing or blank text
+  filter(!is.na(text), str_trim(text) != "") |>
+
+  # Count abortion mentions (case-insensitive) and filter for ≥ 5
+  mutate(abortion_mentions = str_count(str_to_lower(text), 
+                                       "\\babortion\\b")) |>
+  filter(abortion_mentions >= 5) |>
+
+  # Minimal cleaning
+  mutate(
+    text_clean = text |> 
+      str_replace_all("[\r\n\t]", " ") |>     # Normalize whitespace
+      str_replace_all(" +", " ") |>           # Collapse multiple spaces
+      str_trim()                              # Remove trailing/leading spaces
+  )
+
+# Reorder columns
+fox_meta3 <- fox_meta3 |>
+  select(pub_date, title, roe_status, url, description, text, text_clean, abortion_mentions)
+
+write_csv(fox_meta3, "../data/wrangled/fox_news_data_wrangled.csv")
+saveRDS(fox_meta3, "../data/wrangled/fox_news_data_wrangled.rds")
+```
+
+

@@ -36,6 +36,6 @@ As discussed in the main content of the blog, we observed that some articles, pa
 
 While our dataset is limited to just two outlets and is not intended to represent the full diversity of the U.S. media landscape, we view this work as a  step toward more expansive analyses. We hope it can inform and inspire future projects that broaden the scope of media coverage.
 
-### 5. Future Work  
+### Future Work  
 Given the scope and limitations of this project, several potential improvements come to mind. Future projects could include additional news sources such as, but not limited to, regional papers, cable news transcripts, and digital-native platforms to increase breadth and representativeness. We are also interested in experimenting with alternative sentiment models and topic modeling techniques that better analyze rhetorical nuance and evolving language use. 
 
