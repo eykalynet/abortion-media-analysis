@@ -1,0 +1,136 @@
+---
+title: "Guttmatcher_State_Data_wrangling"
+output: html_document
+date: "2025-05-04"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# load packages
+library(sf)
+library(leaflet)
+library(viridis)
+library(ggspatial)
+library(mapproj)
+library(maps)
+library(mapdata)
+library(oz)
+library(rnaturalearth)
+library(urbnmapr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(readr)
+library(stringr)
+library(fivethirtyeight)
+library(plotly)
+```
+
+## 1. Read in the File
+```{r}
+data1 <- read.csv("data/Guttmatcher_institute_data/gutt_data_tabel1.csv", header = TRUE)
+data2 <- read.csv("dpwdata/Guttmatcher_institute_data/gutt_data_tabel2.csv", header = TRUE)
+```
+
+# ==============================================================================
+# Map for Table 1.Total Abortion Bans and Bans Based on Gestational Duration
+# ==============================================================================
+
+## 2. Cleaning a rearranging state data 
+
+```{r}
+
+#There are additional notes on the data table that I took out through this rearrangement
+#To make a map I do not think it is important but I should find a way to include this information somehow after
+data_bans <- data1 |>
+  filter(`Jurisdiction` != "TOTAL")|> 
+  rename("ID" = Jurisdiction, 
+         "total ban" = Total.ban, 
+         "under 18 weeks" = Bans.in.the.first.18.weeks.of.pregnancy, 
+         "after 18 weeks" = Bans.after.18.weeks.of.pregnancy, 
+         "no ban" = No.ban.or.gestational.limit) |> 
+  pivot_longer(col = -ID, names_to = "Gestational_Duration", values_to = "specifics")|>
+  filter(`specifics` != "") |> 
+  mutate(ID = tolower(ID))
+  
+
+
+```
+
+## 3. Adding mapr data
+
+```{r}
+state_map_coord <- maps::map("state", plot = FALSE, fill = TRUE) |>
+  st_as_sf()
+
+bans_full <- full_join(state_map_coord, data_bans, by = "ID") |> 
+  mutate(Gestational_Duration = if_else(is.na(Gestational_Duration), "no data", Gestational_Duration))
+
+```
+
+
+## 4. Ploting the map
+```{r}
+
+bans_full$Gestational_Duration <- factor(bans_full$Gestational_Duration, 
+                                         levels = c("no ban", "under 18 weeks", "after 18 weeks", "total ban", "no data")) 
+
+g <- ggplot(bans_full) +
+  geom_sf(aes(fill = Gestational_Duration)) +
+  theme_void() +
+  scale_fill_manual(values = c("#4C6BFF", "#7F9EFF", "#FF7F7F", "#FF4C4C", "grey"))+
+  theme(
+    plot.background = element_rect(fill = "white", color = NA),  
+    panel.background = element_rect(fill = "white", color = NA),  
+    plot.title = element_text(hjust =0.5), 
+  ) +
+  labs(title= "Total Abortion Bans and Bans Based on Gestational Duration", fill = "Gestational Duration")
+
+g
+
+```
+
+# ==============================================================================
+# Map for Table 2. Exceptions to Bans Based on Gestational Duration
+# ==============================================================================
+
+## 5. Wrangling the Data for Exceptions to Bans and adding state coordinates
+```{r}
+data_exceptions <- data2 |> 
+  rename("ID" = Jurisdiction, 
+         "Threat to Maternal Life" = Threat.to.the.life.of.the.pregnant.person, 
+         "Risk to General Materal Health" = Threat.to.the.general.health.of.the.pregnant.person, 
+         "Risk to Physical Maternal Health" = Threat.to.the.physical.health.of.the.pregnant.person, 
+         "Pregnancy Resulted from Rape" = Pregnancy.resulting.from.rape, 
+         "Pregnancy Resulted from Incest" = Pregnancy.resulting.from.incest, 
+         ) |> 
+  pivot_longer(col = -ID, names_to = "Gestational_Duration", values_to = "specifics") |> 
+  filter(`specifics` != "") |> 
+  group_by(ID)|> 
+  summarise("number_of_exceptions" = n()) |> 
+  mutate(ID = tolower(ID))
+
+exceptions_full <- full_join(state_map_coord, data_exceptions, by = "ID")
+```
+
+## 6. Graphing the Map 
+
+```{r}
+
+
+g <- ggplot(exceptions_full) +
+  geom_sf(aes(fill = number_of_exceptions )) +
+  theme_void() +
+  scale_fill_distiller(palette = "RdBu", direction = 1)+
+  theme(
+    plot.background = element_rect(fill = "white", color = NA),  
+    panel.background = element_rect(fill = "white", color = NA),  
+    plot.title = element_text(hjust =0.5), 
+  ) +
+  labs(title= "Total Abortion Bans and Bans Based on Gestational Duration", fill = "Gestational Duration")
+
+g
+
+```
+

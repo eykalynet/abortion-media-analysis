@@ -1,0 +1,43 @@
+Jurisdiction,Threat to the life of the pregnant person,Threat to the general health of the pregnant person,Threat to the physical health of the pregnant person,Pregnancy resulting from rape,Pregnancy resulting from incest,Diagnosis of lethal fetal anomaly
+Alabama,X,,X,,,X
+Arizona,X,X,,,,
+Arkansas,X,,,,,
+California,X,X,,,,
+Connecticut,X,X,,,,
+Delaware,X,X,,,,X
+Florida,X,,X,X (through 15 weeks),X (through 15 weeks),X (until 3rd trimester)
+Georgia,X,,X,X (through 20 weeks since fertilization),X (through 20 weeks since fertilization),X
+Hawaii,X,X,,,,
+Idaho,X,,,X (through first trimester),X (through first trimester),
+Illinois,X,X,,,,
+Indiana,X (through 20 weeks since fertilization),,X (through 20 weeks since fertilization),X (through 10 weeks since fertilization),X (through 10 weeks since fertilization),X (through 20 weeks since fertilization)
+Iowa†,X,,X,X (through 20 weeks since fertilization),X (through 20 weeks since fertilization),X (through 20 weeks since fertilization)
+Kansas,X,,X,,,
+Kentucky,X,,X,,,
+Louisiana,X,,X,,,X
+Maine*,X,,,,,
+Massachusetts,X,X,,,,X
+Mississippi,X,,,X,,
+Missouri,X,,X,,,
+Montana,X,,X,,,
+Nebraska,X,,X,X,X,
+Nevada,X,X,,,,
+New Hampshire,X,,X,,,X
+New York,X,X,,,,
+North Carolina,X,,X,X (through 20 weeks),X (through 20 weeks),X (through 24 weeks)
+North Dakota,X,,X,,,
+Ohio,X,,X,,,
+Oklahoma,X,,,,,
+Pennsylvania,X,,X,,,
+Rhode Island,X,X,,,,
+South Carolina,X,,X,X (through 12 weeks since conception),X (through 12 weeks since conception),X
+South Dakota,X,,,,,
+Tennessee,X,,X,,,
+Texas,X,,X,,,
+Utah,X,,X,,,X
+Virginia,X,X,,,,
+Washington,X,X,,,,
+West Virginia,X,,X,"X (through 8 weeks since fertilization for adults, 14 weeks since fertilization for minors)","X (through 8 weeks since fertilization for adults, 14 weeks since fertilization for minors)",X
+Wisconsin,X,,X,,,
+Wyoming,X,X,,,,
+TOTAL,41,13,22,10,9,13
