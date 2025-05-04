@@ -193,6 +193,27 @@ fox_chart
 ```
 
 ```{r}
+#| label: saving
+
 saveWidget(fox_chart, "fox_bigrams_chart.html", selfcontained = TRUE)
+```
+```{r}
+#| label: saving-with-font-correction
+
+save_fox_chart <- function(chart, file_path = "fox_bigrams_chart.html") {
+  saveWidget(chart, file = file_path, selfcontained = TRUE)
+
+  html_lines <- readLines(file_path)
+
+  font_link <- '<link href="https://fonts.googleapis.com/css2?family=News+Cycle&display=swap" rel="stylesheet">'
+  font_style <- '<style>body { font-family: "News Cycle", sans-serif; }</style>'
+
+  insert_at <- grep("<head>", html_lines, fixed = TRUE) + 1
+  html_lines <- append(html_lines, values = c(font_link, font_style), after = insert_at)
+
+  writeLines(html_lines, file_path)
+}
+
+save_fox_chart(fox_chart)
 ```
 

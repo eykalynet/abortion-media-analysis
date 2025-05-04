@@ -709,7 +709,7 @@ throughout.
 
 To visualize how *The New York Times’* framing of abortion evolved over time, we animated the top bigrams appearing in abortion-related articles each month from **2020** to **2024**.
 
-![Animated NYT Bigrams](images/nyt_sentiment_bigrams_per_month.gif)
+<iframe src="../echarts/nyt_bigrams_chart.html" width="100%" height="720px" style="border: none;"></iframe>  
 
 In **early 2020**, bigrams like *health care*, *pro life*, and *reproductive rights* were prominent, reflecting a healthcare- and ideologically-focused framing of abortion. In **September 2021**, with [Texas’s SB8 law](https://en.wikipedia.org/wiki/Texas_Senate_Bill_8) going into effect, terms like *texas law* and *planned parenthood* surged.
 
@@ -724,7 +724,8 @@ The presence of terms like *12 weeks*, *15 weeks*, *shield laws*, and *aid acces
 
 We did the similar thing for Fox News. 
 
-![Animated Fox Bigrams](images/fox_sentiment_bigrams_per_month.gif)
+<iframe src="../echarts/fox_bigrams_chart.html" width="100%" height="720px" style="border: none;"></iframe>  
+
 We consistently see *health care* as a primary focus each year, but especially in **2020**, there was a heightened emphasis on *public care*, with frequent mentions of phrases like *affordable care*, *care access*, and *medical progress*.
 
 A more *narrative-driven* framing emerges at the start of **2021**, with top bigrams in **February 2021** such as *lives matter* and *killed babies*, followed by *moral evil* and *spiritual harm* in **April** and **May**. While **2020** centered more on *medicine*, *public health*, and social institutions impacted by abortion laws, **2021** marks a shift toward individual experiences and the *moral and social opinion* surrounding abortion.
