@@ -1,0 +1,126 @@
+---
+title: "Animated Timeline of Abortion-Related Bigrams in NYT and Fox News (2020–2024)"
+author: "Maigan Lafontant, Emilie Ward, and Erika Salvador"
+format:
+  html:
+    toc: true
+    number-sections: true
+    include-in-header: fonts.html
+---
+
+```{r}
+#| label: nyt-animated-bar-chart
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(tidytext)
+library(lubridate)
+library(gganimate)
+library(gifski)
+library(showtext)
+library(sysfonts)
+library(gdtools)
+library(echarts4r)
+
+# Font and color setup
+font_add_google("News Cycle", "news")
+showtext_auto()
+register_gfont("News Cycle")
+
+nyt_color <- "#7aaed6"
+
+# Load data
+nyt_top_bigrams <- read_csv("../data/wrangled/top1000_nyt_bigrams_filtered.csv") |> 
+  mutate(bigram = str_trim(str_to_lower(bigram)))
+
+nyt_data <- read_rds("../data/wrangled/nyt_news_data_wrangled.rds")
+
+# Timeline events
+events <- tribble(
+  ~month,         ~event,
+  "2020-03-01",   "COVID Lockdowns Begin",
+  "2020-09-01",   "RBG Dies",
+  "2021-01-01",   "Capitol Riot",
+  "2022-05-01",   "Dobbs Leak",
+  "2022-06-01",   "Roe Overturned",
+  "2023-04-01",   "Mifepristone Ruling",
+  "2023-08-01",   "Ohio Ballot Fight",
+  "2024-03-01",   "SCOTUS Hearing",
+  "2024-08-01",   "GOP Convention",
+  "2024-11-01",   "2024 US Elections"
+) |> mutate(month = as.Date(month))
+
+# Preprocess
+nyt_bigrams <- nyt_data |> 
+  mutate(month = floor_date(pub_date, "month")) |>
+  unnest_tokens(bigram, text_clean, token = "ngrams", n = 2) |>
+  mutate(bigram = str_trim(str_to_lower(bigram))) |>
+  filter(bigram %in% nyt_top_bigrams$bigram) |>
+  count(month, bigram, sort = TRUE) |>
+  group_by(month) |>
+  slice_max(n, n = 15, with_ties = FALSE) |> 
+  ungroup()
+
+# Build annotations
+timeline_meta <- tibble(month = sort(unique(nyt_bigrams$month))) |>
+  left_join(events, by = "month") |>
+  mutate(
+    label = if_else(is.na(event),
+                    format(month, "%b %Y"),
+                    paste0(format(month, "%b %Y"), "\n", event))
+  )
+
+title_labels <- map(timeline_meta$label, ~ list(
+  text = .x,
+  right = "2%",
+  bottom = "5%",
+  textStyle = list(
+    fontSize = 20,
+    color = nyt_color,
+    fontFamily = "News Cycle"
+  )
+))
+
+# Build chart
+nyt_chart <- nyt_bigrams |>
+  group_by(month) |>
+  e_charts(bigram, timeline = TRUE) |>
+  e_bar(n,
+        realtimeSort = TRUE,
+        itemStyle = list(color = nyt_color),
+        label = list(show = TRUE, position = "right"),
+        legend = FALSE) |>
+  e_flip_coords() |>
+  e_y_axis(inverse = TRUE, max = 15,
+           axisLabel = list(fontFamily = "News Cycle")) |>
+  e_x_axis(name = "Frequency",
+           axisLabel = list(fontFamily = "News Cycle"),
+           nameTextStyle = list(fontFamily = "News Cycle")) |>
+  e_grid(left = 130) |>
+  e_timeline_opts(
+    autoPlay = TRUE,
+    symbolSize = 8,
+    label = list(fontFamily = "News Cycle"),
+    controlStyle = list(color = nyt_color, borderColor = nyt_color),
+    lineStyle = list(color = nyt_color),
+    itemStyle = list(color = nyt_color),
+    checkpointStyle = list(color = nyt_color, borderColor = nyt_color)
+  ) |>
+  e_title(text = "Top NYT Bigrams by Month",
+          textStyle = list(fontFamily = "News Cycle"))
+
+# Inject bottom-right titles
+nyt_chart$x$opts$options <- map2(
+  nyt_chart$x$opts$options,
+  title_labels,
+  \(opt, label) {
+    opt$title <- list(label)
+    opt
+  }
+)
+
+nyt_chart
+
+```
+

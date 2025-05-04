@@ -1,0 +1,199 @@
+---
+title: "Animated Timeline of Abortion-Related Bigrams in The Nrew York Times (2020–2024)"
+author: "Maigan Lafontant, Emilie Ward, and Erika Salvador"
+format:
+  html:
+    include-in-header: fonts.html
+---
+
+```{r}
+#| label: set-up
+
+# =================================================================
+# Step 0: Set-up and Load Libraries
+# =================================================================
+
+library(tidyverse)
+library(tidytext)
+library(lubridate)
+library(echarts4r)
+library(sysfonts)
+library(showtext)
+library(readr)
+library(gdtools)
+library(htmlwidgets)
+
+# Font setup
+font_add_google("News Cycle", "news")
+showtext_auto()
+register_gfont("News Cycle")
+
+# Custom color
+nyt_blue <- "#7aaed6"
+nyt_darkblue <- "#3b6072"
+```
+
+## Step 1. Read and Prepare Data
+
+Next, we import the top 1000 bigrams (two-word phrases) that appeared in abortion-related New York Times articles between 2020 and 2024. We also read in the full dataset of cleaned article text, including metadata such as publication date, so we can analyze changes over time.
+
+```{r}
+#| label: step-1 
+
+# =================================================================
+# Step 1: Read and Prepare Data
+# =================================================================
+
+nyt_top_bigrams <- read_csv("../data/wrangled/top1000_nyt_bigrams_filtered.csv") |> 
+  mutate(bigram = str_trim(str_to_lower(bigram)))
+
+nyt_data <- read_rds("../data/wrangled/nyt_news_data_wrangled.rds")
+```
+
+## Step 2. Add Key Events for Timeline Annotations
+
+We create a custom set of major political and legal events related to abortion policy, such as the Dobbs leak and the Roe v. Wade overturn. These will later be annotated on the timeline to help contextualize spikes or dips in certain bigrams.
+
+```{r}
+#| label: step-2 
+
+# =================================================================
+# Step 2: Add Key Events for Timeline Annotations
+# =================================================================
+
+# Timeline events (no COVID)
+events <- tribble(
+  ~month,         ~event,
+  "2020-09-01",   "RBG Dies",
+  "2021-01-01",   "Capitol Riot",
+  "2022-05-01",   "Dobbs Leak",
+  "2022-06-01",   "Roe Overturned",
+  "2023-04-01",   "Mifepristone Ruling",
+  "2023-08-01",   "Ohio Ballot Fight",
+  "2024-03-01",   "SCOTUS Hearing",
+  "2024-08-01",   "Republican Convention",
+  "2024-11-01",   "US Elections"
+) |> mutate(month = as.Date(month))
+```
+
+## Step 3. Process Bigrams by Month
+
+Using unnest_tokens, we break the article text into bigrams, filter only the most common ones, and count their monthly frequency. For clarity, we keep only the top 15 bigrams per month and rank them so that they can be shown in an animated bar chart.
+
+```{r}
+#| label: step-3
+
+# =================================================================
+# Step 3: Process Bigrams by Month
+# =================================================================
+
+nyt_bigrams <- nyt_data |> 
+  mutate(month = floor_date(pub_date, "month")) |> 
+  unnest_tokens(bigram, text_clean, token = "ngrams", n = 2) |> 
+  mutate(bigram = str_trim(str_to_lower(bigram))) |> 
+  filter(bigram %in% nyt_top_bigrams$bigram) |> 
+  count(month, bigram, sort = TRUE) |> 
+  group_by(month) |> 
+  arrange(desc(n)) |> 
+  mutate(rank = row_number()) |> 
+  filter(rank <= 15) |> 
+  ungroup()
+```
+
+```{r}
+#| label: step-3b
+
+# Timeline metadata
+timeline_meta <- tibble(month = sort(unique(nyt_bigrams$month))) |> 
+  left_join(events, by = "month") |> 
+  mutate(
+    label = if_else(is.na(event),
+                    format(month, "%b %Y"),
+                    paste(format(month, "%b %Y"), "\n", str_wrap(event, width = 20))),
+    speed = if_else(is.na(event), 800, 2400)
+  )
+```
+
+```{r titles}
+#| label: step-3c
+
+# Timeline annotations
+title_texts <- map(timeline_meta$label, ~ list(
+  text = .x,
+  right = 10,
+  bottom = 20,
+  textStyle = list(
+    fontSize = 20,
+    color = nyt_blue,
+    fontFamily = "News Cycle"
+  )
+))
+```
+
+## Step 4. Build the Animated Bar Chart
+
+Special attention is given to customizing fonts, layout, colors, and transitions to enhance legibility and visual appeal. Key events appear as annotations on the timeline, and important moments slow down the animation to allow for better viewer focus.
+
+```{r}
+#| label: step-4
+
+nyt_chart <- nyt_bigrams |> 
+  group_by(month) |> 
+  e_charts(bigram, timeline = TRUE) |> 
+  e_bar(n,
+        realtimeSort = TRUE,
+        label = list(show = TRUE, position = "right"),
+        legend = FALSE,
+        itemStyle = list(color = nyt_blue)) |> 
+  e_flip_coords() |> 
+  e_y_axis(inverse = TRUE, max = 15, axisLabel = list(fontFamily = "News Cycle")) |> 
+  e_x_axis(name = "Frequency",
+           nameTextStyle = list(fontFamily = "News Cycle"),
+           axisLabel = list(fontFamily = "News Cycle")) |> 
+  e_grid(left = 130) |> 
+  e_timeline_opts(
+    autoPlay = TRUE,
+    symbolSize = 8,
+    label = list(fontFamily = "News Cycle"),
+    controlStyle = list(color = nyt_darkblue),
+    lineStyle = list(color = nyt_darkblue),
+    checkpointStyle = list(color = nyt_darkblue, borderColor = nyt_darkblue),
+    itemStyle = list(color = nyt_blue)
+  ) |> 
+  e_toolbox_feature(feature = "saveAsImage")
+
+# Replace this block:
+nyt_chart$x$opts$options <- map2(nyt_chart$x$opts$options, title_texts, ~{
+  .x$title <- list(
+    list(
+      text = "Top Bigrams Per Month in The New York Times",
+      left = "center",
+      top = 10,
+      textStyle = list(
+        fontSize = 28,
+        fontFamily = "News Cycle",
+        fontWeight = "bold",
+        color = nyt_darkblue
+      )
+    ),
+    .y
+  )
+  .x
+})
+
+# Playback speed customization stays the same
+for (i in seq_along(timeline_meta$speed)) {
+  nyt_chart$x$opts$options[[i]]$timeline <- modifyList(
+    nyt_chart$x$opts$options[[i]]$timeline %||% list(),
+    list(playInterval = timeline_meta$speed[i])
+  )
+}
+
+nyt_chart
+
+```
+
+```{r}
+saveWidget(nyt_chart, "nyt_bigrams_chart.html", selfcontained = TRUE)
+```
+

@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Maigan Lafontant, Emilie Ward, and Erika Salvador">
+
+<title>Animated Timeline of Abortion-Related Bigrams in The Nrew York Times (2020–2024)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="animated_bar_charts_NYT_files/libs/clipboard/clipboard.min.js"></script>
+<script src="animated_bar_charts_NYT_files/libs/quarto-html/quarto.js"></script>
+<script src="animated_bar_charts_NYT_files/libs/quarto-html/popper.min.js"></script>
+<script src="animated_bar_charts_NYT_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="animated_bar_charts_NYT_files/libs/quarto-html/anchor.min.js"></script>
+<link href="animated_bar_charts_NYT_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="animated_bar_charts_NYT_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="animated_bar_charts_NYT_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="animated_bar_charts_NYT_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="animated_bar_charts_NYT_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<!-- fonts.html -->
+
+<link href="https://fonts.googleapis.com/css2?family=News+Cycle&amp;display=swap" rel="stylesheet">
+
+<style>
+
+  body {
+
+    font-family: 'News Cycle', sans-serif !important;
+
+  }
+
+
+
+  .echarts {
+
+    font-family: 'News Cycle', sans-serif !important;
+
+  }
+
+</style>
+
+<link href="animated_bar_charts_NYT_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="animated_bar_charts_NYT_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<script src="animated_bar_charts_NYT_files/libs/echarts4r-4.8.0/echarts-en.min.js"></script>
+
+<script src="animated_bar_charts_NYT_files/libs/echarts4r-4.8.0/ecStat.min.js"></script>
+
+<script src="animated_bar_charts_NYT_files/libs/echarts4r-4.8.0/dataTool.min.js"></script>
+
+<script src="animated_bar_charts_NYT_files/libs/echarts4r-binding-0.4.5/echarts4r.js"></script>
+
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Animated Timeline of Abortion-Related Bigrams in The Nrew York Times (2020–2024)</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Maigan Lafontant, Emilie Ward, and Erika Salvador </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># =================================================================</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 0: Set-up and Load Libraries</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># =================================================================</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(echarts4r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'echarts4r' was built under R version 4.4.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sysfonts)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(showtext)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'showtext' was built under R version 4.4.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: showtextdb</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gdtools)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'gdtools' was built under R version 4.4.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(htmlwidgets)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'htmlwidgets' was built under R version 4.4.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Font setup</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">font_add_google</span>(<span class="st">"News Cycle"</span>, <span class="st">"news"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">showtext_auto</span>()</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">register_gfont</span>(<span class="st">"News Cycle"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom color</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>nyt_blue <span class="ot">&lt;-</span> <span class="st">"#7aaed6"</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>nyt_darkblue <span class="ot">&lt;-</span> <span class="st">"#3b6072"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="step-1.-read-and-prepare-data" class="level2">
+<h2 class="anchored" data-anchor-id="step-1.-read-and-prepare-data">Step 1. Read and Prepare Data</h2>
+<p>Next, we import the top 1000 bigrams (two-word phrases) that appeared in abortion-related New York Times articles between 2020 and 2024. We also read in the full dataset of cleaned article text, including metadata such as publication date, so we can analyze changes over time.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># =================================================================</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Read and Prepare Data</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># =================================================================</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>nyt_top_bigrams <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../data/wrangled/top1000_nyt_bigrams_filtered.csv"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bigram =</span> <span class="fu">str_trim</span>(<span class="fu">str_to_lower</span>(bigram)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1000 Columns: 2
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (1): bigram
+dbl (1): n
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>nyt_data <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"../data/wrangled/nyt_news_data_wrangled.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="step-2.-add-key-events-for-timeline-annotations" class="level2">
+<h2 class="anchored" data-anchor-id="step-2.-add-key-events-for-timeline-annotations">Step 2. Add Key Events for Timeline Annotations</h2>
+<p>We create a custom set of major political and legal events related to abortion policy, such as the Dobbs leak and the Roe v. Wade overturn. These will later be annotated on the timeline to help contextualize spikes or dips in certain bigrams.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># =================================================================</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Add Key Events for Timeline Annotations</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># =================================================================</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Timeline events (no COVID)</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>events <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>month,         <span class="sc">~</span>event,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2020-09-01"</span>,   <span class="st">"RBG Dies"</span>,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2021-01-01"</span>,   <span class="st">"Capitol Riot"</span>,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2022-05-01"</span>,   <span class="st">"Dobbs Leak"</span>,</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2022-06-01"</span>,   <span class="st">"Roe Overturned"</span>,</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2023-04-01"</span>,   <span class="st">"Mifepristone Ruling"</span>,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2023-08-01"</span>,   <span class="st">"Ohio Ballot Fight"</span>,</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2024-03-01"</span>,   <span class="st">"SCOTUS Hearing"</span>,</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2024-08-01"</span>,   <span class="st">"Republican Convention"</span>,</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2024-11-01"</span>,   <span class="st">"US Elections"</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">as.Date</span>(month))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="step-3.-process-bigrams-by-month" class="level2">
+<h2 class="anchored" data-anchor-id="step-3.-process-bigrams-by-month">Step 3. Process Bigrams by Month</h2>
+<p>Using unnest_tokens, we break the article text into bigrams, filter only the most common ones, and count their monthly frequency. For clarity, we keep only the top 15 bigrams per month and rank them so that they can be shown in an animated bar chart.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># =================================================================</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Process Bigrams by Month</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># =================================================================</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>nyt_bigrams <span class="ot">&lt;-</span> nyt_data <span class="sc">|&gt;</span> </span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">floor_date</span>(pub_date, <span class="st">"month"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(bigram, text_clean, <span class="at">token =</span> <span class="st">"ngrams"</span>, <span class="at">n =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bigram =</span> <span class="fu">str_trim</span>(<span class="fu">str_to_lower</span>(bigram))) <span class="sc">|&gt;</span> </span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(bigram <span class="sc">%in%</span> nyt_top_bigrams<span class="sc">$</span>bigram) <span class="sc">|&gt;</span> </span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(month, bigram, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span> </span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n)) <span class="sc">|&gt;</span> </span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rank =</span> <span class="fu">row_number</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(rank <span class="sc">&lt;=</span> <span class="dv">15</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Timeline metadata</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>timeline_meta <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">month =</span> <span class="fu">sort</span>(<span class="fu">unique</span>(nyt_bigrams<span class="sc">$</span>month))) <span class="sc">|&gt;</span> </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(events, <span class="at">by =</span> <span class="st">"month"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">if_else</span>(<span class="fu">is.na</span>(event),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">format</span>(month, <span class="st">"%b %Y"</span>),</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">paste</span>(<span class="fu">format</span>(month, <span class="st">"%b %Y"</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>, <span class="fu">str_wrap</span>(event, <span class="at">width =</span> <span class="dv">20</span>))),</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">speed =</span> <span class="fu">if_else</span>(<span class="fu">is.na</span>(event), <span class="dv">800</span>, <span class="dv">2400</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Timeline annotations</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>title_texts <span class="ot">&lt;-</span> <span class="fu">map</span>(timeline_meta<span class="sc">$</span>label, <span class="sc">~</span> <span class="fu">list</span>(</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">text =</span> .x,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">right =</span> <span class="dv">10</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">bottom =</span> <span class="dv">20</span>,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">textStyle =</span> <span class="fu">list</span>(</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontSize =</span> <span class="dv">20</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> nyt_blue,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontFamily =</span> <span class="st">"News Cycle"</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="step-4.-build-the-animated-bar-chart" class="level2">
+<h2 class="anchored" data-anchor-id="step-4.-build-the-animated-bar-chart">Step 4. Build the Animated Bar Chart</h2>
+<p>Special attention is given to customizing fonts, layout, colors, and transitions to enhance legibility and visual appeal. Key events appear as annotations on the timeline, and important moments slow down the animation to allow for better viewer focus.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>nyt_chart <span class="ot">&lt;-</span> nyt_bigrams <span class="sc">|&gt;</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span> </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">e_charts</span>(bigram, <span class="at">timeline =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">e_bar</span>(n,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">realtimeSort =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="fu">list</span>(<span class="at">show =</span> <span class="cn">TRUE</span>, <span class="at">position =</span> <span class="st">"right"</span>),</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">itemStyle =</span> <span class="fu">list</span>(<span class="at">color =</span> nyt_blue)) <span class="sc">|&gt;</span> </span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">e_flip_coords</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">e_y_axis</span>(<span class="at">inverse =</span> <span class="cn">TRUE</span>, <span class="at">max =</span> <span class="dv">15</span>, <span class="at">axisLabel =</span> <span class="fu">list</span>(<span class="at">fontFamily =</span> <span class="st">"News Cycle"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">e_x_axis</span>(<span class="at">name =</span> <span class="st">"Frequency"</span>,</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">nameTextStyle =</span> <span class="fu">list</span>(<span class="at">fontFamily =</span> <span class="st">"News Cycle"</span>),</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>           <span class="at">axisLabel =</span> <span class="fu">list</span>(<span class="at">fontFamily =</span> <span class="st">"News Cycle"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">e_grid</span>(<span class="at">left =</span> <span class="dv">130</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">e_timeline_opts</span>(</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">autoPlay =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">symbolSize =</span> <span class="dv">8</span>,</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">list</span>(<span class="at">fontFamily =</span> <span class="st">"News Cycle"</span>),</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">controlStyle =</span> <span class="fu">list</span>(<span class="at">color =</span> nyt_darkblue),</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">lineStyle =</span> <span class="fu">list</span>(<span class="at">color =</span> nyt_darkblue),</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">checkpointStyle =</span> <span class="fu">list</span>(<span class="at">color =</span> nyt_darkblue, <span class="at">borderColor =</span> nyt_darkblue),</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">itemStyle =</span> <span class="fu">list</span>(<span class="at">color =</span> nyt_blue)</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">e_toolbox_feature</span>(<span class="at">feature =</span> <span class="st">"saveAsImage"</span>)</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace this block:</span></span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>nyt_chart<span class="sc">$</span>x<span class="sc">$</span>opts<span class="sc">$</span>options <span class="ot">&lt;-</span> <span class="fu">map2</span>(nyt_chart<span class="sc">$</span>x<span class="sc">$</span>opts<span class="sc">$</span>options, title_texts, <span class="sc">~</span>{</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>  .x<span class="sc">$</span>title <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">text =</span> <span class="st">"Top Bigrams Per Month in The New York Times"</span>,</span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">left =</span> <span class="st">"center"</span>,</span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">top =</span> <span class="dv">10</span>,</span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">textStyle =</span> <span class="fu">list</span>(</span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">fontSize =</span> <span class="dv">28</span>,</span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">fontFamily =</span> <span class="st">"News Cycle"</span>,</span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">fontWeight =</span> <span class="st">"bold"</span>,</span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> nyt_darkblue</span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>    .y</span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a>  .x</span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Playback speed customization stays the same</span></span>
+<span id="cb22-46"><a href="#cb22-46" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(timeline_meta<span class="sc">$</span>speed)) {</span>
+<span id="cb22-47"><a href="#cb22-47" aria-hidden="true" tabindex="-1"></a>  nyt_chart<span class="sc">$</span>x<span class="sc">$</span>opts<span class="sc">$</span>options[[i]]<span class="sc">$</span>timeline <span class="ot">&lt;-</span> <span class="fu">modifyList</span>(</span>
+<span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a>    nyt_chart<span class="sc">$</span>x<span class="sc">$</span>opts<span class="sc">$</span>options[[i]]<span class="sc">$</span>timeline <span class="sc">%||%</span> <span class="fu">list</span>(),</span>
+<span id="cb22-49"><a href="#cb22-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">playInterval =</span> timeline_meta<span class="sc">$</span>speed[i])</span>
+<span id="cb22-50"><a href="#cb22-50" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb22-51"><a href="#cb22-51" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-52"><a href="#cb22-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-53"><a href="#cb22-53" aria-hidden="true" tabindex="-1"></a>nyt_chart</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="echarts4r html-widget html-fill-item" id="htmlwidget-c12f2a3cc71d712b2d26" style="width:100%;height:500px;"></div>
+<script type="application/json" data-for="htmlwidget-c12f2a3cc71d712b2d26">{"x":{"theme":"","tl":true,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"baseOption":{"xAxis":[{"show":true,"name":"Frequency","nameTextStyle":{"fontFamily":"News Cycle"},"axisLabel":{"fontFamily":"News Cycle"}}],"timeline":{"data":["2020-01-01","2020-02-01","2020-03-01","2020-04-01","2020-05-01","2020-06-01","2020-07-01","2020-08-01","2020-09-01","2020-10-01","2020-11-01","2020-12-01","2021-01-01","2021-02-01","2021-03-01","2021-04-01","2021-05-01","2021-06-01","2021-07-01","2021-08-01","2021-09-01","2021-10-01","2021-11-01","2021-12-01","2022-01-01","2022-02-01","2022-03-01","2022-04-01","2022-05-01","2022-06-01","2022-07-01","2022-08-01","2022-09-01","2022-10-01","2022-11-01","2022-12-01","2023-01-01","2023-02-01","2023-03-01","2023-04-01","2023-05-01","2023-06-01","2023-07-01","2023-08-01","2023-09-01","2023-10-01","2023-11-01","2023-12-01","2024-01-01","2024-02-01","2024-03-01","2024-04-01","2024-05-01","2024-06-01","2024-07-01","2024-08-01","2024-09-01","2024-10-01","2024-11-01","2024-12-01"],"axisType":"category","autoPlay":true,"symbolSize":8,"label":{"fontFamily":"News Cycle"},"controlStyle":{"color":"#3b6072"},"lineStyle":{"color":"#3b6072"},"checkpointStyle":{"color":"#3b6072","borderColor":"#3b6072"},"itemStyle":{"color":"#7aaed6"}},"yAxis":[{"data":["supreme court","abortion rights","draft opinion","anti abortion","texas law","ezra klein","judge barrett","donald trump","supreme court’s","justice alito","planned parenthood","pro life","health care","abortion access","court’s decision","kamala harris","birth control","reproductive rights","pro choice","kate greasley","leaked draft","court decision","larry kramer","white house","vice president","ginni thomas","abortion pills","abortion law","abortion ban","justice ginsburg","abortion bans","medication abortion","shadow docket","judge barrett’s","abortion providers","jd vance","reproductive health","north carolina","dr califf","justice thomas","chief justice","emily jashinsky","social media","justice department","15 weeks","s.b 8","harris campaign","president donald","mississippi law","jamal greene","admitting privileges","justice ginsburg’s","notre dame","president kamala","ruth bader","dr hamlin","leslie reagan","amy coney","justice barrett","democratic party","abortion clinics","american bishops","project 2025","latin america","republican party","law school","affordable care","appeals court","care act","coney barrett","justice scalia","court overturned","justice ruth","federal government","justice roberts","oral arguments","60 percent","louisiana law","bader ginsburg","pope francis","senate bill","confirmation hearings","catholic bishops","federal court","undue burden","women’s health","sinn fein","gag rule","bill 8","1864 law","northern ireland","president trump","jan 6","14th amendment","catholic politicians","south carolina","federal law","woman’s health","trump administration","catholic church","president biden","abortion pill","federal ban","shield laws","coronavirus pandemic","family planning","deny communion","black women","joe biden","abortion restrictions","abortion clinic","medical procedures","human rights","abortion movement","life movement","human life","support abortion","abortion laws","guttmacher institute","reproductive justice","tax credit","week ban","20 weeks","bear arms","law professor","legalizing abortion","abortion services","medical care","conservative majority","ballot measure","comstock act","chief executive","public health","weeks pregnant","justice breyer","control pills","ban abortion","abortion policy","drug administration’s","medication abortions","federalist society","women’s rights","mexico city","pregnant women","lower courts","week abortion","midterm elections","drug administration","12 weeks","legal abortions","abortion care","abortion medication","health insurance","equal rights","late term","june medical","legalize abortion","roman catholic","abortion opponents","west virginia","aid access","legal action","dr bernard","special session","legal experts","climate change","clarence thomas","planned parenthood’s","chief justice’s","feminist movement","gender equality","health center","anti choice","biden administration","rights activists","child support","ross douthat","banned abortion","fetal personhood","hobby lobby","pill mifepristone","republican women","district court","health organization","jackson women’s","republican led","15 week","life america","reproductive freedom","southern baptist","ballot measures","national convention","f.d.a approved","abortion regulation","district judge","executive director","federal district","care workers","human services","abortion procedure","rights supporters","lindsey graham","pregnant woman","care providers","federal abortion","life threatening","attorney general’s","enshrine abortion","ballot initiatives","fertilized egg","abortion activists","dobbs decision","22 weeks","american civil","civil liberties","provide abortions","gov ron","republican presidential","economic issues","election day","election results","president biden’s","american people","emergency medical","june 2022","covid 19","republican controlled","american college","10 weeks","unwanted pregnancies","federal judge","perform abortions","restrict access","ballot initiative","constitutional amendment","court ruled","legal abortion","legal challenge","republican senate","democratic process","state’s abortion","ted cruz","16 weeks","allowing abortion","abortion nationwide","abortion protections","presidential candidate","2020 election","80 percent","election cycle","low income","protect abortion","anthony pro","cardiac activity"],"type":"category","boundaryGap":true,"inverse":true,"max":15,"axisLabel":{"fontFamily":"News Cycle"}}],"series":[{"name":"n","type":"bar","yAxisIndex":0,"xAxisIndex":0,"coordinateSystem":"cartesian2d","realtimeSort":true,"label":{"show":true,"position":"right"},"itemStyle":{"color":"#7aaed6"}}],"grid":[{"left":130}],"toolbox":{"feature":{"saveAsImage":[]}}},"options":[{"series":[{"data":[{"value":["20","supreme court"]},{"value":["15","anti abortion"]},{"value":["10","trump administration"]},{"value":[" 8","health care"]},{"value":[" 7","pro life"]},{"value":[" 5","abortion rights"]},{"value":[" 5","affordable care"]},{"value":[" 5","health insurance"]},{"value":[" 4","president trump"]},{"value":[" 4","pro choice"]},{"value":[" 4","white house"]},{"value":[" 3","abortion access"]},{"value":[" 3","abortion movement"]},{"value":[" 3","birth control"]},{"value":[" 3","care act"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Jan 2020","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["25","supreme court"]},{"value":["16","abortion rights"]},{"value":["16","sinn fein"]},{"value":["11","health care"]},{"value":["10","anti abortion"]},{"value":[" 9","pro life"]},{"value":[" 8","20 weeks"]},{"value":[" 8","bear arms"]},{"value":[" 8","law professor"]},{"value":[" 6","14th amendment"]},{"value":[" 6","federalist society"]},{"value":[" 5","confirmation hearings"]},{"value":[" 5","conservative majority"]},{"value":[" 5","equal rights"]},{"value":[" 5","late term"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Feb 2020","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["58","supreme court"]},{"value":["29","abortion rights"]},{"value":["29","admitting privileges"]},{"value":["29","anti abortion"]},{"value":["23","abortion clinics"]},{"value":["20","health care"]},{"value":["18","abortion providers"]},{"value":["17","louisiana law"]},{"value":["14","reproductive rights"]},{"value":["11","trump administration"]},{"value":["10","chief justice"]},{"value":["10","latin america"]},{"value":["10","planned parenthood"]},{"value":[" 9","abortion clinic"]},{"value":[" 9","medical procedures"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Mar 2020","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["15","northern ireland"]},{"value":["14","supreme court"]},{"value":["13","health care"]},{"value":["11","medication abortion"]},{"value":["10","abortion rights"]},{"value":["10","coronavirus pandemic"]},{"value":[" 8","planned parenthood"]},{"value":[" 8","reproductive rights"]},{"value":[" 8","white house"]},{"value":[" 7","abortion clinics"]},{"value":[" 7","abortion providers"]},{"value":[" 7","chief executive"]},{"value":[" 7","public health"]},{"value":[" 7","weeks pregnant"]},{"value":[" 6","abortion services"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Apr 2020","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["12","anti abortion"]},{"value":[" 8","pro choice"]},{"value":[" 7","republican party"]},{"value":[" 6","abortion rights"]},{"value":[" 4","abortion clinic"]},{"value":[" 4","aid access"]},{"value":[" 4","climate change"]},{"value":[" 4","pro life"]},{"value":[" 4","public health"]},{"value":[" 3","abortion care"]},{"value":[" 3","abortion pills"]},{"value":[" 3","f.d.a approved"]},{"value":[" 3","health care"]},{"value":[" 3","supreme court"]},{"value":[" 2","abortion access"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"May 2020","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["41","supreme court"]},{"value":["36","chief justice"]},{"value":["24","anti abortion"]},{"value":["21","abortion rights"]},{"value":["19","louisiana law"]},{"value":["15","admitting privileges"]},{"value":["14","reproductive rights"]},{"value":["13","abortion access"]},{"value":["12","justice roberts"]},{"value":["11","president trump"]},{"value":[" 9","texas law"]},{"value":[" 7","abortion movement"]},{"value":[" 7","justice breyer"]},{"value":[" 7","undue burden"]},{"value":[" 6","abortion clinic"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Jun 2020","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["16","supreme court"]},{"value":["12","chief justice"]},{"value":["10","undue burden"]},{"value":[" 7","justice roberts"]},{"value":[" 7","planned parenthood"]},{"value":[" 6","admitting privileges"]},{"value":[" 6","anti abortion"]},{"value":[" 6","louisiana law"]},{"value":[" 5","woman’s health"]},{"value":[" 4","abortion rights"]},{"value":[" 4","clarence thomas"]},{"value":[" 4","justice breyer"]},{"value":[" 4","planned parenthood’s"]},{"value":[" 4","women’s health"]},{"value":[" 3","abortion regulation"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Jul 2020","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["18","anti abortion"]},{"value":["15","abortion rights"]},{"value":["12","woman’s health"]},{"value":["11","supreme court"]},{"value":[" 8","planned parenthood"]},{"value":[" 8","undue burden"]},{"value":[" 7","chief justice"]},{"value":[" 5","june medical"]},{"value":[" 5","pro life"]},{"value":[" 4","chief justice’s"]},{"value":[" 3","district judge"]},{"value":[" 3","executive director"]},{"value":[" 3","federal district"]},{"value":[" 3","justice breyer"]},{"value":[" 3","medication abortion"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Aug 2020","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["112","supreme court"]},{"value":[" 57","judge barrett"]},{"value":[" 50","justice ginsburg"]},{"value":[" 34","abortion rights"]},{"value":[" 29","justice ginsburg’s"]},{"value":[" 28","ruth bader"]},{"value":[" 21","law school"]},{"value":[" 20","justice ruth"]},{"value":[" 19","bader ginsburg"]},{"value":[" 15","notre dame"]},{"value":[" 14","coney barrett"]},{"value":[" 14","judge barrett’s"]},{"value":[" 14","president trump"]},{"value":[" 13","amy coney"]},{"value":[" 11","appeals court"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Sep 2020 \n RBG Dies","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":2400}},{"series":[{"data":[{"value":["124","judge barrett"]},{"value":[" 92","supreme court"]},{"value":[" 45","judge barrett’s"]},{"value":[" 29","notre dame"]},{"value":[" 24","amy coney"]},{"value":[" 23","abortion rights"]},{"value":[" 21","affordable care"]},{"value":[" 21","appeals court"]},{"value":[" 21","care act"]},{"value":[" 21","coney barrett"]},{"value":[" 21","justice scalia"]},{"value":[" 19","health care"]},{"value":[" 17","confirmation hearings"]},{"value":[" 16","law school"]},{"value":[" 16","white house"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Oct 2020","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["3","north carolina"]},{"value":["2","abortion rights"]},{"value":["2","covid 19"]},{"value":["2","executive director"]},{"value":["2","health care"]},{"value":["2","republican controlled"]},{"value":["1","2020 election"]},{"value":["1","80 percent"]},{"value":["1","affordable care"]},{"value":["1","ban abortion"]},{"value":["1","care act"]},{"value":["1","election cycle"]},{"value":["1","low income"]},{"value":["1","protect abortion"]},{"value":["1","reproductive rights"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Nov 2020","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["22","latin america"]},{"value":["20","abortion rights"]},{"value":["15","anti abortion"]},{"value":[" 8","legalizing abortion"]},{"value":[" 6","women’s rights"]},{"value":[" 5","abortion laws"]},{"value":[" 5","legalize abortion"]},{"value":[" 5","pope francis"]},{"value":[" 5","roman catholic"]},{"value":[" 5","vice president"]},{"value":[" 4","catholic church"]},{"value":[" 4","feminist movement"]},{"value":[" 4","gender equality"]},{"value":[" 4","health center"]},{"value":[" 4","planned parenthood"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Dec 2020","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["20","anti abortion"]},{"value":["18","supreme court"]},{"value":["16","gag rule"]},{"value":["16","health care"]},{"value":["15","northern ireland"]},{"value":["12","chief justice"]},{"value":["11","trump administration"]},{"value":["10","affordable care"]},{"value":["10","family planning"]},{"value":[" 9","abortion rights"]},{"value":[" 9","care act"]},{"value":[" 9","human rights"]},{"value":[" 8","abortion services"]},{"value":[" 8","women’s health"]},{"value":[" 6","women’s rights"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Jan 2021 \n Capitol Riot","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":2400}},{"series":[{"data":[{"value":["17","abortion rights"]},{"value":["11","birth control"]},{"value":[" 9","health care"]},{"value":[" 8","medical care"]},{"value":[" 8","planned parenthood"]},{"value":[" 6","mexico city"]},{"value":[" 6","president biden"]},{"value":[" 4","abortion care"]},{"value":[" 4","abortion services"]},{"value":[" 4","anti abortion"]},{"value":[" 4","anti choice"]},{"value":[" 4","biden administration"]},{"value":[" 4","reproductive health"]},{"value":[" 3","abortion movement"]},{"value":[" 3","affordable care"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Feb 2021","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["13","anti abortion"]},{"value":["10","birth control"]},{"value":["10","health care"]},{"value":[" 7","control pills"]},{"value":[" 7","reproductive rights"]},{"value":[" 6","abortion movement"]},{"value":[" 6","supreme court"]},{"value":[" 5","abortion rights"]},{"value":[" 5","public health"]},{"value":[" 5","south carolina"]},{"value":[" 4","latin america"]},{"value":[" 4","rights activists"]},{"value":[" 3","abortion opponents"]},{"value":[" 3","care workers"]},{"value":[" 3","human services"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Mar 2021","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["25","pro life"]},{"value":["14","anti abortion"]},{"value":["14","supreme court"]},{"value":["13","14th amendment"]},{"value":[" 9","abortion movement"]},{"value":[" 9","life movement"]},{"value":[" 6","abortion rights"]},{"value":[" 6","pregnant women"]},{"value":[" 6","pro choice"]},{"value":[" 5","republican party"]},{"value":[" 4","abortion ban"]},{"value":[" 4","abortion opponents"]},{"value":[" 4","child support"]},{"value":[" 4","reproductive health"]},{"value":[" 4","ross douthat"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Apr 2021","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["56","supreme court"]},{"value":["47","abortion rights"]},{"value":["17","anti abortion"]},{"value":["17","reproductive rights"]},{"value":["12","health care"]},{"value":["11","women’s health"]},{"value":["10","15 weeks"]},{"value":[" 8","conservative majority"]},{"value":[" 8","mississippi law"]},{"value":[" 8","planned parenthood"]},{"value":[" 7","abortion access"]},{"value":[" 7","medication abortion"]},{"value":[" 6","guttmacher institute"]},{"value":[" 6","lower courts"]},{"value":[" 6","pro choice"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"May 2021","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["30","abortion rights"]},{"value":["23","american bishops"]},{"value":["18","pope francis"]},{"value":["17","catholic bishops"]},{"value":["15","supreme court"]},{"value":["13","catholic politicians"]},{"value":["11","anti abortion"]},{"value":["11","catholic church"]},{"value":["11","president biden"]},{"value":["10","deny communion"]},{"value":["10","health care"]},{"value":[" 9","human life"]},{"value":[" 9","support abortion"]},{"value":[" 7","ban abortion"]},{"value":[" 6","abortion restrictions"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Jun 2021","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["26","supreme court"]},{"value":["18","abortion rights"]},{"value":["17","anti abortion"]},{"value":["10","black women"]},{"value":[" 9","planned parenthood"]},{"value":[" 9","texas law"]},{"value":[" 8","abortion ban"]},{"value":[" 8","women’s health"]},{"value":[" 7","abortion clinics"]},{"value":[" 7","abortion restrictions"]},{"value":[" 6","15 weeks"]},{"value":[" 6","week abortion"]},{"value":[" 6","woman’s health"]},{"value":[" 5","abortion laws"]},{"value":[" 4","abortion clinic"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Jul 2021","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["18","supreme court"]},{"value":["10","texas law"]},{"value":[" 6","abortion rights"]},{"value":[" 5","abortion opponents"]},{"value":[" 4","15 weeks"]},{"value":[" 4","abortion providers"]},{"value":[" 3","abortion access"]},{"value":[" 3","abortion pills"]},{"value":[" 3","abortion procedure"]},{"value":[" 3","abortion restrictions"]},{"value":[" 3","guttmacher institute"]},{"value":[" 3","woman’s health"]},{"value":[" 2","american college"]},{"value":[" 2","appeals court"]},{"value":[" 2","conservative majority"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Aug 2021","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["236","supreme court"]},{"value":["148","abortion rights"]},{"value":["141","texas law"]},{"value":["117","anti abortion"]},{"value":[" 51","abortion law"]},{"value":[" 46","shadow docket"]},{"value":[" 45","abortion providers"]},{"value":[" 44","planned parenthood"]},{"value":[" 36","justice department"]},{"value":[" 35","s.b 8"]},{"value":[" 32","reproductive rights"]},{"value":[" 28","supreme court’s"]},{"value":[" 27","ezra klein"]},{"value":[" 26","leslie reagan"]},{"value":[" 25","pro life"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Sep 2021","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["91","supreme court"]},{"value":["55","abortion rights"]},{"value":["44","texas law"]},{"value":["32","chief justice"]},{"value":["29","abortion providers"]},{"value":["24","justice barrett"]},{"value":["24","justice department"]},{"value":["23","anti abortion"]},{"value":["22","15 weeks"]},{"value":["20","federal government"]},{"value":["20","s.b 8"]},{"value":["18","senate bill"]},{"value":["17","abortion law"]},{"value":["16","bill 8"]},{"value":["16","mississippi law"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Oct 2021","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["95","supreme court"]},{"value":["54","pro life"]},{"value":["48","abortion rights"]},{"value":["38","pro choice"]},{"value":["30","anti abortion"]},{"value":["28","dr hamlin"]},{"value":["28","texas law"]},{"value":["25","15 weeks"]},{"value":["21","mississippi law"]},{"value":["18","abortion providers"]},{"value":["17","federal court"]},{"value":["17","undue burden"]},{"value":["17","women’s health"]},{"value":["16","abortion law"]},{"value":["16","planned parenthood"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Nov 2021","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["116","supreme court"]},{"value":[" 97","abortion rights"]},{"value":[" 43","anti abortion"]},{"value":[" 38","chief justice"]},{"value":[" 36","15 weeks"]},{"value":[" 34","abortion access"]},{"value":[" 31","mississippi law"]},{"value":[" 25","planned parenthood"]},{"value":[" 23","abortion providers"]},{"value":[" 20","justice roberts"]},{"value":[" 20","oral arguments"]},{"value":[" 18","s.b 8"]},{"value":[" 17","abortion law"]},{"value":[" 17","amy coney"]},{"value":[" 17","pro life"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Dec 2021","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["32","supreme court"]},{"value":["22","abortion rights"]},{"value":["18","planned parenthood"]},{"value":["13","abortion providers"]},{"value":["10","anti abortion"]},{"value":["10","dr califf"]},{"value":["10","reproductive rights"]},{"value":[" 8","15 weeks"]},{"value":[" 8","health care"]},{"value":[" 7","abortion access"]},{"value":[" 7","white house"]},{"value":[" 6","chief justice"]},{"value":[" 6","mississippi law"]},{"value":[" 6","pro choice"]},{"value":[" 5","abortion laws"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Jan 2022","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["75","supreme court"]},{"value":["53","ginni thomas"]},{"value":["41","dr califf"]},{"value":["41","justice thomas"]},{"value":["31","jamal greene"]},{"value":["30","ezra klein"]},{"value":["26","abortion rights"]},{"value":["25","anti abortion"]},{"value":["21","white house"]},{"value":["20","health care"]},{"value":["14","jan 6"]},{"value":["12","latin america"]},{"value":["12","medication abortion"]},{"value":["11","chief justice"]},{"value":["10","joe biden"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Feb 2022","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["52","supreme court"]},{"value":["49","anti abortion"]},{"value":["35","abortion rights"]},{"value":["21","texas law"]},{"value":["20","abortion providers"]},{"value":["18","s.b 8"]},{"value":["15","planned parenthood"]},{"value":["14","15 weeks"]},{"value":["13","reproductive rights"]},{"value":["12","abortion law"]},{"value":["12","health care"]},{"value":["10","latin america"]},{"value":["10","mississippi law"]},{"value":["10","reproductive health"]},{"value":[" 9","abortion laws"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Mar 2022","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["38","anti abortion"]},{"value":["32","supreme court"]},{"value":["26","ezra klein"]},{"value":["23","abortion rights"]},{"value":["16","health care"]},{"value":["12","abortion pills"]},{"value":["12","planned parenthood"]},{"value":["12","texas law"]},{"value":["11","abortion providers"]},{"value":["10","medication abortion"]},{"value":["10","reproductive health"]},{"value":[" 9","abortion access"]},{"value":[" 9","guttmacher institute"]},{"value":[" 9","reproductive justice"]},{"value":[" 9","tax credit"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Apr 2022","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["506","supreme court"]},{"value":["440","abortion rights"]},{"value":["213","draft opinion"]},{"value":["208","anti abortion"]},{"value":["109","ezra klein"]},{"value":["104","justice alito"]},{"value":["101","planned parenthood"]},{"value":[" 98","pro life"]},{"value":[" 95","abortion access"]},{"value":[" 80","birth control"]},{"value":[" 80","reproductive rights"]},{"value":[" 75","pro choice"]},{"value":[" 74","kate greasley"]},{"value":[" 70","leaked draft"]},{"value":[" 68","health care"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"May 2022 \n Dobbs Leak","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":2400}},{"series":[{"data":[{"value":["403","supreme court"]},{"value":["257","abortion rights"]},{"value":["152","anti abortion"]},{"value":["109","supreme court’s"]},{"value":[" 96","health care"]},{"value":[" 95","planned parenthood"]},{"value":[" 90","court’s decision"]},{"value":[" 63","pro life"]},{"value":[" 56","abortion access"]},{"value":[" 55","court decision"]},{"value":[" 53","abortion pills"]},{"value":[" 50","abortion bans"]},{"value":[" 47","medication abortion"]},{"value":[" 47","reproductive rights"]},{"value":[" 44","abortion ban"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Jun 2022 \n Roe Overturned","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":2400}},{"series":[{"data":[{"value":["249","supreme court"]},{"value":["172","abortion rights"]},{"value":["128","ezra klein"]},{"value":["115","anti abortion"]},{"value":[" 92","health care"]},{"value":[" 74","supreme court’s"]},{"value":[" 57","court’s decision"]},{"value":[" 54","larry kramer"]},{"value":[" 54","white house"]},{"value":[" 53","abortion access"]},{"value":[" 53","planned parenthood"]},{"value":[" 49","reproductive rights"]},{"value":[" 48","pro life"]},{"value":[" 44","abortion bans"]},{"value":[" 42","reproductive health"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Jul 2022","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["25","abortion rights"]},{"value":["17","supreme court"]},{"value":[" 6","abortion bans"]},{"value":[" 6","anti abortion"]},{"value":[" 6","court overturned"]},{"value":[" 4","banned abortion"]},{"value":[" 4","court’s decision"]},{"value":[" 4","fetal personhood"]},{"value":[" 4","supreme court’s"]},{"value":[" 3","abortion restrictions"]},{"value":[" 3","ban abortion"]},{"value":[" 3","health care"]},{"value":[" 3","reproductive freedom"]},{"value":[" 3","rights supporters"]},{"value":[" 2","abortion ban"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Aug 2022","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["9","abortion rights"]},{"value":["9","supreme court"]},{"value":["6","abortion access"]},{"value":["5","west virginia"]},{"value":["4","abortion providers"]},{"value":["4","court overturned"]},{"value":["4","supreme court’s"]},{"value":["3","abortion ban"]},{"value":["3","anti abortion"]},{"value":["3","court’s decision"]},{"value":["3","health care"]},{"value":["3","lindsey graham"]},{"value":["3","pregnant woman"]},{"value":["2","10 weeks"]},{"value":["2","15 weeks"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Sep 2022","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["22","abortion rights"]},{"value":["14","anti abortion"]},{"value":[" 9","supreme court"]},{"value":[" 7","health care"]},{"value":[" 7","reproductive health"]},{"value":[" 6","abortion access"]},{"value":[" 6","midterm elections"]},{"value":[" 6","supreme court’s"]},{"value":[" 4","court overturned"]},{"value":[" 4","court’s decision"]},{"value":[" 4","pro life"]},{"value":[" 3","abortion bans"]},{"value":[" 3","care providers"]},{"value":[" 3","federal abortion"]},{"value":[" 3","life threatening"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Oct 2022","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["26","abortion rights"]},{"value":["15","supreme court"]},{"value":[" 6","court overturned"]},{"value":[" 6","supreme court’s"]},{"value":[" 5","aid access"]},{"value":[" 5","court’s decision"]},{"value":[" 4","abortion bans"]},{"value":[" 4","dr bernard"]},{"value":[" 4","hobby lobby"]},{"value":[" 4","midterm elections"]},{"value":[" 3","abortion pills"]},{"value":[" 3","abortion providers"]},{"value":[" 3","anti abortion"]},{"value":[" 3","attorney general’s"]},{"value":[" 3","enshrine abortion"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Nov 2022","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["8","abortion rights"]},{"value":["5","abortion pills"]},{"value":["3","anti abortion"]},{"value":["3","ballot initiatives"]},{"value":["3","fertilized egg"]},{"value":["3","supreme court"]},{"value":["2","abortion opponents"]},{"value":["2","abortion restrictions"]},{"value":["2","aid access"]},{"value":["2","court’s decision"]},{"value":["2","legal abortions"]},{"value":["2","republican controlled"]},{"value":["2","republican presidential"]},{"value":["2","supreme court’s"]},{"value":["2","unwanted pregnancies"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Dec 2022","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["20","supreme court"]},{"value":["19","abortion rights"]},{"value":["11","anti abortion"]},{"value":[" 9","health care"]},{"value":[" 7","medication abortion"]},{"value":[" 6","abortion pills"]},{"value":[" 6","court overturned"]},{"value":[" 6","vice president"]},{"value":[" 4","abortion pill"]},{"value":[" 4","court decision"]},{"value":[" 4","drug administration"]},{"value":[" 4","federal government"]},{"value":[" 4","pro life"]},{"value":[" 3","abortion access"]},{"value":[" 3","abortion activists"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Jan 2023","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["4","abortion rights"]},{"value":["2","anti abortion"]},{"value":["2","federal judge"]},{"value":["2","medication abortion"]},{"value":["2","perform abortions"]},{"value":["2","restrict access"]},{"value":["2","supreme court"]},{"value":["1","22 weeks"]},{"value":["1","abortion access"]},{"value":["1","abortion pill"]},{"value":["1","abortion pills"]},{"value":["1","abortion providers"]},{"value":["1","anthony pro"]},{"value":["1","cardiac activity"]},{"value":["1","chief executive"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Feb 2023","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["16","medication abortion"]},{"value":["12","supreme court"]},{"value":["11","abortion pill"]},{"value":["10","anti abortion"]},{"value":[" 8","abortion pills"]},{"value":[" 8","abortion rights"]},{"value":[" 6","abortion ban"]},{"value":[" 6","drug administration"]},{"value":[" 5","health care"]},{"value":[" 5","legal action"]},{"value":[" 4","abortion access"]},{"value":[" 4","court’s decision"]},{"value":[" 4","pill mifepristone"]},{"value":[" 3","court overturned"]},{"value":[" 3","north carolina"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Mar 2023","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["33","supreme court"]},{"value":["22","abortion rights"]},{"value":["16","medication abortion"]},{"value":["13","anti abortion"]},{"value":[" 7","abortion policy"]},{"value":[" 7","drug administration’s"]},{"value":[" 6","12 weeks"]},{"value":[" 6","abortion ban"]},{"value":[" 6","court overturned"]},{"value":[" 6","legal abortions"]},{"value":[" 5","abortion pill"]},{"value":[" 5","south carolina"]},{"value":[" 4","abortion pills"]},{"value":[" 4","court decision"]},{"value":[" 4","health care"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Apr 2023 \n Mifepristone Ruling","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":2400}},{"series":[{"data":[{"value":["19","supreme court"]},{"value":["18","abortion rights"]},{"value":["13","south carolina"]},{"value":[" 9","week ban"]},{"value":[" 8","abortion access"]},{"value":[" 7","comstock act"]},{"value":[" 7","planned parenthood"]},{"value":[" 5","abortion clinics"]},{"value":[" 5","dr bernard"]},{"value":[" 5","north carolina"]},{"value":[" 4","anti abortion"]},{"value":[" 4","court overturned"]},{"value":[" 4","court’s decision"]},{"value":[" 4","republican women"]},{"value":[" 3","12 weeks"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"May 2023","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["11","supreme court"]},{"value":[" 9","abortion rights"]},{"value":[" 5","court overturned"]},{"value":[" 5","court’s decision"]},{"value":[" 5","women’s health"]},{"value":[" 4","abortion ban"]},{"value":[" 4","abortion bans"]},{"value":[" 4","abortion providers"]},{"value":[" 4","district court"]},{"value":[" 4","health organization"]},{"value":[" 4","jackson women’s"]},{"value":[" 4","pro choice"]},{"value":[" 4","pro life"]},{"value":[" 3","abortion pills"]},{"value":[" 3","dobbs decision"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Jun 2023","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["14","supreme court"]},{"value":["10","abortion rights"]},{"value":[" 6","abortion ban"]},{"value":[" 5","anti abortion"]},{"value":[" 5","special session"]},{"value":[" 4","abortion access"]},{"value":[" 4","abortion bans"]},{"value":[" 4","health care"]},{"value":[" 4","republican led"]},{"value":[" 3","12 weeks"]},{"value":[" 3","20 weeks"]},{"value":[" 3","22 weeks"]},{"value":[" 3","american civil"]},{"value":[" 3","ballot measures"]},{"value":[" 3","civil liberties"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Jul 2023","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["17","abortion rights"]},{"value":[" 9","supreme court"]},{"value":[" 5","anti abortion"]},{"value":[" 5","court overturned"]},{"value":[" 3","abortion bans"]},{"value":[" 3","appeals court"]},{"value":[" 3","federal ban"]},{"value":[" 3","provide abortions"]},{"value":[" 2","15 weeks"]},{"value":[" 2","60 percent"]},{"value":[" 2","abortion access"]},{"value":[" 2","ballot initiative"]},{"value":[" 2","constitutional amendment"]},{"value":[" 2","court ruled"]},{"value":[" 2","court’s decision"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Aug 2023 \n Ohio Ballot Fight","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":2400}},{"series":[{"data":[{"value":["16","abortion rights"]},{"value":["15","supreme court"]},{"value":[" 9","abortion ban"]},{"value":[" 6","abortion access"]},{"value":[" 6","planned parenthood"]},{"value":[" 5","court overturned"]},{"value":[" 5","week ban"]},{"value":[" 4","anti abortion"]},{"value":[" 4","president donald"]},{"value":[" 4","week abortion"]},{"value":[" 3","15 week"]},{"value":[" 3","15 weeks"]},{"value":[" 3","gov ron"]},{"value":[" 3","pro choice"]},{"value":[" 3","republican presidential"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Sep 2023","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["8","abortion rights"]},{"value":["8","supreme court"]},{"value":["5","abortion ban"]},{"value":["5","anti abortion"]},{"value":["4","court overturned"]},{"value":["3","abortion providers"]},{"value":["3","supreme court’s"]},{"value":["2","12 weeks"]},{"value":["2","abortion bans"]},{"value":["2","abortion pills"]},{"value":["2","abortion restrictions"]},{"value":["2","court’s decision"]},{"value":["2","legal abortion"]},{"value":["2","legal challenge"]},{"value":["2","republican senate"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Oct 2023","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["32","abortion rights"]},{"value":["19","supreme court"]},{"value":[" 9","abortion ban"]},{"value":[" 8","court overturned"]},{"value":[" 7","abortion access"]},{"value":[" 5","ballot measure"]},{"value":[" 4","15 week"]},{"value":[" 4","week abortion"]},{"value":[" 3","abortion bans"]},{"value":[" 3","democratic party"]},{"value":[" 3","economic issues"]},{"value":[" 3","election day"]},{"value":[" 3","election results"]},{"value":[" 3","president biden’s"]},{"value":[" 3","pro life"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Nov 2023","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["9","supreme court"]},{"value":["7","abortion rights"]},{"value":["5","abortion bans"]},{"value":["4","reproductive rights"]},{"value":["3","american people"]},{"value":["3","vice president"]},{"value":["2","20 weeks"]},{"value":["2","court’s decision"]},{"value":["2","democratic process"]},{"value":["2","president biden’s"]},{"value":["2","president donald"]},{"value":["2","state’s abortion"]},{"value":["2","ted cruz"]},{"value":["2","weeks pregnant"]},{"value":["2","white house"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Dec 2023","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["12","abortion rights"]},{"value":[" 9","supreme court"]},{"value":[" 5","supreme court’s"]},{"value":[" 4","anti abortion"]},{"value":[" 3","abortion bans"]},{"value":[" 3","biden administration"]},{"value":[" 3","court’s decision"]},{"value":[" 3","emergency medical"]},{"value":[" 3","june 2022"]},{"value":[" 2","abortion access"]},{"value":[" 2","abortion ban"]},{"value":[" 2","abortion movement"]},{"value":[" 2","abortion pills"]},{"value":[" 2","aid access"]},{"value":[" 2","ballot measure"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Jan 2024","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["9","abortion pills"]},{"value":["6","shield laws"]},{"value":["5","supreme court"]},{"value":["4","abortion bans"]},{"value":["4","abortion rights"]},{"value":["3","abortion restrictions"]},{"value":["3","anti abortion"]},{"value":["3","dobbs decision"]},{"value":["3","supreme court’s"]},{"value":["2","16 weeks"]},{"value":["2","abortion access"]},{"value":["2","abortion medication"]},{"value":["2","abortion providers"]},{"value":["2","allowing abortion"]},{"value":["2","court overturned"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Feb 2024","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["22","supreme court"]},{"value":["16","abortion pills"]},{"value":["14","medication abortion"]},{"value":["13","abortion rights"]},{"value":["11","anti abortion"]},{"value":[" 9","abortion pill"]},{"value":[" 9","health care"]},{"value":[" 7","medication abortions"]},{"value":[" 6","abortion access"]},{"value":[" 6","court overturned"]},{"value":[" 6","supreme court’s"]},{"value":[" 5","abortion clinic"]},{"value":[" 5","abortion providers"]},{"value":[" 5","vice president"]},{"value":[" 4","12 weeks"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Mar 2024 \n SCOTUS Hearing","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":2400}},{"series":[{"data":[{"value":["39","supreme court"]},{"value":["31","abortion rights"]},{"value":["25","anti abortion"]},{"value":["22","abortion ban"]},{"value":["16","1864 law"]},{"value":["15","president donald"]},{"value":["13","federal law"]},{"value":["12","abortion access"]},{"value":["11","federal ban"]},{"value":["10","abortion bans"]},{"value":["10","abortion restrictions"]},{"value":["10","donald trump"]},{"value":["10","president biden"]},{"value":[" 8","ballot measure"]},{"value":[" 8","supreme court’s"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Apr 2024","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["28","abortion rights"]},{"value":["17","supreme court"]},{"value":["12","anti abortion"]},{"value":[" 9","abortion ban"]},{"value":[" 9","abortion bans"]},{"value":[" 7","abortion movement"]},{"value":[" 7","abortion pills"]},{"value":[" 6","court overturned"]},{"value":[" 4","pro choice"]},{"value":[" 3","federal abortion"]},{"value":[" 3","president biden"]},{"value":[" 3","pro life"]},{"value":[" 3","support abortion"]},{"value":[" 3","week abortion"]},{"value":[" 3","white house"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"May 2024","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["19","abortion rights"]},{"value":["17","supreme court"]},{"value":["15","anti abortion"]},{"value":["11","abortion pills"]},{"value":["10","medication abortion"]},{"value":[" 8","pro life"]},{"value":[" 8","reproductive rights"]},{"value":[" 8","supreme court’s"]},{"value":[" 6","abortion pill"]},{"value":[" 5","court’s decision"]},{"value":[" 4","life america"]},{"value":[" 4","president donald"]},{"value":[" 4","reproductive freedom"]},{"value":[" 4","reproductive health"]},{"value":[" 4","southern baptist"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Jun 2024","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["9","abortion rights"]},{"value":["8","supreme court"]},{"value":["4","vice president"]},{"value":["3","project 2025"]},{"value":["2","abortion access"]},{"value":["2","abortion clinics"]},{"value":["2","abortion nationwide"]},{"value":["2","abortion protections"]},{"value":["2","court overturned"]},{"value":["2","health care"]},{"value":["2","kamala harris"]},{"value":["2","president donald"]},{"value":["2","president kamala"]},{"value":["2","presidential candidate"]},{"value":["1","22 weeks"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Jul 2024","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["24","abortion rights"]},{"value":["13","supreme court"]},{"value":["10","anti abortion"]},{"value":[" 5","ballot measure"]},{"value":[" 4","abortion bans"]},{"value":[" 4","ballot measures"]},{"value":[" 4","court overturned"]},{"value":[" 4","health care"]},{"value":[" 4","kamala harris"]},{"value":[" 4","national convention"]},{"value":[" 4","president donald"]},{"value":[" 4","president kamala"]},{"value":[" 4","reproductive health"]},{"value":[" 4","vice president"]},{"value":[" 3","abortion access"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Aug 2024 \n Republican\nConvention","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":2400}},{"series":[{"data":[{"value":["121","donald trump"]},{"value":[" 81","kamala harris"]},{"value":[" 76","abortion rights"]},{"value":[" 61","supreme court"]},{"value":[" 57","ezra klein"]},{"value":[" 46","health care"]},{"value":[" 43","jd vance"]},{"value":[" 42","north carolina"]},{"value":[" 39","abortion ban"]},{"value":[" 38","anti abortion"]},{"value":[" 38","emily jashinsky"]},{"value":[" 36","vice president"]},{"value":[" 35","pro life"]},{"value":[" 25","president kamala"]},{"value":[" 22","republican party"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Sep 2024","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["170","abortion rights"]},{"value":[" 87","supreme court"]},{"value":[" 68","anti abortion"]},{"value":[" 68","kamala harris"]},{"value":[" 65","donald trump"]},{"value":[" 54","vice president"]},{"value":[" 53","health care"]},{"value":[" 51","abortion ban"]},{"value":[" 40","pro life"]},{"value":[" 38","social media"]},{"value":[" 35","reproductive rights"]},{"value":[" 33","harris campaign"]},{"value":[" 33","president donald"]},{"value":[" 29","abortion pills"]},{"value":[" 29","president kamala"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Oct 2024","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}},{"series":[{"data":[{"value":["152","abortion rights"]},{"value":[" 51","supreme court"]},{"value":[" 43","health care"]},{"value":[" 41","donald trump"]},{"value":[" 38","anti abortion"]},{"value":[" 35","kamala harris"]},{"value":[" 27","abortion access"]},{"value":[" 27","abortion bans"]},{"value":[" 24","democratic party"]},{"value":[" 23","project 2025"]},{"value":[" 21","abortion ban"]},{"value":[" 21","court overturned"]},{"value":[" 21","white house"]},{"value":[" 20","60 percent"]},{"value":[" 20","abortion pills"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Nov 2024 \n US Elections","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":2400}},{"series":[{"data":[{"value":["18","abortion pills"]},{"value":["11","shield laws"]},{"value":[" 9","president biden"]},{"value":[" 8","comstock act"]},{"value":[" 7","donald trump"]},{"value":[" 7","justice department"]},{"value":[" 6","abortion care"]},{"value":[" 6","abortion medication"]},{"value":[" 6","abortion providers"]},{"value":[" 6","supreme court"]},{"value":[" 5","federal court"]},{"value":[" 5","joe biden"]},{"value":[" 5","law professor"]},{"value":[" 5","legal experts"]},{"value":[" 5","trump administration"]}]}],"title":[{"text":"Top Bigrams Per Month in The New York Times","left":"center","top":10,"textStyle":{"fontSize":28,"fontFamily":"News Cycle","fontWeight":"bold","color":"#3b6072"}},{"text":"Dec 2024","right":10,"bottom":20,"textStyle":{"fontSize":20,"color":"#7aaed6","fontFamily":"News Cycle"}}],"timeline":{"playInterval":800}}]},"dispose":true},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveWidget</span>(nyt_chart, <span class="st">"nyt_bigrams_chart.html"</span>, <span class="at">selfcontained =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
