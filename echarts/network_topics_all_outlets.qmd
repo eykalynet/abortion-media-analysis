@@ -47,64 +47,52 @@ To streamline the visualization process, we defined a reusable function `render_
 
 # Function 1: Build network plot
 build_network_plot <- function(outlet, period, title_text) {
-  # File path
   json_file <- sprintf("../data/wrangled/networks/network_%s_%s.json", 
                        tolower(outlet), tolower(gsub("-", "", period)))
-
-  # Load network data
   network_data <- jsonlite::fromJSON(json_file)
 
-  # Font color logic
   font_color <- if (period == "Post-Roe") "white" else "black"
 
-  # Apply styling
-  network_data$nodes$shapeProperties <- seq_len(nrow(network_data$nodes)) |>
+  network_data$nodes$shapeProperties <- seq_len(nrow(network_data$nodes)) |> 
     lapply(\(i) list(borderRadius = 10))
-  network_data$nodes$font <- seq_len(nrow(network_data$nodes)) |>
+
+  network_data$nodes$font <- seq_len(nrow(network_data$nodes)) |> 
     lapply(\(i) list(size = 16, face = "News Cycle", color = font_color, multi = "html"))
 
-  # Build visNetwork plot with a title
-  htmltools::tagList(
-    htmltools::tags$h3(title_text, 
-      style = "font-family: 'News Cycle'; text-align: center; margin-bottom: 25px;"),
-    visNetwork::visNetwork(network_data$nodes, network_data$edges, width = "100%", height = "800px") |>
-      visNetwork::visOptions(
-        highlightNearest = list(enabled = TRUE, degree = 1, hover = TRUE),
-        nodesIdSelection = TRUE
-      ) |>
-      visNetwork::visEdges(smooth = FALSE) |>
-      visNetwork::visPhysics(
-        solver = "forceAtlas2Based",
-        forceAtlas2Based = list(
-          gravitationalConstant = -50,
-          springLength = 150,
-          springConstant = 0.05
-        ),
-        maxVelocity = 50,
-        minVelocity = 0.75,
-        stabilization = list(enabled = TRUE, iterations = 200)
-      ) |>
-      visNetwork::visLayout(randomSeed = 123)
-  )
+  visNetwork::visNetwork(network_data$nodes, network_data$edges, width = "100%", height = "800px") |>
+    visNetwork::visOptions(
+      highlightNearest = list(enabled = TRUE, degree = 1, hover = TRUE),
+      nodesIdSelection = TRUE
+    ) |>
+    visNetwork::visEdges(smooth = FALSE) |>
+    visNetwork::visPhysics(
+      solver = "forceAtlas2Based",
+      forceAtlas2Based = list(
+        gravitationalConstant = -50,
+        springLength = 150,
+        springConstant = 0.05
+      ),
+      maxVelocity = 50,
+      minVelocity = 0.75,
+      stabilization = list(enabled = TRUE, iterations = 200)
+    ) |>
+    visNetwork::visLayout(randomSeed = 123)
 }
 
 # Function 2: Save the rendered plot to HTML
-save_network_plot <- function(plot_obj, outlet, period) {
-  output_file <- sprintf("network_%s_%s.html", tolower(outlet), tolower(gsub("-", "", period)))
+save_network_with_font <- function(widget, outlet, period) {
+  filename <- sprintf("network_%s_%s.html", tolower(outlet), tolower(gsub("-", "", period)))
 
-  # Save basic HTML file
-  htmltools::save_html(plot_obj, file = output_file, background = "white")
+  # Save and inject News Cycle font
+  htmlwidgets::saveWidget(widget, file = filename, selfcontained = TRUE)
 
-  # Inject News Cycle font manually
-  html_lines <- readLines(output_file)
+  html_lines <- readLines(filename)
   font_link <- '<link href="https://fonts.googleapis.com/css2?family=News+Cycle&display=swap" rel="stylesheet">'
   font_style <- '<style>body { font-family: "News Cycle", sans-serif; }</style>'
   insert_at <- grep("<head>", html_lines, fixed = TRUE) + 1
   html_lines <- append(html_lines, values = c(font_link, font_style), after = insert_at)
-  writeLines(html_lines, output_file)
+  writeLines(html_lines, filename)
 }
-
-
 ```
 
 ## Step 2. Render Networks
@@ -117,19 +105,15 @@ save_network_plot <- function(plot_obj, outlet, period) {
 # ================================================================
 
 # Define combinations
+
 outlets <- c("Fox", "NYT")
 periods <- c("Pre-Roe", "Post-Roe")
 
-# Loop through each combination
 for (outlet in outlets) {
   for (period in periods) {
-    # Create title
     title_text <- sprintf("Network of Topics in Abortion Articles for %s (%s)", outlet, period)
-    
-    # Build and save plot
     plot_obj <- build_network_plot(outlet, period, title_text)
-    save_network_plot(plot_obj, outlet, period)
+    save_network_with_font(plot_obj, outlet, period)
   }
 }
-
 ```
