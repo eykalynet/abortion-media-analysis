@@ -1,0 +1,127 @@
+---
+title: "Network of Bigrams Per Outlet and Per Time"
+author: "Maigan Lafontant, Emilie Ward, and Erika Salvador"
+format:
+  html:
+    include-in-header: fonts.html
+---
+
+```{r}
+#| label: set-up
+
+# ================================================================
+# Step 0: Load Packages and Fonts
+# ================================================================
+
+library(tidyverse)
+library(tidytext)
+library(lubridate)
+library(ggiraph)
+library(data.table)
+library(zoo)
+library(ggimage)
+library(sysfonts)
+library(showtext)
+library(jsonlite)
+library(htmlwidgets)
+library(gdtools)
+library(htmltools)
+library(visNetwork)
+
+# Font setup
+showtext_auto()
+register_gfont("News Cycle")
+font_add_google("News Cycle", "News Cycle")  
+```
+
+## Step 1. Define Function to Render and Save Network to HTML
+
+To streamline the visualization process, we defined a reusable function `render_and_save_network()` that dynamically loads a JSON file containing node and edge data for a specified outlet and time period (e.g., Fox News during the Pre-Roe period). This function applies consistent styling such as custom font, rounded rectangles for nodes, and force-directed physics for layout optimization to enhance readability and prevent node overlap.
+
+```{r}
+#| label: step-1
+
+# ================================================================
+# Step 1: Define Function to Render and Save Network to HTML
+# ================================================================
+
+# Function 1: Build network plot
+build_network_plot <- function(outlet, period, title_text) {
+  json_file <- sprintf("../data/wrangled/networks/network_%s_%s.json", 
+                       tolower(outlet), tolower(gsub("-", "", period)))
+  network_data <- jsonlite::fromJSON(json_file)
+
+  font_color <- if (period == "Post-Roe") "white" else "black"
+
+  network_data$nodes$shapeProperties <- seq_len(nrow(network_data$nodes)) |> 
+    lapply(\(i) list(borderRadius = 10))
+
+  network_data$nodes$font <- seq_len(nrow(network_data$nodes)) |> 
+    lapply(\(i) list(size = 16, face = "News Cycle", color = font_color, multi = "html"))
+
+  visNetwork::visNetwork(network_data$nodes, network_data$edges, width = "100%", height = "800px") |>
+    visNetwork::visOptions(
+      highlightNearest = list(enabled = TRUE, degree = 1, hover = TRUE),
+      nodesIdSelection = TRUE
+    ) |>
+    visNetwork::visEdges(smooth = FALSE) |>
+    visNetwork::visPhysics(
+      solver = "forceAtlas2Based",
+      forceAtlas2Based = list(
+        gravitationalConstant = -50,
+        springLength = 150,
+        springConstant = 0.05
+      ),
+      maxVelocity = 50,
+      minVelocity = 0.75,
+      stabilization = list(enabled = TRUE, iterations = 200)
+    ) |>
+    visNetwork::visLayout(randomSeed = 123)
+}
+
+# Function 2: Save the rendered plot to HTML
+save_network_with_font <- function(widget, outlet, period) {
+  filename <- sprintf("network_%s_%s.html", tolower(outlet), tolower(gsub("-", "", period)))
+
+  # Save widget with selfcontained = TRUE
+  htmlwidgets::saveWidget(widget, file = filename, selfcontained = TRUE)
+
+  html_lines <- readLines(filename)
+  font_link <- '<link href="https://fonts.googleapis.com/css2?family=News+Cycle&display=swap" rel="stylesheet">'
+  font_style <- '<style>body { font-family: "News Cycle", sans-serif; }</style>'
+
+  insert_at <- grep("<head>", html_lines, fixed = TRUE)
+
+  if (length(insert_at) > 0) {
+    html_lines <- append(html_lines, values = c(font_link, font_style), after = insert_at[1])
+    writeLines(html_lines, filename)
+  } else {
+    warning("Could not inject font: <head> tag not found in HTML file.")
+  }
+}
+
+
+```
+
+## Step 2. Render Networks
+
+```{r}
+#| label: step-2
+
+# ================================================================
+# Step 2: Render Networks
+# ================================================================
+
+# Define combinations
+
+outlets <- c("Fox", "NYT")
+periods <- c("Pre-Roe", "Post-Roe")
+
+for (outlet in outlets) {
+  for (period in periods) {
+    title_text <- sprintf("Network of Topics in Abortion Articles for %s (%s)", outlet, period)
+    plot_obj <- build_network_plot(outlet, period, title_text)
+    save_network_with_font(plot_obj, outlet, period)
+  }
+}
+```

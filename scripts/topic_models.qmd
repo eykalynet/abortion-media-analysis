@@ -33,6 +33,10 @@ library(textstem)       # Lemmatization
 library(readr)         
 library(purrr)
 library(jsonlite)
+
+font_add_google("News Cycle", "News Cycle")
+showtext_auto()
+register_gfont("News Cycle")
 ```
 
 ## 1. Reading in the Data
@@ -314,79 +318,109 @@ While our topic modeling and visualization were initially developed within R, ou
 Since ECharts is built for the web, it expects data to be in standard JSON format. Therefore, we exported each topic–bigram network as a `.json` file using `jsonlite`, with nodes representing topics and bigrams, and edges weighted by the topic–word probability.
 
 ```{r}
+#| label: step-10
 
 # =================================================================
 # Step 10: Generate Data for Networks
 # =================================================================
- 
-# Function to generate nodes and edges for a given outlet + period
-export_network_json <- function(df, outlet_input, period_input) {
+
+get_visnetwork_data <- function(df, outlet_input, period_input) {
   df <- df |> filter(outlet == outlet_input, period == period_input)
 
-  # Topic colors (darker, since they're parent nodes)
+  # Define colors by outlet and period
   topic_color <- case_when(
-    outlet_input == "Fox" & period_input == "Pre-Roe"  ~ "#c35b5b",  # medium red
-    outlet_input == "Fox" & period_input == "Post-Roe" ~ "#6a040f",  # deep red
-    outlet_input == "NYT" & period_input == "Pre-Roe"  ~ "#61a5c2",  # medium blue
-    outlet_input == "NYT" & period_input == "Post-Roe" ~ "#003049",  # deep navy
+    outlet_input == "Fox" & period_input == "Pre-Roe"  ~ "#c35b5b",
+    outlet_input == "Fox" & period_input == "Post-Roe" ~ "#6a040f",
+    outlet_input == "NYT" & period_input == "Pre-Roe"  ~ "#61a5c2",
+    outlet_input == "NYT" & period_input == "Post-Roe" ~ "#003049",
     TRUE ~ "#cccccc"
   )
 
-  # Bigram colors (lighter than topics for visual contrast)
   bigram_color <- case_when(
-    outlet_input == "Fox" & period_input == "Pre-Roe"  ~ "#f4a5a5",  # light red
-    outlet_input == "Fox" & period_input == "Post-Roe" ~ "#9e2a2b",  # dark red
-    outlet_input == "NYT" & period_input == "Pre-Roe"  ~ "#a9d6e5",  # light blue
-    outlet_input == "NYT" & period_input == "Post-Roe" ~ "#1d3557",  # dark blue
+    outlet_input == "Fox" & period_input == "Pre-Roe"  ~ "#f4a5a5",
+    outlet_input == "Fox" & period_input == "Post-Roe" ~ "#9e2a2b",
+    outlet_input == "NYT" & period_input == "Pre-Roe"  ~ "#a9d6e5",
+    outlet_input == "NYT" & period_input == "Post-Roe" ~ "#2a539e",
     TRUE ~ "#999999"
   )
 
-  # Create topic nodes
-  topics <- df |> 
-    distinct(topic, topic_name) |> 
+  # Create topic nodes with unique prefixed IDs
+  topics <- df |>
+    distinct(topic, topic_name) |>
     mutate(
-      name = topic_name,
-      category = "Topic",
-      symbolSize = 40,
-      itemStyle = map(topic_color, ~ list(color = .x))
+      id = paste0("T:", topic),
+      label = topic_name,
+      group = "Topic",
+      color = topic_color,
+      value = 40,
+      shape = "box",
+      shapeProperties = list(borderRadius = 10),
+      font = replicate(n(), list(size = 16, face = "News Cycle", multi = "html"), simplify = FALSE),
+      title = paste0(
+        "<b>", label, "</b><br>",
+        "This is a <b>topic</b> from <b>", outlet_input, "</b> during the <b>", period_input, "</b> period.<br>",
+        "Hovering shows this node. Clicking a connected bigram reveals shared usage."
+      )
     )
 
-  # Create bigram nodes
-  bigrams <- df |> 
-    distinct(term) |> 
+  # Create bigram nodes with unique prefixed IDs
+  bigrams <- df |>
+    distinct(term, topic_name) |>
     mutate(
-      name = term,
-      category = "Bigram",
-      symbolSize = 20,
-      itemStyle = map(bigram_color, ~ list(color = .x))
+      id = paste0("B:", term),
+      label = term,
+      group = "Bigram",
+      color = bigram_color,
+      value = 20,
+      shape = "box",
+      shapeProperties = list(borderRadius = 10),
+      font = replicate(n(), list(size = 16, face = "News Cycle", multi = "html"), simplify = FALSE),
+      title = paste0(
+        "<b>", label, "</b><br>",
+        "This is a <b>bigram</b> used in the topic <b>", topic_name, "</b>.<br>",
+        "Appeared in <b>", outlet_input, "</b> during the <b>", period_input, "</b> period."
+      )
     )
 
-  # Combine into one node list
-  nodes <- bind_rows(topics, bigrams) |> 
-    mutate(id = name) |> 
-    select(id, name, category, symbolSize, itemStyle)
+  # Combine nodes safely
+  nodes <- bind_rows(topics, bigrams) |>
+    distinct(id, .keep_all = TRUE)
 
-  # Edges
-  links <- df |> transmute(
-    source = topic_name,
-    target = term,
+  # Create edges with prefix-matching IDs
+  edges <- df |> transmute(
+    from = paste0("T:", topic),
+    to = paste0("B:", term),
     value = beta,
-    lineStyle = list(width = beta * 100)
+    width = beta * 10,
+    title = paste0("β = ", round(beta, 3))
   )
 
-  list(nodes = nodes, links = links)
+  list(nodes = nodes, edges = edges)
 }
 
-# Function to save JSON file to disk
-save_json <- function(df, outlet_input, period_input) {
-  net <- export_network_json(df, outlet_input, period_input)
-  filename <- paste0("network_", tolower(outlet_input), "_", tolower(gsub("-", "", period_input)), ".json")
-  write_json(net, file.path("../data/wrangled/networks", filename), pretty = TRUE, auto_unbox = TRUE)
+save_visnetwork_json <- function(df, outlet_input, period_input) {
+  net <- get_visnetwork_data(df, outlet_input, period_input)
+
+  # Clean and consistent filename
+  filename <- paste0(
+    "network_", 
+    tolower(outlet_input), "_", 
+    tolower(gsub("-", "", period_input)), 
+    ".json"
+  )
+
+  jsonlite::write_json(
+    net,
+    path = file.path("../data/wrangled/networks", filename),
+    pretty = TRUE,
+    auto_unbox = TRUE
+  )
 }
 
-# Export all four networks
-save_json(all_topics_named, "Fox", "Pre-Roe")
-save_json(all_topics_named, "Fox", "Post-Roe")
-save_json(all_topics_named, "NYT", "Pre-Roe")
-save_json(all_topics_named, "NYT", "Post-Roe")
+
+# Re-export all 4 networks
+save_visnetwork_json(all_topics_named, "Fox", "Pre-Roe")
+save_visnetwork_json(all_topics_named, "Fox", "Post-Roe")
+save_visnetwork_json(all_topics_named, "NYT", "Pre-Roe")
+save_visnetwork_json(all_topics_named, "NYT", "Post-Roe")
 ```

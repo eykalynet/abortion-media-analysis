@@ -1,675 +1,1053 @@
 {
   "nodes": [
     {
-      "id": "Medication Abortion Access",
-      "name": "Medication Abortion Access",
-      "category": "Topic",
-      "symbolSize": 40,
-      "itemStyle": {
-        "color": "#003049"
-      }
+      "topic": 1,
+      "topic_name": "Medication Abortion Access",
+      "id": "T:1",
+      "label": "Medication Abortion Access",
+      "group": "Topic",
+      "color": "#003049",
+      "value": 40,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>Medication Abortion Access<\/b><br>This is a <b>topic<\/b> from <b>NYT<\/b> during the <b>Post-Roe<\/b> period.<br>Hovering shows this node. Clicking a connected bigram reveals shared usage."
     },
     {
-      "id": "Pro-Life & Court Battles",
-      "name": "Pro-Life & Court Battles",
-      "category": "Topic",
-      "symbolSize": 40,
-      "itemStyle": {
-        "color": "#003049"
-      }
+      "topic": 2,
+      "topic_name": "Pro-Life & Court Battles",
+      "id": "T:2",
+      "label": "Pro-Life & Court Battles",
+      "group": "Topic",
+      "color": "#003049",
+      "value": 40,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>Pro-Life & Court Battles<\/b><br>This is a <b>topic<\/b> from <b>NYT<\/b> during the <b>Post-Roe<\/b> period.<br>Hovering shows this node. Clicking a connected bigram reveals shared usage."
     },
     {
-      "id": "Anti-Abortion Campaigns",
-      "name": "Anti-Abortion Campaigns",
-      "category": "Topic",
-      "symbolSize": 40,
-      "itemStyle": {
-        "color": "#003049"
-      }
+      "topic": 3,
+      "topic_name": "Anti-Abortion Campaigns",
+      "id": "T:3",
+      "label": "Anti-Abortion Campaigns",
+      "group": "Topic",
+      "color": "#003049",
+      "value": 40,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>Anti-Abortion Campaigns<\/b><br>This is a <b>topic<\/b> from <b>NYT<\/b> during the <b>Post-Roe<\/b> period.<br>Hovering shows this node. Clicking a connected bigram reveals shared usage."
     },
     {
-      "id": "Political Institutions & Response",
-      "name": "Political Institutions & Response",
-      "category": "Topic",
-      "symbolSize": 40,
-      "itemStyle": {
-        "color": "#003049"
-      }
+      "topic": 4,
+      "topic_name": "Political Institutions & Response",
+      "id": "T:4",
+      "label": "Political Institutions & Response",
+      "group": "Topic",
+      "color": "#003049",
+      "value": 40,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>Political Institutions & Response<\/b><br>This is a <b>topic<\/b> from <b>NYT<\/b> during the <b>Post-Roe<\/b> period.<br>Hovering shows this node. Clicking a connected bigram reveals shared usage."
     },
     {
-      "id": "Opinion & Media Figures",
-      "name": "Opinion & Media Figures",
-      "category": "Topic",
-      "symbolSize": 40,
-      "itemStyle": {
-        "color": "#003049"
-      }
+      "topic": 5,
+      "topic_name": "Opinion & Media Figures",
+      "id": "T:5",
+      "label": "Opinion & Media Figures",
+      "group": "Topic",
+      "color": "#003049",
+      "value": 40,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>Opinion & Media Figures<\/b><br>This is a <b>topic<\/b> from <b>NYT<\/b> during the <b>Post-Roe<\/b> period.<br>Hovering shows this node. Clicking a connected bigram reveals shared usage."
     },
     {
-      "id": "abortion pill",
-      "name": "abortion pill",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Medication Abortion Access",
+      "id": "B:abortion pill",
+      "label": "abortion pill",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>abortion pill<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Medication Abortion Access<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "abortion pill"
     },
     {
-      "id": "health care",
-      "name": "health care",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Medication Abortion Access",
+      "id": "B:health care",
+      "label": "health care",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>health care<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Medication Abortion Access<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "health care"
     },
     {
-      "id": "supreme court",
-      "name": "supreme court",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Medication Abortion Access",
+      "id": "B:supreme court",
+      "label": "supreme court",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>supreme court<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Medication Abortion Access<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "supreme court"
     },
     {
-      "id": "medication abortion",
-      "name": "medication abortion",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Medication Abortion Access",
+      "id": "B:medication abortion",
+      "label": "medication abortion",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>medication abortion<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Medication Abortion Access<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "medication abortion"
     },
     {
-      "id": "reproductive health",
-      "name": "reproductive health",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Medication Abortion Access",
+      "id": "B:reproductive health",
+      "label": "reproductive health",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>reproductive health<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Medication Abortion Access<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "reproductive health"
     },
     {
-      "id": "abortion ban",
-      "name": "abortion ban",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Medication Abortion Access",
+      "id": "B:abortion ban",
+      "label": "abortion ban",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>abortion ban<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Medication Abortion Access<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "abortion ban"
     },
     {
-      "id": "abortion provider",
-      "name": "abortion provider",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Medication Abortion Access",
+      "id": "B:abortion provider",
+      "label": "abortion provider",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>abortion provider<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Medication Abortion Access<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "abortion provider"
     },
     {
-      "id": "supreme court’s",
-      "name": "supreme court’s",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Medication Abortion Access",
+      "id": "B:supreme court’s",
+      "label": "supreme court’s",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>supreme court’s<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Medication Abortion Access<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "supreme court’s"
     },
     {
-      "id": "abortion access",
-      "name": "abortion access",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Medication Abortion Access",
+      "id": "B:abortion access",
+      "label": "abortion access",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>abortion access<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Medication Abortion Access<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "abortion access"
     },
     {
-      "id": "abortion care",
-      "name": "abortion care",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Medication Abortion Access",
+      "id": "B:abortion care",
+      "label": "abortion care",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>abortion care<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Medication Abortion Access<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "abortion care"
     },
     {
-      "id": "pro life",
-      "name": "pro life",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Pro-Life & Court Battles",
+      "id": "B:pro life",
+      "label": "pro life",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>pro life<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Pro-Life & Court Battles<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "pro life"
     },
     {
-      "id": "15 week",
-      "name": "15 week",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Pro-Life & Court Battles",
+      "id": "B:15 week",
+      "label": "15 week",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>15 week<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Pro-Life & Court Battles<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "15 week"
     },
     {
-      "id": "anti abortion",
-      "name": "anti abortion",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Pro-Life & Court Battles",
+      "id": "B:anti abortion",
+      "label": "anti abortion",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>anti abortion<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Pro-Life & Court Battles<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "anti abortion"
     },
     {
-      "id": "ban abortion",
-      "name": "ban abortion",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Pro-Life & Court Battles",
+      "id": "B:ban abortion",
+      "label": "ban abortion",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>ban abortion<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Pro-Life & Court Battles<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "ban abortion"
     },
     {
-      "id": "court’s decision",
-      "name": "court’s decision",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Pro-Life & Court Battles",
+      "id": "B:court’s decision",
+      "label": "court’s decision",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>court’s decision<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Pro-Life & Court Battles<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "court’s decision"
     },
     {
-      "id": "pro choice",
-      "name": "pro choice",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Pro-Life & Court Battles",
+      "id": "B:pro choice",
+      "label": "pro choice",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>pro choice<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Pro-Life & Court Battles<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "pro choice"
     },
     {
-      "id": "abortion clinic",
-      "name": "abortion clinic",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Anti-Abortion Campaigns",
+      "id": "B:abortion clinic",
+      "label": "abortion clinic",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>abortion clinic<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Anti-Abortion Campaigns<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "abortion clinic"
     },
     {
-      "id": "abortion movement",
-      "name": "abortion movement",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Anti-Abortion Campaigns",
+      "id": "B:abortion movement",
+      "label": "abortion movement",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>abortion movement<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Anti-Abortion Campaigns<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "abortion movement"
     },
     {
-      "id": "pregnant woman",
-      "name": "pregnant woman",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Anti-Abortion Campaigns",
+      "id": "B:pregnant woman",
+      "label": "pregnant woman",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>pregnant woman<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Anti-Abortion Campaigns<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "pregnant woman"
     },
     {
-      "id": "ballot measure",
-      "name": "ballot measure",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Anti-Abortion Campaigns",
+      "id": "B:ballot measure",
+      "label": "ballot measure",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>ballot measure<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Anti-Abortion Campaigns<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "ballot measure"
     },
     {
-      "id": "white house",
-      "name": "white house",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Political Institutions & Response",
+      "id": "B:white house",
+      "label": "white house",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>white house<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Political Institutions & Response<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "white house"
     },
     {
-      "id": "vice president",
-      "name": "vice president",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Political Institutions & Response",
+      "id": "B:vice president",
+      "label": "vice president",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>vice president<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Political Institutions & Response<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "vice president"
     },
     {
-      "id": "kamala harris",
-      "name": "kamala harris",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Political Institutions & Response",
+      "id": "B:kamala harris",
+      "label": "kamala harris",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>kamala harris<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Political Institutions & Response<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "kamala harris"
     },
     {
-      "id": "president donald",
-      "name": "president donald",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Political Institutions & Response",
+      "id": "B:president donald",
+      "label": "president donald",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>president donald<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Political Institutions & Response<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "president donald"
     },
     {
-      "id": "president biden",
-      "name": "president biden",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Political Institutions & Response",
+      "id": "B:president biden",
+      "label": "president biden",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>president biden<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Political Institutions & Response<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "president biden"
     },
     {
-      "id": "president kamala",
-      "name": "president kamala",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Political Institutions & Response",
+      "id": "B:president kamala",
+      "label": "president kamala",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>president kamala<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Political Institutions & Response<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "president kamala"
     },
     {
-      "id": "north carolina",
-      "name": "north carolina",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Political Institutions & Response",
+      "id": "B:north carolina",
+      "label": "north carolina",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>north carolina<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Political Institutions & Response<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "north carolina"
     },
     {
-      "id": "democratic party",
-      "name": "democratic party",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Political Institutions & Response",
+      "id": "B:democratic party",
+      "label": "democratic party",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>democratic party<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Political Institutions & Response<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "democratic party"
     },
     {
-      "id": "ezra klein",
-      "name": "ezra klein",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Opinion & Media Figures",
+      "id": "B:ezra klein",
+      "label": "ezra klein",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>ezra klein<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Opinion & Media Figures<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "ezra klein"
     },
     {
-      "id": "donald trump",
-      "name": "donald trump",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Opinion & Media Figures",
+      "id": "B:donald trump",
+      "label": "donald trump",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>donald trump<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Opinion & Media Figures<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "donald trump"
     },
     {
-      "id": "jd vance",
-      "name": "jd vance",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Opinion & Media Figures",
+      "id": "B:jd vance",
+      "label": "jd vance",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>jd vance<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Opinion & Media Figures<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "jd vance"
     },
     {
-      "id": "project 2025",
-      "name": "project 2025",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Opinion & Media Figures",
+      "id": "B:project 2025",
+      "label": "project 2025",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>project 2025<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Opinion & Media Figures<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "project 2025"
     },
     {
-      "id": "chief justice",
-      "name": "chief justice",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Opinion & Media Figures",
+      "id": "B:chief justice",
+      "label": "chief justice",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>chief justice<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Opinion & Media Figures<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "chief justice"
     },
     {
-      "id": "larry kramer",
-      "name": "larry kramer",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Opinion & Media Figures",
+      "id": "B:larry kramer",
+      "label": "larry kramer",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>larry kramer<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Opinion & Media Figures<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "larry kramer"
     },
     {
-      "id": "republican party",
-      "name": "republican party",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Opinion & Media Figures",
+      "id": "B:republican party",
+      "label": "republican party",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>republican party<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Opinion & Media Figures<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "republican party"
     },
     {
-      "id": "joe biden",
-      "name": "joe biden",
-      "category": "Bigram",
-      "symbolSize": 20,
-      "itemStyle": {
-        "color": "#1d3557"
-      }
+      "topic_name": "Opinion & Media Figures",
+      "id": "B:joe biden",
+      "label": "joe biden",
+      "group": "Bigram",
+      "color": "#2a539e",
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>joe biden<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Opinion & Media Figures<\/b>.<br>Appeared in <b>NYT<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "joe biden"
     }
   ],
-  "links": [
+  "edges": [
     {
-      "source": "Medication Abortion Access",
-      "target": "abortion pill",
+      "from": "T:1",
+      "to": "B:abortion pill",
       "value": 0.0725,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.7249,
+      "title": "β = 0.072"
     },
     {
-      "source": "Medication Abortion Access",
-      "target": "health care",
+      "from": "T:1",
+      "to": "B:health care",
       "value": 0.0683,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.6827,
+      "title": "β = 0.068"
     },
     {
-      "source": "Medication Abortion Access",
-      "target": "supreme court",
+      "from": "T:1",
+      "to": "B:supreme court",
       "value": 0.0511,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.5113,
+      "title": "β = 0.051"
     },
     {
-      "source": "Medication Abortion Access",
-      "target": "medication abortion",
+      "from": "T:1",
+      "to": "B:medication abortion",
       "value": 0.0499,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.4987,
+      "title": "β = 0.05"
     },
     {
-      "source": "Medication Abortion Access",
-      "target": "reproductive health",
+      "from": "T:1",
+      "to": "B:reproductive health",
       "value": 0.0365,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.3648,
+      "title": "β = 0.036"
     },
     {
-      "source": "Medication Abortion Access",
-      "target": "abortion ban",
+      "from": "T:1",
+      "to": "B:abortion ban",
       "value": 0.0257,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.2574,
+      "title": "β = 0.026"
     },
     {
-      "source": "Medication Abortion Access",
-      "target": "abortion provider",
+      "from": "T:1",
+      "to": "B:abortion provider",
       "value": 0.0186,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.1858,
+      "title": "β = 0.019"
     },
     {
-      "source": "Medication Abortion Access",
-      "target": "supreme court’s",
+      "from": "T:1",
+      "to": "B:supreme court’s",
       "value": 0.017,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.1704,
+      "title": "β = 0.017"
     },
     {
-      "source": "Medication Abortion Access",
-      "target": "abortion access",
+      "from": "T:1",
+      "to": "B:abortion access",
       "value": 0.0163,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.1627,
+      "title": "β = 0.016"
     },
     {
-      "source": "Medication Abortion Access",
-      "target": "abortion care",
+      "from": "T:1",
+      "to": "B:abortion care",
       "value": 0.0146,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.1455,
+      "title": "β = 0.015"
     },
     {
-      "source": "Pro-Life & Court Battles",
-      "target": "supreme court",
+      "from": "T:2",
+      "to": "B:supreme court",
       "value": 0.078,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.7803,
+      "title": "β = 0.078"
     },
     {
-      "source": "Pro-Life & Court Battles",
-      "target": "pro life",
+      "from": "T:2",
+      "to": "B:pro life",
       "value": 0.0523,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.5229,
+      "title": "β = 0.052"
     },
     {
-      "source": "Pro-Life & Court Battles",
-      "target": "abortion ban",
+      "from": "T:2",
+      "to": "B:abortion ban",
       "value": 0.0416,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.4159,
+      "title": "β = 0.042"
     },
     {
-      "source": "Pro-Life & Court Battles",
-      "target": "abortion access",
+      "from": "T:2",
+      "to": "B:abortion access",
       "value": 0.0311,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.311,
+      "title": "β = 0.031"
     },
     {
-      "source": "Pro-Life & Court Battles",
-      "target": "supreme court’s",
+      "from": "T:2",
+      "to": "B:supreme court’s",
       "value": 0.0256,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.2556,
+      "title": "β = 0.026"
     },
     {
-      "source": "Pro-Life & Court Battles",
-      "target": "15 week",
+      "from": "T:2",
+      "to": "B:15 week",
       "value": 0.024,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.24,
+      "title": "β = 0.024"
     },
     {
-      "source": "Pro-Life & Court Battles",
-      "target": "anti abortion",
+      "from": "T:2",
+      "to": "B:anti abortion",
       "value": 0.0232,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.2318,
+      "title": "β = 0.023"
     },
     {
-      "source": "Pro-Life & Court Battles",
-      "target": "ban abortion",
+      "from": "T:2",
+      "to": "B:ban abortion",
       "value": 0.0231,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.2306,
+      "title": "β = 0.023"
     },
     {
-      "source": "Pro-Life & Court Battles",
-      "target": "court’s decision",
+      "from": "T:2",
+      "to": "B:court’s decision",
       "value": 0.0208,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.2085,
+      "title": "β = 0.021"
     },
     {
-      "source": "Pro-Life & Court Battles",
-      "target": "pro choice",
+      "from": "T:2",
+      "to": "B:pro choice",
       "value": 0.0205,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.2046,
+      "title": "β = 0.02"
     },
     {
-      "source": "Anti-Abortion Campaigns",
-      "target": "anti abortion",
+      "from": "T:3",
+      "to": "B:anti abortion",
       "value": 0.1004,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 1.0045,
+      "title": "β = 0.1"
     },
     {
-      "source": "Anti-Abortion Campaigns",
-      "target": "supreme court",
+      "from": "T:3",
+      "to": "B:supreme court",
       "value": 0.0977,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.9766,
+      "title": "β = 0.098"
     },
     {
-      "source": "Anti-Abortion Campaigns",
-      "target": "ban abortion",
+      "from": "T:3",
+      "to": "B:ban abortion",
       "value": 0.0337,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.3371,
+      "title": "β = 0.034"
     },
     {
-      "source": "Anti-Abortion Campaigns",
-      "target": "abortion ban",
+      "from": "T:3",
+      "to": "B:abortion ban",
       "value": 0.0304,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.3045,
+      "title": "β = 0.03"
     },
     {
-      "source": "Anti-Abortion Campaigns",
-      "target": "abortion clinic",
+      "from": "T:3",
+      "to": "B:abortion clinic",
       "value": 0.0264,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.2638,
+      "title": "β = 0.026"
     },
     {
-      "source": "Anti-Abortion Campaigns",
-      "target": "supreme court’s",
+      "from": "T:3",
+      "to": "B:supreme court’s",
       "value": 0.0256,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.2559,
+      "title": "β = 0.026"
     },
     {
-      "source": "Anti-Abortion Campaigns",
-      "target": "abortion movement",
+      "from": "T:3",
+      "to": "B:abortion movement",
       "value": 0.0218,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.2182,
+      "title": "β = 0.022"
     },
     {
-      "source": "Anti-Abortion Campaigns",
-      "target": "court’s decision",
+      "from": "T:3",
+      "to": "B:court’s decision",
       "value": 0.0211,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.2112,
+      "title": "β = 0.021"
     },
     {
-      "source": "Anti-Abortion Campaigns",
-      "target": "pregnant woman",
+      "from": "T:3",
+      "to": "B:pregnant woman",
       "value": 0.0208,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.2082,
+      "title": "β = 0.021"
     },
     {
-      "source": "Anti-Abortion Campaigns",
-      "target": "ballot measure",
+      "from": "T:3",
+      "to": "B:ballot measure",
       "value": 0.0197,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.1965,
+      "title": "β = 0.02"
     },
     {
-      "source": "Political Institutions & Response",
-      "target": "supreme court",
+      "from": "T:4",
+      "to": "B:supreme court",
       "value": 0.0406,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.4064,
+      "title": "β = 0.041"
     },
     {
-      "source": "Political Institutions & Response",
-      "target": "white house",
+      "from": "T:4",
+      "to": "B:white house",
       "value": 0.0359,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.3587,
+      "title": "β = 0.036"
     },
     {
-      "source": "Political Institutions & Response",
-      "target": "vice president",
+      "from": "T:4",
+      "to": "B:vice president",
       "value": 0.0344,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.3438,
+      "title": "β = 0.034"
     },
     {
-      "source": "Political Institutions & Response",
-      "target": "abortion ban",
+      "from": "T:4",
+      "to": "B:abortion ban",
       "value": 0.0314,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.3135,
+      "title": "β = 0.031"
     },
     {
-      "source": "Political Institutions & Response",
-      "target": "kamala harris",
+      "from": "T:4",
+      "to": "B:kamala harris",
       "value": 0.0307,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.3069,
+      "title": "β = 0.031"
     },
     {
-      "source": "Political Institutions & Response",
-      "target": "president donald",
+      "from": "T:4",
+      "to": "B:president donald",
       "value": 0.0221,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.2211,
+      "title": "β = 0.022"
     },
     {
-      "source": "Political Institutions & Response",
-      "target": "president biden",
+      "from": "T:4",
+      "to": "B:president biden",
       "value": 0.0212,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.2121,
+      "title": "β = 0.021"
     },
     {
-      "source": "Political Institutions & Response",
-      "target": "president kamala",
+      "from": "T:4",
+      "to": "B:president kamala",
       "value": 0.0194,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.194,
+      "title": "β = 0.019"
     },
     {
-      "source": "Political Institutions & Response",
-      "target": "north carolina",
+      "from": "T:4",
+      "to": "B:north carolina",
       "value": 0.0182,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.1818,
+      "title": "β = 0.018"
     },
     {
-      "source": "Political Institutions & Response",
-      "target": "democratic party",
+      "from": "T:4",
+      "to": "B:democratic party",
       "value": 0.0176,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.1765,
+      "title": "β = 0.018"
     },
     {
-      "source": "Opinion & Media Figures",
-      "target": "ezra klein",
+      "from": "T:5",
+      "to": "B:ezra klein",
       "value": 0.0684,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.6845,
+      "title": "β = 0.068"
     },
     {
-      "source": "Opinion & Media Figures",
-      "target": "donald trump",
+      "from": "T:5",
+      "to": "B:donald trump",
       "value": 0.0653,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.6529,
+      "title": "β = 0.065"
     },
     {
-      "source": "Opinion & Media Figures",
-      "target": "supreme court",
+      "from": "T:5",
+      "to": "B:supreme court",
       "value": 0.035,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.3499,
+      "title": "β = 0.035"
     },
     {
-      "source": "Opinion & Media Figures",
-      "target": "jd vance",
+      "from": "T:5",
+      "to": "B:jd vance",
       "value": 0.0241,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.2407,
+      "title": "β = 0.024"
     },
     {
-      "source": "Opinion & Media Figures",
-      "target": "kamala harris",
+      "from": "T:5",
+      "to": "B:kamala harris",
       "value": 0.0233,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.2326,
+      "title": "β = 0.023"
     },
     {
-      "source": "Opinion & Media Figures",
-      "target": "project 2025",
+      "from": "T:5",
+      "to": "B:project 2025",
       "value": 0.0178,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.1782,
+      "title": "β = 0.018"
     },
     {
-      "source": "Opinion & Media Figures",
-      "target": "chief justice",
+      "from": "T:5",
+      "to": "B:chief justice",
       "value": 0.0178,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.1782,
+      "title": "β = 0.018"
     },
     {
-      "source": "Opinion & Media Figures",
-      "target": "larry kramer",
+      "from": "T:5",
+      "to": "B:larry kramer",
       "value": 0.0169,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.1688,
+      "title": "β = 0.017"
     },
     {
-      "source": "Opinion & Media Figures",
-      "target": "republican party",
+      "from": "T:5",
+      "to": "B:republican party",
       "value": 0.0151,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.1507,
+      "title": "β = 0.015"
     },
     {
-      "source": "Opinion & Media Figures",
-      "target": "joe biden",
+      "from": "T:5",
+      "to": "B:joe biden",
       "value": 0.0138,
-      "lineStyle": [7.2486, 6.8273, 5.1131, 4.9866, 3.6484, 2.5742, 1.8577, 1.7042, 1.6268, 1.4553, 7.8029, 5.2287, 4.1591, 3.1099, 2.5561, 2.3995, 2.318, 2.3057, 2.0849, 2.0455, 10.0449, 9.7659, 3.371, 3.0448, 2.6378, 2.5591, 2.1825, 2.1122, 2.082, 1.9653, 4.0636, 3.5865, 3.4379, 3.1353, 3.0694, 2.2107, 2.1214, 1.9397, 1.8178, 1.7649, 6.8448, 6.5288, 3.4989, 2.4066, 2.3261, 1.7815, 1.7815, 1.6878, 1.5073, 1.3751]
+      "width": 0.1375,
+      "title": "β = 0.014"
     }
   ]
 }
