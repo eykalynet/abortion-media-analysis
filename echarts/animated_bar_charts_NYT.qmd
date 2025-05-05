@@ -202,7 +202,7 @@ saveWidget(nyt_chart, "nyt_bigrams_chart.html", selfcontained = TRUE)
 ```{r}
 #| label: saving-with-font-correction
 
-save_nyt_chart <- function(chart, file_path = "nyt_bigrams_chart.html") {
+save_nyt_chart <- function(chart, file_path = "animated_bar_charts_NYT.html") {
   saveWidget(chart, file = file_path, selfcontained = TRUE)
 
   html_lines <- readLines(file_path)
