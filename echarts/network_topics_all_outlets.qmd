@@ -22,8 +22,11 @@ library(zoo)
 library(ggimage)
 library(sysfonts)
 library(showtext)
+library(jsonlite)
 library(htmlwidgets)
 library(gdtools)
+library(htmltools)
+library(visNetwork)
 
 # Font setup
 showtext_auto()
@@ -49,18 +52,26 @@ render_and_save_network <- function(outlet, period, title_text) {
 
   # Load and style data
   network_data <- fromJSON(json_file)
-  network_data$nodes$shapeProperties <- lapply(seq_len(nrow(network_data$nodes)), function(i) list(borderRadius = 10))
-  network_data$nodes$font <- lapply(seq_len(nrow(network_data$nodes)), function(i) list(size = 16, face = "News Cycle", multi = "html"))
+
+  # Set font color based on period
+  font_color <- if (period == "Post-Roe") "white" else "black"
+
+  # Apply rounded corners and font styling
+  network_data$nodes$shapeProperties <- seq_len(nrow(network_data$nodes)) |> 
+    lapply(\(i) list(borderRadius = 10))
+
+  network_data$nodes$font <- seq_len(nrow(network_data$nodes)) |> 
+    lapply(\(i) list(size = 16, face = "News Cycle", color = font_color, multi = "html"))
 
   # Build UI
   network_plot <- tagList(
     h3(title_text, style = "font-family: 'News Cycle'; text-align: center; margin-bottom: 25px;"),
-    visNetwork(network_data$nodes, network_data$edges, width = "100%", height = "800px") %>%
+    visNetwork(network_data$nodes, network_data$edges, width = "100%", height = "800px") |>
       visOptions(
         highlightNearest = list(enabled = TRUE, degree = 1, hover = TRUE),
         nodesIdSelection = TRUE
-      ) %>%
-      visEdges(smooth = FALSE) %>%
+      ) |>
+      visEdges(smooth = FALSE) |>
       visPhysics(
         solver = "forceAtlas2Based",
         forceAtlas2Based = list(
@@ -71,7 +82,7 @@ render_and_save_network <- function(outlet, period, title_text) {
         maxVelocity = 50,
         minVelocity = 0.75,
         stabilization = list(enabled = TRUE, iterations = 200)
-      ) %>%
+      ) |>
       visLayout(randomSeed = 123)
   )
 

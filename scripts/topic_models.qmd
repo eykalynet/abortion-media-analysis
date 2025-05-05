@@ -340,7 +340,7 @@ get_visnetwork_data <- function(df, outlet_input, period_input) {
     outlet_input == "Fox" & period_input == "Pre-Roe"  ~ "#f4a5a5",
     outlet_input == "Fox" & period_input == "Post-Roe" ~ "#9e2a2b",
     outlet_input == "NYT" & period_input == "Pre-Roe"  ~ "#a9d6e5",
-    outlet_input == "NYT" & period_input == "Post-Roe" ~ "#1d3557",
+    outlet_input == "NYT" & period_input == "Post-Roe" ~ "#2a539e",
     TRUE ~ "#999999"
   )
 
