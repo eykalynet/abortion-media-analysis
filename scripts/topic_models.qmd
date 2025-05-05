@@ -349,8 +349,8 @@ get_visnetwork_data <- function(df, outlet_input, period_input) {
   nodes <- bind_rows(topics, bigrams)
 
   edges <- df |> transmute(
-    from = topic_name,
-    to = term,
+    from = as.character(topic),   # fixed
+    to = as.character(term),      # fixed
     value = beta,
     width = beta * 10,
     title = paste0("β = ", round(beta, 3))
@@ -365,10 +365,9 @@ save_visnetwork_json <- function(df, outlet_input, period_input) {
   write_json(net, path = file.path("../data/wrangled/networks", filename), pretty = TRUE, auto_unbox = TRUE)
 }
 
-# Save all
+# Re-export all 4 networks
 save_visnetwork_json(all_topics_named, "Fox", "Pre-Roe")
 save_visnetwork_json(all_topics_named, "Fox", "Post-Roe")
 save_visnetwork_json(all_topics_named, "NYT", "Pre-Roe")
 save_visnetwork_json(all_topics_named, "NYT", "Post-Roe")
-
 ```

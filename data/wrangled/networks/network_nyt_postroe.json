@@ -290,350 +290,350 @@
   ],
   "edges": [
     {
-      "from": "Medication Abortion Access",
+      "from": "1",
       "to": "abortion pill",
       "value": 0.0725,
       "width": 0.7249,
       "title": "β = 0.072"
     },
     {
-      "from": "Medication Abortion Access",
+      "from": "1",
       "to": "health care",
       "value": 0.0683,
       "width": 0.6827,
       "title": "β = 0.068"
     },
     {
-      "from": "Medication Abortion Access",
+      "from": "1",
       "to": "supreme court",
       "value": 0.0511,
       "width": 0.5113,
       "title": "β = 0.051"
     },
     {
-      "from": "Medication Abortion Access",
+      "from": "1",
       "to": "medication abortion",
       "value": 0.0499,
       "width": 0.4987,
       "title": "β = 0.05"
     },
     {
-      "from": "Medication Abortion Access",
+      "from": "1",
       "to": "reproductive health",
       "value": 0.0365,
       "width": 0.3648,
       "title": "β = 0.036"
     },
     {
-      "from": "Medication Abortion Access",
+      "from": "1",
       "to": "abortion ban",
       "value": 0.0257,
       "width": 0.2574,
       "title": "β = 0.026"
     },
     {
-      "from": "Medication Abortion Access",
+      "from": "1",
       "to": "abortion provider",
       "value": 0.0186,
       "width": 0.1858,
       "title": "β = 0.019"
     },
     {
-      "from": "Medication Abortion Access",
+      "from": "1",
       "to": "supreme court’s",
       "value": 0.017,
       "width": 0.1704,
       "title": "β = 0.017"
     },
     {
-      "from": "Medication Abortion Access",
+      "from": "1",
       "to": "abortion access",
       "value": 0.0163,
       "width": 0.1627,
       "title": "β = 0.016"
     },
     {
-      "from": "Medication Abortion Access",
+      "from": "1",
       "to": "abortion care",
       "value": 0.0146,
       "width": 0.1455,
       "title": "β = 0.015"
     },
     {
-      "from": "Pro-Life & Court Battles",
+      "from": "2",
       "to": "supreme court",
       "value": 0.078,
       "width": 0.7803,
       "title": "β = 0.078"
     },
     {
-      "from": "Pro-Life & Court Battles",
+      "from": "2",
       "to": "pro life",
       "value": 0.0523,
       "width": 0.5229,
       "title": "β = 0.052"
     },
     {
-      "from": "Pro-Life & Court Battles",
+      "from": "2",
       "to": "abortion ban",
       "value": 0.0416,
       "width": 0.4159,
       "title": "β = 0.042"
     },
     {
-      "from": "Pro-Life & Court Battles",
+      "from": "2",
       "to": "abortion access",
       "value": 0.0311,
       "width": 0.311,
       "title": "β = 0.031"
     },
     {
-      "from": "Pro-Life & Court Battles",
+      "from": "2",
       "to": "supreme court’s",
       "value": 0.0256,
       "width": 0.2556,
       "title": "β = 0.026"
     },
     {
-      "from": "Pro-Life & Court Battles",
+      "from": "2",
       "to": "15 week",
       "value": 0.024,
       "width": 0.24,
       "title": "β = 0.024"
     },
     {
-      "from": "Pro-Life & Court Battles",
+      "from": "2",
       "to": "anti abortion",
       "value": 0.0232,
       "width": 0.2318,
       "title": "β = 0.023"
     },
     {
-      "from": "Pro-Life & Court Battles",
+      "from": "2",
       "to": "ban abortion",
       "value": 0.0231,
       "width": 0.2306,
       "title": "β = 0.023"
     },
     {
-      "from": "Pro-Life & Court Battles",
+      "from": "2",
       "to": "court’s decision",
       "value": 0.0208,
       "width": 0.2085,
       "title": "β = 0.021"
     },
     {
-      "from": "Pro-Life & Court Battles",
+      "from": "2",
       "to": "pro choice",
       "value": 0.0205,
       "width": 0.2046,
       "title": "β = 0.02"
     },
     {
-      "from": "Anti-Abortion Campaigns",
+      "from": "3",
       "to": "anti abortion",
       "value": 0.1004,
       "width": 1.0045,
       "title": "β = 0.1"
     },
     {
-      "from": "Anti-Abortion Campaigns",
+      "from": "3",
       "to": "supreme court",
       "value": 0.0977,
       "width": 0.9766,
       "title": "β = 0.098"
     },
     {
-      "from": "Anti-Abortion Campaigns",
+      "from": "3",
       "to": "ban abortion",
       "value": 0.0337,
       "width": 0.3371,
       "title": "β = 0.034"
     },
     {
-      "from": "Anti-Abortion Campaigns",
+      "from": "3",
       "to": "abortion ban",
       "value": 0.0304,
       "width": 0.3045,
       "title": "β = 0.03"
     },
     {
-      "from": "Anti-Abortion Campaigns",
+      "from": "3",
       "to": "abortion clinic",
       "value": 0.0264,
       "width": 0.2638,
       "title": "β = 0.026"
     },
     {
-      "from": "Anti-Abortion Campaigns",
+      "from": "3",
       "to": "supreme court’s",
       "value": 0.0256,
       "width": 0.2559,
       "title": "β = 0.026"
     },
     {
-      "from": "Anti-Abortion Campaigns",
+      "from": "3",
       "to": "abortion movement",
       "value": 0.0218,
       "width": 0.2182,
       "title": "β = 0.022"
     },
     {
-      "from": "Anti-Abortion Campaigns",
+      "from": "3",
       "to": "court’s decision",
       "value": 0.0211,
       "width": 0.2112,
       "title": "β = 0.021"
     },
     {
-      "from": "Anti-Abortion Campaigns",
+      "from": "3",
       "to": "pregnant woman",
       "value": 0.0208,
       "width": 0.2082,
       "title": "β = 0.021"
     },
     {
-      "from": "Anti-Abortion Campaigns",
+      "from": "3",
       "to": "ballot measure",
       "value": 0.0197,
       "width": 0.1965,
       "title": "β = 0.02"
     },
     {
-      "from": "Political Institutions & Response",
+      "from": "4",
       "to": "supreme court",
       "value": 0.0406,
       "width": 0.4064,
       "title": "β = 0.041"
     },
     {
-      "from": "Political Institutions & Response",
+      "from": "4",
       "to": "white house",
       "value": 0.0359,
       "width": 0.3587,
       "title": "β = 0.036"
     },
     {
-      "from": "Political Institutions & Response",
+      "from": "4",
       "to": "vice president",
       "value": 0.0344,
       "width": 0.3438,
       "title": "β = 0.034"
     },
     {
-      "from": "Political Institutions & Response",
+      "from": "4",
       "to": "abortion ban",
       "value": 0.0314,
       "width": 0.3135,
       "title": "β = 0.031"
     },
     {
-      "from": "Political Institutions & Response",
+      "from": "4",
       "to": "kamala harris",
       "value": 0.0307,
       "width": 0.3069,
       "title": "β = 0.031"
     },
     {
-      "from": "Political Institutions & Response",
+      "from": "4",
       "to": "president donald",
       "value": 0.0221,
       "width": 0.2211,
       "title": "β = 0.022"
     },
     {
-      "from": "Political Institutions & Response",
+      "from": "4",
       "to": "president biden",
       "value": 0.0212,
       "width": 0.2121,
       "title": "β = 0.021"
     },
     {
-      "from": "Political Institutions & Response",
+      "from": "4",
       "to": "president kamala",
       "value": 0.0194,
       "width": 0.194,
       "title": "β = 0.019"
     },
     {
-      "from": "Political Institutions & Response",
+      "from": "4",
       "to": "north carolina",
       "value": 0.0182,
       "width": 0.1818,
       "title": "β = 0.018"
     },
     {
-      "from": "Political Institutions & Response",
+      "from": "4",
       "to": "democratic party",
       "value": 0.0176,
       "width": 0.1765,
       "title": "β = 0.018"
     },
     {
-      "from": "Opinion & Media Figures",
+      "from": "5",
       "to": "ezra klein",
       "value": 0.0684,
       "width": 0.6845,
       "title": "β = 0.068"
     },
     {
-      "from": "Opinion & Media Figures",
+      "from": "5",
       "to": "donald trump",
       "value": 0.0653,
       "width": 0.6529,
       "title": "β = 0.065"
     },
     {
-      "from": "Opinion & Media Figures",
+      "from": "5",
       "to": "supreme court",
       "value": 0.035,
       "width": 0.3499,
       "title": "β = 0.035"
     },
     {
-      "from": "Opinion & Media Figures",
+      "from": "5",
       "to": "jd vance",
       "value": 0.0241,
       "width": 0.2407,
       "title": "β = 0.024"
     },
     {
-      "from": "Opinion & Media Figures",
+      "from": "5",
       "to": "kamala harris",
       "value": 0.0233,
       "width": 0.2326,
       "title": "β = 0.023"
     },
     {
-      "from": "Opinion & Media Figures",
+      "from": "5",
       "to": "project 2025",
       "value": 0.0178,
       "width": 0.1782,
       "title": "β = 0.018"
     },
     {
-      "from": "Opinion & Media Figures",
+      "from": "5",
       "to": "chief justice",
       "value": 0.0178,
       "width": 0.1782,
       "title": "β = 0.018"
     },
     {
-      "from": "Opinion & Media Figures",
+      "from": "5",
       "to": "larry kramer",
       "value": 0.0169,
       "width": 0.1688,
       "title": "β = 0.017"
     },
     {
-      "from": "Opinion & Media Figures",
+      "from": "5",
       "to": "republican party",
       "value": 0.0151,
       "width": 0.1507,
       "title": "β = 0.015"
     },
     {
-      "from": "Opinion & Media Figures",
+      "from": "5",
       "to": "joe biden",
       "value": 0.0138,
       "width": 0.1375,

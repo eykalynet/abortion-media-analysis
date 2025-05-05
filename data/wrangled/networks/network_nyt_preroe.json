@@ -325,350 +325,350 @@
   ],
   "edges": [
     {
-      "from": "Courtroom & Legal Landscape",
+      "from": "1",
       "to": "supreme court",
       "value": 0.0886,
       "width": 0.8856,
       "title": "β = 0.089"
     },
     {
-      "from": "Courtroom & Legal Landscape",
+      "from": "1",
       "to": "texas law",
       "value": 0.0503,
       "width": 0.5034,
       "title": "β = 0.05"
     },
     {
-      "from": "Courtroom & Legal Landscape",
+      "from": "1",
       "to": "ezra klein",
       "value": 0.0392,
       "width": 0.3919,
       "title": "β = 0.039"
     },
     {
-      "from": "Courtroom & Legal Landscape",
+      "from": "1",
       "to": "abortion provider",
       "value": 0.0286,
       "width": 0.2864,
       "title": "β = 0.029"
     },
     {
-      "from": "Courtroom & Legal Landscape",
+      "from": "1",
       "to": "15 week",
       "value": 0.026,
       "width": 0.2595,
       "title": "β = 0.026"
     },
     {
-      "from": "Courtroom & Legal Landscape",
+      "from": "1",
       "to": "s.b 8",
       "value": 0.0232,
       "width": 0.2323,
       "title": "β = 0.023"
     },
     {
-      "from": "Courtroom & Legal Landscape",
+      "from": "1",
       "to": "ban abortion",
       "value": 0.0223,
       "width": 0.2229,
       "title": "β = 0.022"
     },
     {
-      "from": "Courtroom & Legal Landscape",
+      "from": "1",
       "to": "abortion clinic",
       "value": 0.0208,
       "width": 0.2078,
       "title": "β = 0.021"
     },
     {
-      "from": "Courtroom & Legal Landscape",
+      "from": "1",
       "to": "federal court",
       "value": 0.019,
       "width": 0.1896,
       "title": "β = 0.019"
     },
     {
-      "from": "Courtroom & Legal Landscape",
+      "from": "1",
       "to": "women’s health",
       "value": 0.0168,
       "width": 0.1683,
       "title": "β = 0.017"
     },
     {
-      "from": "Healthcare & Public Access",
+      "from": "2",
       "to": "anti abortion",
       "value": 0.0807,
       "width": 0.8073,
       "title": "β = 0.081"
     },
     {
-      "from": "Healthcare & Public Access",
+      "from": "2",
       "to": "pro life",
       "value": 0.0542,
       "width": 0.5424,
       "title": "β = 0.054"
     },
     {
-      "from": "Healthcare & Public Access",
+      "from": "2",
       "to": "health care",
       "value": 0.0347,
       "width": 0.3467,
       "title": "β = 0.035"
     },
     {
-      "from": "Healthcare & Public Access",
+      "from": "2",
       "to": "birth control",
       "value": 0.0307,
       "width": 0.3071,
       "title": "β = 0.031"
     },
     {
-      "from": "Healthcare & Public Access",
+      "from": "2",
       "to": "pro choice",
       "value": 0.0284,
       "width": 0.284,
       "title": "β = 0.028"
     },
     {
-      "from": "Healthcare & Public Access",
+      "from": "2",
       "to": "legalize abortion",
       "value": 0.021,
       "width": 0.21,
       "title": "β = 0.021"
     },
     {
-      "from": "Healthcare & Public Access",
+      "from": "2",
       "to": "supreme court",
       "value": 0.0183,
       "width": 0.183,
       "title": "β = 0.018"
     },
     {
-      "from": "Healthcare & Public Access",
+      "from": "2",
       "to": "abortion movement",
       "value": 0.0178,
       "width": 0.1785,
       "title": "β = 0.018"
     },
     {
-      "from": "Healthcare & Public Access",
+      "from": "2",
       "to": "latin america",
       "value": 0.0169,
       "width": 0.1693,
       "title": "β = 0.017"
     },
     {
-      "from": "Healthcare & Public Access",
+      "from": "2",
       "to": "legal abortion",
       "value": 0.0151,
       "width": 0.1511,
       "title": "β = 0.015"
     },
     {
-      "from": "Legislative Pushback",
+      "from": "3",
       "to": "supreme court",
       "value": 0.0867,
       "width": 0.8674,
       "title": "β = 0.087"
     },
     {
-      "from": "Legislative Pushback",
+      "from": "3",
       "to": "anti abortion",
       "value": 0.0479,
       "width": 0.4795,
       "title": "β = 0.048"
     },
     {
-      "from": "Legislative Pushback",
+      "from": "3",
       "to": "ban abortion",
       "value": 0.0365,
       "width": 0.365,
       "title": "β = 0.036"
     },
     {
-      "from": "Legislative Pushback",
+      "from": "3",
       "to": "abortion access",
       "value": 0.0275,
       "width": 0.2755,
       "title": "β = 0.028"
     },
     {
-      "from": "Legislative Pushback",
+      "from": "3",
       "to": "abortion law",
       "value": 0.0274,
       "width": 0.2739,
       "title": "β = 0.027"
     },
     {
-      "from": "Legislative Pushback",
+      "from": "3",
       "to": "abortion provider",
       "value": 0.0264,
       "width": 0.2641,
       "title": "β = 0.026"
     },
     {
-      "from": "Legislative Pushback",
+      "from": "3",
       "to": "medication abortion",
       "value": 0.0245,
       "width": 0.2454,
       "title": "β = 0.025"
     },
     {
-      "from": "Legislative Pushback",
+      "from": "3",
       "to": "abortion ban",
       "value": 0.0182,
       "width": 0.1816,
       "title": "β = 0.018"
     },
     {
-      "from": "Legislative Pushback",
+      "from": "3",
       "to": "abortion pill",
       "value": 0.0179,
       "width": 0.179,
       "title": "β = 0.018"
     },
     {
-      "from": "Legislative Pushback",
+      "from": "3",
       "to": "health care",
       "value": 0.0178,
       "width": 0.1785,
       "title": "β = 0.018"
     },
     {
-      "from": "Judicial Appointments",
+      "from": "4",
       "to": "supreme court",
       "value": 0.0989,
       "width": 0.9889,
       "title": "β = 0.099"
     },
     {
-      "from": "Judicial Appointments",
+      "from": "4",
       "to": "chief justice",
       "value": 0.0391,
       "width": 0.3915,
       "title": "β = 0.039"
     },
     {
-      "from": "Judicial Appointments",
+      "from": "4",
       "to": "judge barrett",
       "value": 0.0325,
       "width": 0.3254,
       "title": "β = 0.033"
     },
     {
-      "from": "Judicial Appointments",
+      "from": "4",
       "to": "justice alito",
       "value": 0.0204,
       "width": 0.204,
       "title": "β = 0.02"
     },
     {
-      "from": "Judicial Appointments",
+      "from": "4",
       "to": "amy coney",
       "value": 0.0192,
       "width": 0.1917,
       "title": "β = 0.019"
     },
     {
-      "from": "Judicial Appointments",
+      "from": "4",
       "to": "coney barrett",
       "value": 0.0178,
       "width": 0.1776,
       "title": "β = 0.018"
     },
     {
-      "from": "Judicial Appointments",
+      "from": "4",
       "to": "justice thomas",
       "value": 0.0174,
       "width": 0.1741,
       "title": "β = 0.017"
     },
     {
-      "from": "Judicial Appointments",
+      "from": "4",
       "to": "justice roberts",
       "value": 0.0159,
       "width": 0.1588,
       "title": "β = 0.016"
     },
     {
-      "from": "Judicial Appointments",
+      "from": "4",
       "to": "law school",
       "value": 0.015,
       "width": 0.1496,
       "title": "β = 0.015"
     },
     {
-      "from": "Judicial Appointments",
+      "from": "4",
       "to": "ruth bader",
       "value": 0.0146,
       "width": 0.146,
       "title": "β = 0.015"
     },
     {
-      "from": "White House & Party Messaging",
+      "from": "5",
       "to": "supreme court",
       "value": 0.0523,
       "width": 0.5228,
       "title": "β = 0.052"
     },
     {
-      "from": "White House & Party Messaging",
+      "from": "5",
       "to": "white house",
       "value": 0.0259,
       "width": 0.2591,
       "title": "β = 0.026"
     },
     {
-      "from": "White House & Party Messaging",
+      "from": "5",
       "to": "president biden",
       "value": 0.0192,
       "width": 0.1922,
       "title": "β = 0.019"
     },
     {
-      "from": "White House & Party Messaging",
+      "from": "5",
       "to": "support abortion",
       "value": 0.0173,
       "width": 0.1733,
       "title": "β = 0.017"
     },
     {
-      "from": "White House & Party Messaging",
+      "from": "5",
       "to": "draft opinion",
       "value": 0.0149,
       "width": 0.149,
       "title": "β = 0.015"
     },
     {
-      "from": "White House & Party Messaging",
+      "from": "5",
       "to": "republican party",
       "value": 0.0144,
       "width": 0.144,
       "title": "β = 0.014"
     },
     {
-      "from": "White House & Party Messaging",
+      "from": "5",
       "to": "democratic party",
       "value": 0.0111,
       "width": 0.1114,
       "title": "β = 0.011"
     },
     {
-      "from": "White House & Party Messaging",
+      "from": "5",
       "to": "oppose abortion",
       "value": 0.0106,
       "width": 0.1056,
       "title": "β = 0.011"
     },
     {
-      "from": "White House & Party Messaging",
+      "from": "5",
       "to": "pro choice",
       "value": 0.0104,
       "width": 0.1042,
       "title": "β = 0.01"
     },
     {
-      "from": "White House & Party Messaging",
+      "from": "5",
       "to": "vice president",
       "value": 0.0099,
       "width": 0.0995,

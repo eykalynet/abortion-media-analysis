@@ -220,350 +220,350 @@
   ],
   "edges": [
     {
-      "from": "Supreme Court & Leaks",
+      "from": "1",
       "to": "supreme court",
       "value": 0.0843,
       "width": 0.8428,
       "title": "β = 0.084"
     },
     {
-      "from": "Supreme Court & Leaks",
+      "from": "1",
       "to": "pro life",
       "value": 0.0623,
       "width": 0.6233,
       "title": "β = 0.062"
     },
     {
-      "from": "Supreme Court & Leaks",
+      "from": "1",
       "to": "pro choice",
       "value": 0.0328,
       "width": 0.3284,
       "title": "β = 0.033"
     },
     {
-      "from": "Supreme Court & Leaks",
+      "from": "1",
       "to": "health care",
       "value": 0.0289,
       "width": 0.2894,
       "title": "β = 0.029"
     },
     {
-      "from": "Supreme Court & Leaks",
+      "from": "1",
       "to": "15 week",
       "value": 0.02,
       "width": 0.1997,
       "title": "β = 0.02"
     },
     {
-      "from": "Supreme Court & Leaks",
+      "from": "1",
       "to": "abortion provider",
       "value": 0.0197,
       "width": 0.1975,
       "title": "β = 0.02"
     },
     {
-      "from": "Supreme Court & Leaks",
+      "from": "1",
       "to": "ban abortion",
       "value": 0.0152,
       "width": 0.1517,
       "title": "β = 0.015"
     },
     {
-      "from": "Supreme Court & Leaks",
+      "from": "1",
       "to": "court decision",
       "value": 0.0123,
       "width": 0.1232,
       "title": "β = 0.012"
     },
     {
-      "from": "Supreme Court & Leaks",
+      "from": "1",
       "to": "unborn child",
       "value": 0.0106,
       "width": 0.1064,
       "title": "β = 0.011"
     },
     {
-      "from": "Supreme Court & Leaks",
+      "from": "1",
       "to": "samuel alito",
       "value": 0.0105,
       "width": 0.1052,
       "title": "β = 0.011"
     },
     {
-      "from": "Moral Arguments",
+      "from": "2",
       "to": "pro life",
       "value": 0.0779,
       "width": 0.7787,
       "title": "β = 0.078"
     },
     {
-      "from": "Moral Arguments",
+      "from": "2",
       "to": "pro abortion",
       "value": 0.0238,
       "width": 0.2378,
       "title": "β = 0.024"
     },
     {
-      "from": "Moral Arguments",
+      "from": "2",
       "to": "abortion access",
       "value": 0.0232,
       "width": 0.2315,
       "title": "β = 0.023"
     },
     {
-      "from": "Moral Arguments",
+      "from": "2",
       "to": "pro choice",
       "value": 0.0202,
       "width": 0.2017,
       "title": "β = 0.02"
     },
     {
-      "from": "Moral Arguments",
+      "from": "2",
       "to": "draft opinion",
       "value": 0.0191,
       "width": 0.1908,
       "title": "β = 0.019"
     },
     {
-      "from": "Moral Arguments",
+      "from": "2",
       "to": "hyde amendment",
       "value": 0.0186,
       "width": 0.1864,
       "title": "β = 0.019"
     },
     {
-      "from": "Moral Arguments",
+      "from": "2",
       "to": "anti abortion",
       "value": 0.0168,
       "width": 0.1678,
       "title": "β = 0.017"
     },
     {
-      "from": "Moral Arguments",
+      "from": "2",
       "to": "texas law",
       "value": 0.0158,
       "width": 0.1577,
       "title": "β = 0.016"
     },
     {
-      "from": "Moral Arguments",
+      "from": "2",
       "to": "health care",
       "value": 0.0137,
       "width": 0.1365,
       "title": "β = 0.014"
     },
     {
-      "from": "Moral Arguments",
+      "from": "2",
       "to": "president trump",
       "value": 0.0125,
       "width": 0.1246,
       "title": "β = 0.012"
     },
     {
-      "from": "Faith & Institutions",
+      "from": "3",
       "to": "supreme court",
       "value": 0.1037,
       "width": 1.0375,
       "title": "β = 0.104"
     },
     {
-      "from": "Faith & Institutions",
+      "from": "3",
       "to": "health organization",
       "value": 0.0194,
       "width": 0.1937,
       "title": "β = 0.019"
     },
     {
-      "from": "Faith & Institutions",
+      "from": "3",
       "to": "abortion provider",
       "value": 0.0192,
       "width": 0.192,
       "title": "β = 0.019"
     },
     {
-      "from": "Faith & Institutions",
+      "from": "3",
       "to": "texas law",
       "value": 0.0191,
       "width": 0.1907,
       "title": "β = 0.019"
     },
     {
-      "from": "Faith & Institutions",
+      "from": "3",
       "to": "15 week",
       "value": 0.0154,
       "width": 0.1541,
       "title": "β = 0.015"
     },
     {
-      "from": "Faith & Institutions",
+      "from": "3",
       "to": "pro choice",
       "value": 0.0146,
       "width": 0.1456,
       "title": "β = 0.015"
     },
     {
-      "from": "Faith & Institutions",
+      "from": "3",
       "to": "holy communion",
       "value": 0.0145,
       "width": 0.1448,
       "title": "β = 0.014"
     },
     {
-      "from": "Faith & Institutions",
+      "from": "3",
       "to": "abortion access",
       "value": 0.0134,
       "width": 0.1338,
       "title": "β = 0.013"
     },
     {
-      "from": "Faith & Institutions",
+      "from": "3",
       "to": "san francisco",
       "value": 0.0125,
       "width": 0.1255,
       "title": "β = 0.013"
     },
     {
-      "from": "Faith & Institutions",
+      "from": "3",
       "to": "pro abortion",
       "value": 0.0118,
       "width": 0.1178,
       "title": "β = 0.012"
     },
     {
-      "from": "Clinic Laws & Enforcement",
+      "from": "4",
       "to": "supreme court",
       "value": 0.0878,
       "width": 0.8777,
       "title": "β = 0.088"
     },
     {
-      "from": "Clinic Laws & Enforcement",
+      "from": "4",
       "to": "pro life",
       "value": 0.065,
       "width": 0.6498,
       "title": "β = 0.065"
     },
     {
-      "from": "Clinic Laws & Enforcement",
+      "from": "4",
       "to": "anti abortion",
       "value": 0.0364,
       "width": 0.3643,
       "title": "β = 0.036"
     },
     {
-      "from": "Clinic Laws & Enforcement",
+      "from": "4",
       "to": "abortion clinic",
       "value": 0.0358,
       "width": 0.3581,
       "title": "β = 0.036"
     },
     {
-      "from": "Clinic Laws & Enforcement",
+      "from": "4",
       "to": "abortion ban",
       "value": 0.0144,
       "width": 0.1441,
       "title": "β = 0.014"
     },
     {
-      "from": "Clinic Laws & Enforcement",
+      "from": "4",
       "to": "court justice",
       "value": 0.014,
       "width": 0.1396,
       "title": "β = 0.014"
     },
     {
-      "from": "Clinic Laws & Enforcement",
+      "from": "4",
       "to": "term abortion",
       "value": 0.0138,
       "width": 0.138,
       "title": "β = 0.014"
     },
     {
-      "from": "Clinic Laws & Enforcement",
+      "from": "4",
       "to": "health care",
       "value": 0.0137,
       "width": 0.1374,
       "title": "β = 0.014"
     },
     {
-      "from": "Clinic Laws & Enforcement",
+      "from": "4",
       "to": "democratic party",
       "value": 0.0135,
       "width": 0.1351,
       "title": "β = 0.014"
     },
     {
-      "from": "Clinic Laws & Enforcement",
+      "from": "4",
       "to": "draft opinion",
       "value": 0.0132,
       "width": 0.1322,
       "title": "β = 0.013"
     },
     {
-      "from": "Federal Debate & Drafts",
+      "from": "5",
       "to": "supreme court",
       "value": 0.0792,
       "width": 0.7918,
       "title": "β = 0.079"
     },
     {
-      "from": "Federal Debate & Drafts",
+      "from": "5",
       "to": "ban abortion",
       "value": 0.04,
       "width": 0.4001,
       "title": "β = 0.04"
     },
     {
-      "from": "Federal Debate & Drafts",
+      "from": "5",
       "to": "pro life",
       "value": 0.0366,
       "width": 0.3663,
       "title": "β = 0.037"
     },
     {
-      "from": "Federal Debate & Drafts",
+      "from": "5",
       "to": "abortion law",
       "value": 0.0253,
       "width": 0.2527,
       "title": "β = 0.025"
     },
     {
-      "from": "Federal Debate & Drafts",
+      "from": "5",
       "to": "abortion provider",
       "value": 0.0251,
       "width": 0.2509,
       "title": "β = 0.025"
     },
     {
-      "from": "Federal Debate & Drafts",
+      "from": "5",
       "to": "health care",
       "value": 0.0218,
       "width": 0.2179,
       "title": "β = 0.022"
     },
     {
-      "from": "Federal Debate & Drafts",
+      "from": "5",
       "to": "draft opinion",
       "value": 0.0185,
       "width": 0.1852,
       "title": "β = 0.019"
     },
     {
-      "from": "Federal Debate & Drafts",
+      "from": "5",
       "to": "anti abortion",
       "value": 0.0157,
       "width": 0.1567,
       "title": "β = 0.016"
     },
     {
-      "from": "Federal Debate & Drafts",
+      "from": "5",
       "to": "court decision",
       "value": 0.0137,
       "width": 0.1369,
       "title": "β = 0.014"
     },
     {
-      "from": "Federal Debate & Drafts",
+      "from": "5",
       "to": "samuel alito",
       "value": 0.0098,
       "width": 0.0978,
