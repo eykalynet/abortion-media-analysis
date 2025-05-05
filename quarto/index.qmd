@@ -479,7 +479,7 @@ throughout.
 
 To visualize how *The New York Times’* framing of abortion evolved over time, we animated the top bigrams appearing in abortion-related articles each month from **2020** to **2024**.
 
-<iframe src="../echarts/animated_bar_charts_fox.html" width="100%" height="500px" style="border: none;"></iframe>  
+<iframe src="../echarts/animated_bar_charts_nyt.html" width="100%" height="500px" style="border: none;"></iframe>  
 
 In **early 2020**, bigrams like *health care*, *pro life*, and *women's health* were prominent, reflecting a healthcare- and ideologically-focused framing of abortion. In **September 2021**, with [Texas’s SB8 law](https://en.wikipedia.org/wiki/Texas_Senate_Bill_8) going into effect, terms like *texas law* and *planned parenthood* surged.
 
@@ -508,18 +508,10 @@ Throughout the entire four year, there are mentions of *communion*, and the *cat
 
 This wider thematic spread reflects the surge in *media attention* and *public discourse* in the lead-up to and aftermath of the overturning of [*Roe v. Wade*](https://www.oyez.org/cases/1971/70-18)—capturing debates around health care, law, religion, and personal trauma in equal measure.
 
-::: {.callout-tip title="What’s Next?"}
-
-With everything ramping up toward the end of the semester (finals, projects, life), there are still a few things we want to finish up.
-
-We’re planning to **run topic modeling** (basically like clustering, but for text) by media outlet and pre-/post-*Dobbs*, then generate word clouds to help visualize recurring themes. We also want to **create a U.S. state-level abortion ban map** using data from the [Guttmacher Institute](https://www.guttmacher.org/) to show geographic patterns in post-*Dobbs* restrictions.
-
-We’re also hoping to **add more annotations** to our graphs to mark key policy changes across the timeline again using Guttmacher’s policy tracker to help explain some of the sharper shifts in language or focus.
-
-Lastly (and maybe a stretch, but we’ll see), we’re exploring how to **make the animated bar graphs interactive**, so viewers can pause, replay, or jump to specific months.
-
-:::
-
+<iframe src="../echarts/network_fox_preroe.html" width="100%" height="500px" style="border: none;"></iframe>  
+<iframe src="../echarts/network_fox_postroe.html" width="100%" height="500px" style="border: none;"></iframe>  
+<iframe src="../echarts/network_nyt_preroe.html" width="100%" height="500px" style="border: none;"></iframe>  
+<iframe src="../echarts/network_nyt_postroe.html" width="100%" height="500px" style="border: none;"></iframe>  
 
 
 
