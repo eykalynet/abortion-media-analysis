@@ -1,0 +1,108 @@
+---
+title: "Network of Bigrams Per Outlet and Per Time"
+author: "Maigan Lafontant, Emilie Ward, and Erika Salvador"
+format:
+  html:
+    include-in-header: fonts.html
+---
+
+```{r}
+#| label: set-up
+
+# ================================================================
+# Step 0: Load Packages and Fonts
+# ================================================================
+
+library(tidyverse)
+library(tidytext)
+library(lubridate)
+library(ggiraph)
+library(data.table)
+library(zoo)
+library(ggimage)
+library(sysfonts)
+library(showtext)
+library(htmlwidgets)
+library(gdtools)
+
+# Font setup
+showtext_auto()
+register_gfont("News Cycle")
+font_add_google("News Cycle", "News Cycle")  
+```
+
+## Step 1. Define Function to Render and Save Network to HTML
+
+To streamline the visualization process, we defined a reusable function `render_and_save_network()` that dynamically loads a JSON file containing node and edge data for a specified outlet and time period (e.g., Fox News during the Pre-Roe period). This function applies consistent styling such as custom font, rounded rectangles for nodes, and force-directed physics for layout optimization to enhance readability and prevent node overlap.
+
+```{r}
+#| label: step-1
+
+# ================================================================
+# Step 1: Define Function to Render and Save Network to HTML
+# ================================================================
+
+render_and_save_network <- function(outlet, period, title_text) {
+  # Construct file paths
+  json_file <- sprintf("../data/wrangled/networks/network_%s_%s.json", tolower(outlet), tolower(gsub("-", "", period)))
+  output_file <- sprintf("network_%s_%s.html", tolower(outlet), tolower(gsub("-", "", period)))
+
+  # Load and style data
+  network_data <- fromJSON(json_file)
+  network_data$nodes$shapeProperties <- lapply(seq_len(nrow(network_data$nodes)), function(i) list(borderRadius = 10))
+  network_data$nodes$font <- lapply(seq_len(nrow(network_data$nodes)), function(i) list(size = 16, face = "News Cycle", multi = "html"))
+
+  # Build UI
+  network_plot <- tagList(
+    h3(title_text, style = "font-family: 'News Cycle'; text-align: center; margin-bottom: 25px;"),
+    visNetwork(network_data$nodes, network_data$edges, width = "100%", height = "800px") %>%
+      visOptions(
+        highlightNearest = list(enabled = TRUE, degree = 1, hover = TRUE),
+        nodesIdSelection = TRUE
+      ) %>%
+      visEdges(smooth = FALSE) %>%
+      visPhysics(
+        solver = "forceAtlas2Based",
+        forceAtlas2Based = list(
+          gravitationalConstant = -50,
+          springLength = 150,
+          springConstant = 0.05
+        ),
+        maxVelocity = 50,
+        minVelocity = 0.75,
+        stabilization = list(enabled = TRUE, iterations = 200)
+      ) %>%
+      visLayout(randomSeed = 123)
+  )
+
+  # Save HTML
+  save_html(network_plot, file = output_file, background = "white")
+}
+
+```
+
+## Step 2. Render Fox News Networks
+
+```{r}
+#| label: step-2
+
+# ================================================================
+# Step 2: Fox News Networks
+# ================================================================
+
+render_and_save_network("Fox", "Pre-Roe",  "Network of Topics in Abortion Articles for Fox News (Pre-Roe)")
+render_and_save_network("Fox", "Post-Roe", "Network of Topics in Abortion Articles for Fox News (Post-Roe)")
+```
+
+## Step 3. Render The New York Times Networks
+
+```{r}
+#| label: step-3
+
+# ================================================================
+# Step 3: The New York Times Networks
+# ================================================================
+
+render_and_save_network("NYT", "Pre-Roe",  "Network of Topics in Abortion Articles for New York Times (Pre-Roe)")
+render_and_save_network("NYT", "Post-Roe", "Network of Topics in Abortion Articles for New York Times (Post-Roe)")
+```
