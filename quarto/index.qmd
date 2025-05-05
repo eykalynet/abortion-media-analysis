@@ -11,7 +11,6 @@ editor:
     wrap: 72
 bibliography: bib/library.bib
 csl: bib/american-statistical-association.csl
-css: styles.css
 ---
 
 ```{r}
@@ -573,18 +572,22 @@ around health care, law, religion, and personal trauma in equal measure.
 
 # The Knots and Threads of Abortion Discourse
 
-<iframe src="../echarts/network_fox_preroe.html" width="100%" height="500px" style="border: none;">
+::: panel-tabset
 
-</iframe>
+### Fox – Pre-Roe
 
-<iframe src="../echarts/network_fox_postroe.html" width="100%" height="500px" style="border: none;">
+<iframe src="../echarts/network_fox_preroe.html" width="100%" height="500px" style="border: none;"></iframe>
 
-</iframe>
+### Fox – Post-Roe
 
-<iframe src="../echarts/network_nyt_preroe.html" width="100%" height="500px" style="border: none;">
+<iframe src="../echarts/network_fox_postroe.html" width="100%" height="500px" style="border: none;"></iframe>
 
-</iframe>
+### NYT – Pre-Roe
 
-<iframe src="../echarts/network_nyt_postroe.html" width="100%" height="500px" style="border: none;">
+<iframe src="../echarts/network_nyt_preroe.html" width="100%" height="500px" style="border: none;"></iframe>
 
-</iframe>
+### NYT – Post-Roe
+
+<iframe src="../echarts/network_nyt_postroe.html" width="100%" height="500px" style="border: none;"></iframe>
+
+:::
