@@ -318,6 +318,7 @@ Since ECharts is built for the web, it expects data to be in standard JSON forma
 # =================================================================
 # Step 10: Generate Data for Networks
 # =================================================================
+
 get_visnetwork_data <- function(df, outlet_input, period_input) {
   df <- df |> filter(outlet == outlet_input, period == period_input)
 
