@@ -45,34 +45,35 @@ To streamline the visualization process, we defined a reusable function `render_
 # Step 1: Define Function to Render and Save Network to HTML
 # ================================================================
 
-render_and_save_network <- function(outlet, period, title_text) {
-  # Construct file paths
-  json_file <- sprintf("../data/wrangled/networks/network_%s_%s.json", tolower(outlet), tolower(gsub("-", "", period)))
-  output_file <- sprintf("network_%s_%s.html", tolower(outlet), tolower(gsub("-", "", period)))
+# Function 1: Build network plot
+build_network_plot <- function(outlet, period, title_text) {
+  # File path
+  json_file <- sprintf("../data/wrangled/networks/network_%s_%s.json", 
+                       tolower(outlet), tolower(gsub("-", "", period)))
 
-  # Load and style data
-  network_data <- fromJSON(json_file)
+  # Load network data
+  network_data <- jsonlite::fromJSON(json_file)
 
-  # Always use Pre-Roe font color and style
-  font_color <- "black"
+  # Font color logic
+  font_color <- if (period == "Post-Roe") "white" else "black"
 
-  # Apply Pre-Roe style: rounded corners and black font
-  network_data$nodes$shapeProperties <- seq_len(nrow(network_data$nodes)) |> 
+  # Apply styling
+  network_data$nodes$shapeProperties <- seq_len(nrow(network_data$nodes)) |>
     lapply(\(i) list(borderRadius = 10))
-
-  network_data$nodes$font <- seq_len(nrow(network_data$nodes)) |> 
+  network_data$nodes$font <- seq_len(nrow(network_data$nodes)) |>
     lapply(\(i) list(size = 16, face = "News Cycle", color = font_color, multi = "html"))
 
-  # Build UI
-  network_plot <- tagList(
-    h3(title_text, style = "font-family: 'News Cycle'; text-align: center; margin-bottom: 25px;"),
-    visNetwork(network_data$nodes, network_data$edges, width = "100%", height = "800px") |>
-      visOptions(
+  # Build visNetwork plot with a title
+  htmltools::tagList(
+    htmltools::tags$h3(title_text, 
+      style = "font-family: 'News Cycle'; text-align: center; margin-bottom: 25px;"),
+    visNetwork::visNetwork(network_data$nodes, network_data$edges, width = "100%", height = "800px") |>
+      visNetwork::visOptions(
         highlightNearest = list(enabled = TRUE, degree = 1, hover = TRUE),
         nodesIdSelection = TRUE
       ) |>
-      visEdges(smooth = FALSE) |>
-      visPhysics(
+      visNetwork::visEdges(smooth = FALSE) |>
+      visNetwork::visPhysics(
         solver = "forceAtlas2Based",
         forceAtlas2Based = list(
           gravitationalConstant = -50,
@@ -83,36 +84,44 @@ render_and_save_network <- function(outlet, period, title_text) {
         minVelocity = 0.75,
         stabilization = list(enabled = TRUE, iterations = 200)
       ) |>
-      visLayout(randomSeed = 123)
+      visNetwork::visLayout(randomSeed = 123)
   )
-
-  # Save HTML
-  save_html(network_plot, file = output_file, background = "white")
 }
+
+# Function 2: Save the rendered plot to HTML
+save_network_plot <- function(plot_obj, outlet, period) {
+  output_file <- sprintf("network_%s_%s.html", 
+                         tolower(outlet), tolower(gsub("-", "", period)))
+
+  # Save only the visNetwork part of the tagList (2nd element)
+  htmlwidgets::saveWidget(plot_obj[[2]], file = output_file, background = "white")
+}
+
 ```
 
-## Step 2. Render Fox News Networks
+## Step 2. Render Networks
 
 ```{r}
 #| label: step-2
 
 # ================================================================
-# Step 2: Fox News Networks
+# Step 2: Render Networks
 # ================================================================
 
-render_and_save_network("Fox", "Pre-Roe",  "Network of Topics in Abortion Articles for Fox News (Pre-Roe)")
-render_and_save_network("Fox", "Post-Roe", "Network of Topics in Abortion Articles for Fox News (Post-Roe)")
-```
+# Define combinations
+outlets <- c("Fox", "NYT")
+periods <- c("Pre-Roe", "Post-Roe")
 
-## Step 3. Render The New York Times Networks
+# Loop through each combination
+for (outlet in outlets) {
+  for (period in periods) {
+    # Create title
+    title_text <- sprintf("Network of Topics in Abortion Articles for %s (%s)", outlet, period)
+    
+    # Build and save plot
+    plot_obj <- build_network_plot(outlet, period, title_text)
+    save_network_plot(plot_obj, outlet, period)
+  }
+}
 
-```{r}
-#| label: step-3
-
-# ================================================================
-# Step 3: The New York Times Networks
-# ================================================================
-
-render_and_save_network("NYT", "Pre-Roe",  "Network of Topics in Abortion Articles for New York Times (Pre-Roe)")
-render_and_save_network("NYT", "Post-Roe", "Network of Topics in Abortion Articles for New York Times (Post-Roe)")
 ```
