@@ -83,16 +83,24 @@ build_network_plot <- function(outlet, period, title_text) {
 save_network_with_font <- function(widget, outlet, period) {
   filename <- sprintf("network_%s_%s.html", tolower(outlet), tolower(gsub("-", "", period)))
 
-  # Save and inject News Cycle font
+  # Save widget with selfcontained = TRUE
   htmlwidgets::saveWidget(widget, file = filename, selfcontained = TRUE)
 
   html_lines <- readLines(filename)
   font_link <- '<link href="https://fonts.googleapis.com/css2?family=News+Cycle&display=swap" rel="stylesheet">'
   font_style <- '<style>body { font-family: "News Cycle", sans-serif; }</style>'
-  insert_at <- grep("<head>", html_lines, fixed = TRUE) + 1
-  html_lines <- append(html_lines, values = c(font_link, font_style), after = insert_at)
-  writeLines(html_lines, filename)
+
+  insert_at <- grep("<head>", html_lines, fixed = TRUE)
+
+  if (length(insert_at) > 0) {
+    html_lines <- append(html_lines, values = c(font_link, font_style), after = insert_at[1])
+    writeLines(html_lines, filename)
+  } else {
+    warning("Could not inject font: <head> tag not found in HTML file.")
+  }
 }
+
+
 ```
 
 ## Step 2. Render Networks

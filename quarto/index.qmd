@@ -418,8 +418,9 @@ Since we’ve been talking about how *Fox News* devoted a large volume of
 coverage to abortion, let’s first take a closer look at the tone of that
 coverage.
 
-<iframe src="../echarts/interactive_calendar_fox.html" width="100%" height="690px" style="border: none;"></iframe>
+<iframe src="../echarts/interactive_calendar_fox.html" width="100%" height="690px" style="border: none;">
 
+</iframe>
 
 While *Fox News* consistently produced abortion-related articles
 throughout the 2020–2024 period, its emotional tone varied more subtly
@@ -440,7 +441,9 @@ spread out across weeks.
 After exploring how *Fox News* covered abortion in both volume and tone,
 it’s worth asking: **how does *The New York Times* compare?**
 
-<iframe src="../echarts/interactive_calendar_NYT.html" width="100%" height="690px" style="border: none;"></iframe>
+<iframe src="../echarts/interactive_calendar_NYT.html" width="100%" height="690px" style="border: none;">
+
+</iframe>
 
 Surprisingly, it’s *The New York Times* that reads as more restrained.
 In contrast to *Fox’s* more visibly fluctuating sentiment, the *Times*
@@ -478,43 +481,110 @@ throughout.
 
 # Running the Narrative Race
 
-To visualize how *The New York Times’* framing of abortion evolved over time, we animated the top bigrams appearing in abortion-related articles each month from **2020** to **2024**.
+To visualize how *The New York Times’* framing of abortion evolved over
+time, we animated the top bigrams appearing in abortion-related articles
+each month from **2020** to **2024**.
 
-<iframe src="../echarts/animated_bar_charts_nyt.html" width="100%" height="500px" style="border: none;"></iframe>  
+<iframe src="../echarts/animated_bar_charts_nyt.html" width="100%" height="500px" style="border: none;">
 
-In **early 2020**, bigrams like *health care*, *pro life*, and *women's health* were prominent, reflecting a healthcare- and ideologically-focused framing of abortion. In **September 2021**, with [Texas’s SB8 law](https://en.wikipedia.org/wiki/Texas_Senate_Bill_8) going into effect, terms like *texas law* and *planned parenthood* surged.
+</iframe>
 
-By **May and June 2022**, during the [leaked draft opinion of *Dobbs v. Jackson Women's Health Organization*](https://www.politico.com/news/2022/05/02/supreme-court-abortion-draft-opinion-00029473) and the eventual [Dobbs decision](https://www.supremecourt.gov/opinions/21pdf/19-1392_6j37.pdf), legal terms like *court decision* became prominent and terminology surrounding *rights* and *laws* shaped the overall discourse, marking a shift to more court-centric, legal framing of abortion discourse.
+In **early 2020**, bigrams like *health care*, *pro life*, and *women's
+health* were prominent, reflecting a healthcare- and
+ideologically-focused framing of abortion. In **September 2021**, with
+[Texas’s SB8 law](https://en.wikipedia.org/wiki/Texas_Senate_Bill_8)
+going into effect, terms like *texas law* and *planned parenthood*
+surged.
 
-Following the **Dobbs** decision, phrases like *overturn roe* and *court decision* remained dominant. At the same time, healthcare-focused language persisted with *health care*, while *ballot measures* rose to prominence during state-level campaigns in [Kansas](https://www.kansascity.com/news/politics-government/article264005286.html) and [Ohio](https://www.npr.org/2023/11/08/1211521603/ohio-election-abortion-rights-issue-1).
+By **May and June 2022**, during the [leaked draft opinion of *Dobbs v.
+Jackson Women's Health
+Organization*](https://www.politico.com/news/2022/05/02/supreme-court-abortion-draft-opinion-00029473)
+and the eventual [Dobbs
+decision](https://www.supremecourt.gov/opinions/21pdf/19-1392_6j37.pdf),
+legal terms like *court decision* became prominent and terminology
+surrounding *rights* and *laws* shaped the overall discourse, marking a
+shift to more court-centric, legal framing of abortion discourse.
 
-The presence of terms like *12 weeks*, *15 weeks*, *shield laws*, and *aid access* reflects the growing complexity of abortion policy post-*Roe*, especially surrounding medication abortion and interstate protections.
+Following the **Dobbs** decision, phrases like *overturn roe* and *court
+decision* remained dominant. At the same time, healthcare-focused
+language persisted with *health care*, while *ballot measures* rose to
+prominence during state-level campaigns in
+[Kansas](https://www.kansascity.com/news/politics-government/article264005286.html)
+and
+[Ohio](https://www.npr.org/2023/11/08/1211521603/ohio-election-abortion-rights-issue-1).
 
-As the articles move through **2023** and **2024** mentions of *election results*, *ballot measures* as well as the *republican sentate* and the *democratic party* demonstrate the growingly politicized nature of abortion articles. In **September 2024** as the election comes close metions of *Kamala Harris*, *Donald Trump*, and *JD Vance* are at the forefront of the discourse around abortion.
+The presence of terms like *12 weeks*, *15 weeks*, *shield laws*, and
+*aid access* reflects the growing complexity of abortion policy
+post-*Roe*, especially surrounding medication abortion and interstate
+protections.
 
-**Overall**, we see how *The New York Times* coverage adapted in real time to political events—shifting from national healthcare debates to increasingly legal and rights-based discourse.
+As the articles move through **2023** and **2024** mentions of *election
+results*, *ballot measures* as well as the *republican sentate* and the
+*democratic party* demonstrate the growingly politicized nature of
+abortion articles. In **September 2024** as the election comes close
+metions of *Kamala Harris*, *Donald Trump*, and *JD Vance* are at the
+forefront of the discourse around abortion.
 
+**Overall**, we see how *The New York Times* coverage adapted in real
+time to political events—shifting from national healthcare debates to
+increasingly legal and rights-based discourse.
 
-We did the similar thing for Fox News. 
+We did the similar thing for Fox News.
 
-<iframe src="../echarts/animated_bar_charts_fox.html" width="100%" height="500px" style="border: none;"></iframe>  
+<iframe src="../echarts/animated_bar_charts_fox.html" width="100%" height="500px" style="border: none;">
 
-We consistently see *health care* as a primary focus each year, but especially in **2020**, there was a heightened emphasis on *public care*, with frequent mentions of phrases like *affordable care*, *care access*, and *medical progress*.
+</iframe>
 
-A focus on the pregnancy and the fetus top bigrams, *unborn children*, *fetal heartbeat*, and *partial birth* in  in **February 2021**. Articles in 2021 have an increasing focus on the pregnancy and the fetus when disscusing abortion. While **2020** centered more on *medicine*, *public health*, and social institutions impacted by abortion laws, **2021** marks a shift toward individual experiences and situations of pregnancy, mothers, and children.
+We consistently see *health care* as a primary focus each year, but
+especially in **2020**, there was a heightened emphasis on *public
+care*, with frequent mentions of phrases like *affordable care*, *care
+access*, and *medical progress*.
 
-During **May 2022** and **June 2022* the [*Dobbs v. Jackson Women's Health Organization* decision](https://www.supremecourt.gov/opinions/21pdf/19-1392_6j37.pdf) is at the forefront of media with a large spike in *supreme court*, *court decision*, and *court ruling* in the vocabulary of many articles. After the descion there is an increased use in *anti/pro* discourse. Terms such as pro life are matched with pro choice and anti abortion is matched with pro abortion to reflect the focus on the polarized nature of the abortion in the aftermath of the decision. 
+A focus on the pregnancy and the fetus top bigrams, *unborn children*,
+*fetal heartbeat*, and *partial birth* in in **February 2021**. Articles
+in 2021 have an increasing focus on the pregnancy and the fetus when
+disscusing abortion. While **2020** centered more on *medicine*, *public
+health*, and social institutions impacted by abortion laws, **2021**
+marks a shift toward individual experiences and situations of pregnancy,
+mothers, and children.
 
-Throughout the entire four year, there are mentions of *communion*, and the *catholic faith* in **November 2020**, *religious freedom*, in **December 2020** and *satanic temple* in **Feburary 2023**, suggesting relgious narrative and arguments surrounding abortion. We see more striking terms such as *rape incest*, *gender identity*, and *15 weeks* like we saw in the NYT articles, suggesting the complex narratives and range of perspectives in the current media discussions about abortion. 
+During **May 2022** and \*\*June 2022\* the [*Dobbs v. Jackson Women's
+Health Organization*
+decision](https://www.supremecourt.gov/opinions/21pdf/19-1392_6j37.pdf)
+is at the forefront of media with a large spike in *supreme court*,
+*court decision*, and *court ruling* in the vocabulary of many articles.
+After the descion there is an increased use in *anti/pro* discourse.
+Terms such as pro life are matched with pro choice and anti abortion is
+matched with pro abortion to reflect the focus on the polarized nature
+of the abortion in the aftermath of the decision.
 
-This wider thematic spread reflects the surge in *media attention* and *public discourse* in the lead-up to and aftermath of the overturning of [*Roe v. Wade*](https://www.oyez.org/cases/1971/70-18)—capturing debates around health care, law, religion, and personal trauma in equal measure.
+Throughout the entire four year, there are mentions of *communion*, and
+the *catholic faith* in **November 2020**, *religious freedom*, in
+**December 2020** and *satanic temple* in **Feburary 2023**, suggesting
+relgious narrative and arguments surrounding abortion. We see more
+striking terms such as *rape incest*, *gender identity*, and *15 weeks*
+like we saw in the NYT articles, suggesting the complex narratives and
+range of perspectives in the current media discussions about abortion.
+
+This wider thematic spread reflects the surge in *media attention* and
+*public discourse* in the lead-up to and aftermath of the overturning of
+[*Roe v. Wade*](https://www.oyez.org/cases/1971/70-18)—capturing debates
+around health care, law, religion, and personal trauma in equal measure.
 
 # The Knots and Threads of Abortion Discourse
 
-<iframe src="../echarts/network_fox_preroe.html" width="100%" height="500px" style="border: none;"></iframe>  
-<iframe src="../echarts/network_fox_postroe.html" width="100%" height="500px" style="border: none;"></iframe>  
-<iframe src="../echarts/network_nyt_preroe.html" width="100%" height="500px" style="border: none;"></iframe>  
-<iframe src="../echarts/network_nyt_postroe.html" width="100%" height="500px" style="border: none;"></iframe>  
+<iframe src="../echarts/network_fox_preroe.html" width="100%" height="500px" style="border: none;">
 
+</iframe>
 
+<iframe src="../echarts/network_fox_postroe.html" width="100%" height="500px" style="border: none;">
 
+</iframe>
+
+<iframe src="../echarts/network_nyt_preroe.html" width="100%" height="500px" style="border: none;">
+
+</iframe>
+
+<iframe src="../echarts/network_nyt_postroe.html" width="100%" height="500px" style="border: none;">
+
+</iframe>
