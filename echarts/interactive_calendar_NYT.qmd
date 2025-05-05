@@ -1,5 +1,5 @@
 ---
-title: "Interactive Calendar of the Sentiment of Articles Published by Fox News (2020–2024)"
+title: "Interactive Calendar of the Sentiment of Articles Published by The New York Times (2020–2024)"
 author: "Maigan Lafontant, Emilie Ward, and Erika Salvador"
 format:
   html:
@@ -31,18 +31,18 @@ register_gfont("News Cycle")
 font_add_google("News Cycle", "News Cycle")  
 ```
 
-## Step 1. Load and Preprocess Fox News Sentiment Data
+## Step 1. Load and Preprocess The New York Times Sentiment Data
 
-This chunk loads and processes Fox News article data to compute a daily sentiment score. It uses the AFINN lexicon to assign numeric sentiment values to words and averages them across articles published on the same day.
+This chunk loads and processes The New York Times article data to compute a daily sentiment score. It uses the AFINN lexicon to assign numeric sentiment values to words and averages them across articles published on the same day.
 
 ```{r}
 #| label: step-1
 
 # ================================================================
-# Step 1: Load and Preprocess NYT Sentiment Data
+# Step 1: Load and Preprocess The New York Times Sentiment Data
 # ================================================================
 
-# Load the wrangled New York Times dataset 
+# Load the wrangled The New York Times News dataset 
 nyt <- read_csv("../data/wrangled/nyt_news_data_wrangled.csv")
 nyt <- as.data.table(nyt)  # Convert to data.table for faster manipulation
 
@@ -58,11 +58,14 @@ afinn <- get_sentiments("afinn")
 
 # Aggregate sentiment per article by summing token sentiment scores
 article_scores <- article_words |>
-  inner_join(afinn, by = "word") |>     # Join sentiment values for matched words
+  inner_join(afinn, by = "word") |>     # Join sentiment values for
+                                        # matched words
   group_by(article_id, pub_date) |>     # Group by article and date
-  summarise(article_sentiment = sum(value), .groups = "drop")  # Sum sentiment scores
+  summarise(article_sentiment = sum(value), .groups = "drop")  
+                                        # Sum sentiment scores
 
-# Average sentiment scores per day across all articles published on that day
+# Average sentiment scores per day across all articles published 
+# on that day
 nyt_sentiment <- article_scores |>
   mutate(pub_day = as.Date(pub_date)) |> # Convert datetime to date
   group_by(pub_day) |>                   # Group by day
@@ -84,25 +87,25 @@ This step constructs a full daily calendar covering the range of article dates. 
 
 # Create a complete sequence of daily dates from the dataset's 
 # start to end
-calendar_fox <- data.table(date = seq(min(fox_sentiment$date), max(fox_sentiment$date), by = "day"))
+calendar_nyt <- data.table(date = seq(min(nyt_sentiment$date), max(nyt_sentiment$date), by = "day"))
 
 # Merge calendar with daily sentiment scores (retain all days,
 # even missing sentiment)
-calendar_fox <- merge(calendar_fox, fox_sentiment, 
+calendar_nyt <- merge(calendar_nyt, nyt_sentiment, 
                       by = "date", all.x = TRUE)
 
 # Interpolate missing sentiment scores linearly (for visualization 
 # continuity)
-calendar_fox[, sentiment_score := na.approx(sentiment_score, 
+calendar_nyt[, sentiment_score := na.approx(sentiment_score, 
                                             na.rm = FALSE)]
 
 # Replace any remaining NAs (e.g., consecutive NAs at 
 # boundaries) with 0
-calendar_fox[is.na(sentiment_score), sentiment_score := 0]
+calendar_nyt[is.na(sentiment_score), sentiment_score := 0]
 
 # Extract temporal metadata: year, month, ISO week, weekday 
 # (1 = Monday), week of year
-calendar_fox[, `:=` (
+calendar_nyt[, `:=` (
   Year       = as.integer(format(date, "%Y")),
   month      = as.integer(format(date, "%m")),
   week       = as.integer(format(date, "%V")),
@@ -111,7 +114,7 @@ calendar_fox[, `:=` (
 )]
 
 # Replace problematic or missing week values with 1 as a fallback
-calendar_fox[is.na(weekofyear) | weekofyear <= 0, weekofyear := 1]
+calendar_nyt[is.na(weekofyear) | weekofyear <= 0, weekofyear := 1]
 
 # Define a list of key events (e.g., SCOTUS rulings, elections) 
 # with labels and dates
@@ -131,12 +134,12 @@ event_dates[, icon_path := "icons/newspaper.png"]
 
 # Merge event metadata into calendar; only rows with 
 # matching event dates get filled
-calendar_fox <- merge(calendar_fox, event_dates, 
+calendar_nyt <- merge(calendar_nyt, event_dates, 
                       by = "date", all.x = TRUE)
 
 ```
 
-## Step 4. Add Tooltip and Data ID Columns
+## Step 4. Add Tooltip and Data ID Columns 
 
 This step prepares metadata used in interactivity. It assigns an interpretation label to each day's sentiment score, builds a tooltip for hover display, and generates a unique identifier for each calendar cell to enable interactivity in `ggiraph`.
 
@@ -148,14 +151,14 @@ This step prepares metadata used in interactivity. It assigns an interpretation 
 # ================================================================
 
 # Classify sentiment interpretation based on sentiment score thresholds
-calendar_fox[, interpretation := fifelse(
+calendar_nyt[, interpretation := fifelse(
   sentiment_score > 10, "Positive",              
   fifelse(sentiment_score < -10, "Negative",    
           "Neutral")                             # Otherwise neutral
 )]
 
 # Create custom tooltips for interactive display
-calendar_fox[, tooltip := fifelse(
+calendar_nyt[, tooltip := fifelse(
   !is.na(label),     # If the row corresponds to a key event
   paste0(
     "<b>", label, "</b><br>",            # Bold event label
@@ -169,7 +172,7 @@ calendar_fox[, tooltip := fifelse(
 )]
 
 # Assign a unique ID for each day (used by girafe to track interactivity)
-calendar_fox[, data_id := paste0("day_", date)]
+calendar_nyt[, data_id := paste0("day_", date)]
 ```
 
 ## 5. Create Interactive Calendar
@@ -183,10 +186,10 @@ calendar_fox[, data_id := paste0("day_", date)]
 
 # Determine the maximum absolute sentiment score for a symmetric 
 # color scale
-range_max <- ceiling(max(abs(calendar_fox$sentiment_score), na.rm = TRUE))
+range_max <- ceiling(max(abs(calendar_nyt$sentiment_score), na.rm = TRUE))
 
 # Construct the ggplot calendar heatmap
-calendar_plot_fox <- ggplot(calendar_fox, aes(x = weekofyear, y = 8 - weekday)) +
+calendar_plot_nyt <- ggplot(calendar_nyt, aes(x = weekofyear, y = 8 - weekday)) +
 
   # Plot each day as an interactive tile with sentiment fill and tooltip
   geom_tile_interactive(
@@ -238,7 +241,7 @@ calendar_plot_fox <- ggplot(calendar_fox, aes(x = weekofyear, y = 8 - weekday)) 
   ) +
 
   # Add a title and theme
-  labs(title = "Sentiment Heatmap of Fox News Abortion Articles (2020–2024)") +
+  labs(title = "Sentiment Heatmap of The New York Times Abortion Articles (2020–2024)") +
 
   # Apply a clean, minimal theme with custom font and spacing
   theme_minimal(base_family = "News Cycle") +
@@ -256,7 +259,7 @@ calendar_plot_fox <- ggplot(calendar_fox, aes(x = weekofyear, y = 8 - weekday)) 
 
 ```
 
-## Step 6. Render Widget
+## Step 6. Render Widget 
 
 ```{r}
 #| label: step-6
@@ -266,7 +269,7 @@ calendar_plot_fox <- ggplot(calendar_fox, aes(x = weekofyear, y = 8 - weekday)) 
 # ================================================================
 
 interactive_calendar <- girafe(
-  ggobj = calendar_plot_fox,  # Pass the ggplot calendar
+  ggobj = calendar_plot_nyt,  # Pass the ggplot calendar
   options = list(
 
     # Highlight tile on hover with semi-opacity and thin gray border
@@ -306,7 +309,7 @@ We save the interactive chart as a standalone HTML file and manually inject the 
 # Step 7: Save as Standalone HTML with Embedded Font
 # ================================================================
 
-save_fox_chart <- function(chart, file_path = "fox_sentiment_calendar.html") {
+save_nyt_chart <- function(chart, file_path = "nyt_sentiment_calendar.html") {
   # Save the widget as a self-contained HTML
   saveWidget(chart, file = file_path, selfcontained = TRUE)
 
@@ -326,7 +329,6 @@ save_fox_chart <- function(chart, file_path = "fox_sentiment_calendar.html") {
 }
 
 # Execute the save function
-save_fox_chart(interactive_calendar)
+save_nyt_chart(interactive_calendar)
 ```
 
-# 
