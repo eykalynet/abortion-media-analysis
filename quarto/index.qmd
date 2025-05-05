@@ -417,7 +417,7 @@ Since we’ve been talking about how *Fox News* devoted a large volume of
 coverage to abortion, let’s first take a closer look at the tone of that
 coverage.
 
-<iframe src="../echarts/fox_sentiment_calendar.html" width="100%" height="650px" style="border: none;"></iframe>
+<iframe src="../echarts/interactive_calendar_fox.html" width="100%" height="690px" style="border: none;"></iframe>
 
 
 While *Fox News* consistently produced abortion-related articles
@@ -439,7 +439,7 @@ spread out across weeks.
 After exploring how *Fox News* covered abortion in both volume and tone,
 it’s worth asking: **how does *The New York Times* compare?**
 
-<iframe src="../echarts/nyt_sentiment_calendar.html" width="100%" height="650px" style="border: none;"></iframe>
+<iframe src="../echarts/interactive_calendar_NYT.html" width="100%" height="690px" style="border: none;"></iframe>
 
 Surprisingly, it’s *The New York Times* that reads as more restrained.
 In contrast to *Fox’s* more visibly fluctuating sentiment, the *Times*

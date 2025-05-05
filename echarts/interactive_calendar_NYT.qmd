@@ -24,7 +24,6 @@ library(showtext)
 library(htmlwidgets)
 library(gdtools)
 
-
 # Font setup
 showtext_auto()
 register_gfont("News Cycle")
@@ -85,26 +84,19 @@ This step constructs a full daily calendar covering the range of article dates. 
 # Step 3: Create Calendar and Merge Event Markers
 # ================================================================
 
-# Create a complete sequence of daily dates from the dataset's 
-# start to end
+# Create a complete sequence of daily dates from the dataset's start to end
 calendar_nyt <- data.table(date = seq(min(nyt_sentiment$date), max(nyt_sentiment$date), by = "day"))
 
-# Merge calendar with daily sentiment scores (retain all days,
-# even missing sentiment)
-calendar_nyt <- merge(calendar_nyt, nyt_sentiment, 
-                      by = "date", all.x = TRUE)
+# Merge calendar with daily sentiment scores (retain all days, even missing sentiment)
+calendar_nyt <- merge(calendar_nyt, nyt_sentiment, by = "date", all.x = TRUE)
 
-# Interpolate missing sentiment scores linearly (for visualization 
-# continuity)
-calendar_nyt[, sentiment_score := na.approx(sentiment_score, 
-                                            na.rm = FALSE)]
+# Interpolate missing sentiment scores linearly (for visualization continuity)
+calendar_nyt[, sentiment_score := na.approx(sentiment_score, na.rm = FALSE)]
 
-# Replace any remaining NAs (e.g., consecutive NAs at 
-# boundaries) with 0
+# Replace any remaining NAs (e.g., consecutive NAs at boundaries) with 0
 calendar_nyt[is.na(sentiment_score), sentiment_score := 0]
 
-# Extract temporal metadata: year, month, ISO week, weekday 
-# (1 = Monday), week of year
+# Extract temporal metadata: year, month, ISO week, weekday (1 = Monday), week of year
 calendar_nyt[, `:=` (
   Year       = as.integer(format(date, "%Y")),
   month      = as.integer(format(date, "%m")),
@@ -115,27 +107,6 @@ calendar_nyt[, `:=` (
 
 # Replace problematic or missing week values with 1 as a fallback
 calendar_nyt[is.na(weekofyear) | weekofyear <= 0, weekofyear := 1]
-
-# Define a list of key events (e.g., SCOTUS rulings, elections) 
-# with labels and dates
-event_dates <- data.table(
-  date = as.Date(c(
-    "2020-09-18", "2021-01-06", "2022-05-02", "2022-06-24",
-    "2023-04-07", "2023-08-08", "2024-03-26", "2024-08-19", "2024-11-05")),
-  label = c(
-    "RBG Dies", "Capitol Riot", "Dobbs Leak", "Roe Overturned",
-    "Mifepristone Ruling", "Ohio Ballot Fight", "SCOTUS Hearing",
-    "Republican Convention", "US Elections")
-)
-
-# Assign a newspaper icon to each event 
-# (used in visualization layer)
-event_dates[, icon_path := "icons/newspaper.png"]
-
-# Merge event metadata into calendar; only rows with 
-# matching event dates get filled
-calendar_nyt <- merge(calendar_nyt, event_dates, 
-                      by = "date", all.x = TRUE)
 
 ```
 
@@ -150,28 +121,23 @@ This step prepares metadata used in interactivity. It assigns an interpretation 
 # Step 4: Add Tooltip and Data ID Columns
 # ================================================================
 
-# Classify sentiment interpretation based on sentiment score thresholds
+# Classify sentiment interpretation based on threshold rules:
+# >10 = Positive, <-10 = Negative, otherwise = Neutral
 calendar_nyt[, interpretation := fifelse(
   sentiment_score > 10, "Positive",              
-  fifelse(sentiment_score < -10, "Negative",    
-          "Neutral")                             # Otherwise neutral
+  fifelse(sentiment_score < -10, "Negative", "Neutral")
 )]
 
-# Create custom tooltips for interactive display
-calendar_nyt[, tooltip := fifelse(
-  !is.na(label),     # If the row corresponds to a key event
-  paste0(
-    "<b>", label, "</b><br>",            # Bold event label
-    "Date: ", format(date, "%B %d, %Y") # Just show the date
-  ),
-  paste0(                                # Else, show detailed sentiment info
-    "Date: ", format(date, "%B %d, %Y"), "<br>",
-    "Sentiment Score: ", round(sentiment_score, 2), "<br>",
-    "Interpretation: ", interpretation
-  )
+# Create HTML-formatted tooltips that show:
+# (1) the date, (2) the exact sentiment score, and (3) its interpretation
+calendar_nyt[, tooltip := paste0(
+  "Date: ", format(date, "%B %d, %Y"), "<br>",
+  "Sentiment Score: ", round(sentiment_score, 2), "<br>",
+  "Interpretation: ", interpretation
 )]
 
-# Assign a unique ID for each day (used by girafe to track interactivity)
+# Generate a unique identifier for each date to enable interactivity
+# in ggiraph (used to highlight individual tiles)
 calendar_nyt[, data_id := paste0("day_", date)]
 ```
 
@@ -184,79 +150,70 @@ calendar_nyt[, data_id := paste0("day_", date)]
 # Step 5: Create Interactive ggplot Calendar
 # ================================================================
 
-# Determine the maximum absolute sentiment score for a symmetric 
-# color scale
+# Determine the maximum absolute sentiment score across all days
+# to center the diverging color scale around zero.
 range_max <- ceiling(max(abs(calendar_nyt$sentiment_score), na.rm = TRUE))
 
-# Construct the ggplot calendar heatmap
+# Begin constructing the calendar plot using ggplot2
 calendar_plot_nyt <- ggplot(calendar_nyt, aes(x = weekofyear, y = 8 - weekday)) +
 
-  # Plot each day as an interactive tile with sentiment fill and tooltip
+  # Plot each day as a tile, colored by sentiment score and made interactive with tooltip
   geom_tile_interactive(
     aes(
-      fill = sentiment_score,
-      tooltip = tooltip,
-      data_id = data_id
+      fill = sentiment_score,   # Fill color reflects sentiment score
+      tooltip = tooltip,        # Hover text
+      data_id = data_id         # ID for interactivity tracking
     ),
-    color = "grey90",     # Tile border color
-    size = 0.25,          # Border thickness
-    width = 0.95,         # Tile width (to reduce white space)
-    height = 0.95         # Tile height
+    color = "grey90",           # Light gray border around tiles
+    size = 0.25,                # Border thickness
+    width = 0.95,              # Slight padding to make grid spacing clear
+    height = 0.95              # Equal height to width ratio for square-ish tiles
   ) +
 
-  # Overlay event icons (e.g., SCOTUS decisions) using local PNG path
-  ggimage::geom_image(
-    aes(image = icon_path),
-    size = 0.085,         # Icon scaling factor
-    asp = 1.5,            # Aspect ratio for better vertical alignment
-    na.rm = TRUE          # Skip missing icons
-  ) +
-
-  # Configure fill color scale for sentiment: red = negative, blue = positive
+  # Use a diverging color scale: red = negative, white = neutral, blue = positive
   scale_fill_gradient2(
-    low = "#cf1322",      # Negative sentiment
-    mid = "white",        # Neutral sentiment
-    high = "#003f5c",     # Positive sentiment
-    midpoint = 0,
+    low = "#cf1322",            # Strong negative sentiment color
+    mid = "white",             # Neutral midpoint
+    high = "#003f5c",           # Strong positive sentiment color
+    midpoint = 0,               # Center scale at zero
     limits = c(-range_max, range_max),
     breaks = c(-range_max, 0, range_max),
     labels = c("Negative", "Neutral", "Positive"),
-    name = "Sentiment"
+    name = "Sentiment"          # Legend title
   ) +
 
-  # Create a vertical panel for each year (faceted by year)
+  # Facet plot vertically by year (one row per year)
   facet_wrap(~Year, ncol = 1, strip.position = "right") +
 
-  # Set vertical axis: 1 = Sunday, 7 = Saturday (flipped for better layout)
+  # Set Y-axis to show weekday names, reversed for visual clarity
   scale_y_continuous(
     name = NULL,
     breaks = 1:7,
     labels = c("Sun", "Sat", "Fri", "Thu", "Wed", "Tue", "Mon")
   ) +
 
-  # Set horizontal axis to represent ISO weeks
+  # Set X-axis to show ISO week numbers
   scale_x_continuous(
     name = "Week of Year",
-    expand = c(0, 0)      # Remove extra spacing around axes
+    expand = c(0, 0)  # Remove excess space around axis
   ) +
 
-  # Add a title and theme
-  labs(title = "Sentiment Heatmap of Fox News Articles") +
+  # Add a descriptive title
+  labs(title = "Sentiment Heatmap of The New York Times Articles") +
 
-  # Apply a clean, minimal theme with custom font and spacing
+  # Apply clean, minimal theme with News Cycle font
   theme_minimal(base_family = "News Cycle") +
   theme(
-    legend.position = "bottom",                # Place legend below the plot
-    axis.text = element_text(size = 8),        # Smaller axis font
-    strip.text = element_text(
-      size = 13, face = "plain", color = "black"  # Year panel labels
+    legend.position = "bottom",                 # Place legend below plot
+    axis.text = element_text(size = 8),         # Small axis labels
+    strip.text = element_text(                  # Year facet labels
+      size = 13, face = "plain", color = "black"
     ),
-    plot.title = element_text(
-      hjust = 0.5, size = 18, face = "bold"    # Centered bold title
+    plot.title = element_text(                  # Title formatting
+      hjust = 0.5, size = 18, face = "bold"
     ),
-    plot.margin = margin(20, 20, 20, 20)       # Breathing space around the plot
+    plot.margin = margin(20, 20, 20, 20)        # Padding around plot
   )
-
 ```
 
 ## Step 6. Render Widget 
