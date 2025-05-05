@@ -90,12 +90,20 @@ build_network_plot <- function(outlet, period, title_text) {
 
 # Function 2: Save the rendered plot to HTML
 save_network_plot <- function(plot_obj, outlet, period) {
-  output_file <- sprintf("network_%s_%s.html", 
-                         tolower(outlet), tolower(gsub("-", "", period)))
+  output_file <- sprintf("network_%s_%s.html", tolower(outlet), tolower(gsub("-", "", period)))
 
-  # Save only the visNetwork part of the tagList (2nd element)
-  htmlwidgets::saveWidget(plot_obj[[2]], file = output_file, background = "white")
+  # Save basic HTML file
+  htmltools::save_html(plot_obj, file = output_file, background = "white")
+
+  # Inject News Cycle font manually
+  html_lines <- readLines(output_file)
+  font_link <- '<link href="https://fonts.googleapis.com/css2?family=News+Cycle&display=swap" rel="stylesheet">'
+  font_style <- '<style>body { font-family: "News Cycle", sans-serif; }</style>'
+  insert_at <- grep("<head>", html_lines, fixed = TRUE) + 1
+  html_lines <- append(html_lines, values = c(font_link, font_style), after = insert_at)
+  writeLines(html_lines, output_file)
 }
+
 
 ```
 
