@@ -53,10 +53,10 @@ render_and_save_network <- function(outlet, period, title_text) {
   # Load and style data
   network_data <- fromJSON(json_file)
 
-  # Set font color based on period
-  font_color <- if (period == "Post-Roe") "white" else "black"
+  # Always use Pre-Roe font color and style
+  font_color <- "black"
 
-  # Apply rounded corners and font styling
+  # Apply Pre-Roe style: rounded corners and black font
   network_data$nodes$shapeProperties <- seq_len(nrow(network_data$nodes)) |> 
     lapply(\(i) list(borderRadius = 10))
 
@@ -89,7 +89,6 @@ render_and_save_network <- function(outlet, period, title_text) {
   # Save HTML
   save_html(network_plot, file = output_file, background = "white")
 }
-
 ```
 
 ## Step 2. Render Fox News Networks
