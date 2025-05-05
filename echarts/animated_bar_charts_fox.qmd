@@ -193,11 +193,6 @@ fox_chart
 ```
 
 ```{r}
-#| label: saving
-
-saveWidget(fox_chart, "fox_bigrams_chart.html", selfcontained = TRUE)
-```
-```{r}
 #| label: saving-with-font-correction
 
 save_fox_chart <- function(chart, file_path = "animated_bar_charts_fox.html") {
