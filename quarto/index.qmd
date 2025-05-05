@@ -527,7 +527,8 @@ girafe(
   ggobj = calendar_plot_fox,
   options = list(
     opts_hover(css = "fill-opacity:0.8;stroke:black;stroke-width:0.5px;"),
-    opts_tooltip(css = "background-color:white;padding:5px;border:1px solid gray;border-radius:4px;font-family:'News Cycle';"),
+    opts_tooltip(css = "background-color:white;padding:5px;border:1px solid gray;border-radius:4px;font-family:'news';")
+,
     opts_toolbar(saveaspng = TRUE),
     opts_sizing(rescale = TRUE)
   )
@@ -709,7 +710,7 @@ throughout.
 
 To visualize how *The New York Times’* framing of abortion evolved over time, we animated the top bigrams appearing in abortion-related articles each month from **2020** to **2024**.
 
-<iframe src="../echarts/nyt_bigrams_chart.html" width="100%" height="720px" style="border: none;"></iframe>  
+<iframe src="../echarts/animated_bar_charts_fox.html" width="100%" height="500px" style="border: none;"></iframe>  
 
 In **early 2020**, bigrams like *health care*, *pro life*, and *women's health* were prominent, reflecting a healthcare- and ideologically-focused framing of abortion. In **September 2021**, with [Texas’s SB8 law](https://en.wikipedia.org/wiki/Texas_Senate_Bill_8) going into effect, terms like *texas law* and *planned parenthood* surged.
 
@@ -726,7 +727,7 @@ As the articles move through **2023** and **2024** mentions of *election results
 
 We did the similar thing for Fox News. 
 
-<iframe src="../echarts/fox_bigrams_chart.html" width="100%" height="720px" style="border: none;"></iframe>  
+<iframe src="../echarts/animated_bar_charts_fox.html" width="100%" height="500px" style="border: none;"></iframe>  
 
 We consistently see *health care* as a primary focus each year, but especially in **2020**, there was a heightened emphasis on *public care*, with frequent mentions of phrases like *affordable care*, *care access*, and *medical progress*.
 
