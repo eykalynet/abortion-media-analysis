@@ -17,6 +17,7 @@ library(maps)
 library(mapdata)
 library(oz)
 library(rnaturalearth)
+install.packages("urbnmapr")
 library(urbnmapr)
 library(dplyr)
 library(tidyr)
@@ -28,9 +29,9 @@ library(plotly)
 ```
 
 ## 1. Read in the File
-```{r}
+```{r} 
 data1 <- read.csv("data/Guttmatcher_institute_data/gutt_data_tabel1.csv", header = TRUE)
-data2 <- read.csv("dpwdata/Guttmatcher_institute_data/gutt_data_tabel2.csv", header = TRUE)
+data2 <- read.csv("data/Guttmatcher_institute_data/gutt_data_table2.csv", header = TRUE)
 ```
 
 # ==============================================================================
@@ -91,6 +92,43 @@ g
 
 ```
 
+```{r}
+#| label: Interactive map 1
+bans_full <- bans_full %>%
+  mutate(
+    ID = str_to_title(ID),
+    Gestational_Duration = str_to_title(Gestational_Duration),
+    specifics = ifelse( specifics == "X", "No additional details", specifics))
+
+
+
+pal <- colorFactor(
+  palette = c("#C7E9C0", "#74C476", "#238B45", "#00441B", "grey80"),
+  domain = bans_full$Gestational_Duration
+)
+
+leaflet(bans_full) |>
+  addTiles() |>
+  addPolygons(
+    fillColor = ~pal(Gestational_Duration),
+    color = "white",
+    weight = 1,
+    popup = ~paste(
+      "<strong>State:</strong>", ID, "<br>",
+      "<strong>Ban Type:</strong>", Gestational_Duration, "<br>",
+      "<strong>Details:</strong>", specifics
+    )
+  )
+
+```
+
+
+
+
+
+
+
+
 # ==============================================================================
 # Map for Table 2. Exceptions to Bans Based on Gestational Duration
 # ==============================================================================
@@ -104,12 +142,16 @@ data_exceptions <- data2 |>
          "Risk to Physical Maternal Health" = Threat.to.the.physical.health.of.the.pregnant.person, 
          "Pregnancy Resulted from Rape" = Pregnancy.resulting.from.rape, 
          "Pregnancy Resulted from Incest" = Pregnancy.resulting.from.incest, 
+         "Lethal Fetal Anomaly Diagnosis" = Diagnosis.of.lethal.fetal.anomaly
          ) |> 
-  pivot_longer(col = -ID, names_to = "Gestational_Duration", values_to = "specifics") |> 
+  pivot_longer(col = -ID, names_to = "Exception_Type", values_to = "specifics") |> 
   filter(`specifics` != "") |> 
   group_by(ID)|> 
-  summarise("number_of_exceptions" = n()) |> 
+  mutate(number_of_exceptions = n()) |>
   mutate(ID = tolower(ID))
+
+
+
 
 exceptions_full <- full_join(state_map_coord, data_exceptions, by = "ID")
 ```
@@ -128,9 +170,43 @@ g <- ggplot(exceptions_full) +
     panel.background = element_rect(fill = "white", color = NA),  
     plot.title = element_text(hjust =0.5), 
   ) +
-  labs(title= "Total Abortion Bans and Bans Based on Gestational Duration", fill = "Gestational Duration")
+  labs(title= "Total Abortion Bans and Ban Exceptions", fill = "number_of_exceptions")
 
 g
+
+```
+
+```{r}
+exceptions_summary <- data_exceptions |>
+  group_by(ID) |>
+  summarise(
+    number_of_exceptions = first(number_of_exceptions),
+    exception_list = paste0("- ", Exception_Type, collapse = "<br>")
+  )
+
+exceptions_full <- full_join(state_map_coord, exceptions_summary, by = "ID")
+
+exceptions_full |>
+  mutate(ID = str_to_title(ID))
+
+pal <- colorFactor(
+  palette = c("#C7E9C0", "#74C476", "#238B45", "#00441B", "grey80"),
+  domain = exceptions_full$number_of_exceptions
+)
+
+
+leaflet(exceptions_full) |>
+  addTiles() |>
+  addPolygons(
+    fillColor = ~pal(number_of_exceptions),
+    color = "white",
+    weight = 1,
+    popup = ~paste(
+      "<strong>State:</strong>", ID, "<br>",
+      "<strong>Number of Exceptions:</strong>", number_of_exceptions, "<br>",
+      "<strong>Exceptions:</strong><br>", exception_list
+    )
+  )
 
 ```
 
