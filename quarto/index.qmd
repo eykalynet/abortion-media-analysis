@@ -11,6 +11,7 @@ editor:
     wrap: 72
 bibliography: bib/library.bib
 csl: bib/american-statistical-association.csl
+css: styles.css
 ---
 
 ```{r}
