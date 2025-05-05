@@ -241,7 +241,7 @@ calendar_plot_fox <- ggplot(calendar_fox, aes(x = weekofyear, y = 8 - weekday)) 
   ) +
 
   # Add a title and theme
-  labs(title = "Sentiment Heatmap of Fox News Abortion Articles (2020–2024)") +
+  labs(title = "Sentiment Heatmap of Fox News Articles") +
 
   # Apply a clean, minimal theme with custom font and spacing
   theme_minimal(base_family = "News Cycle") +
@@ -309,7 +309,7 @@ We save the interactive chart as a standalone HTML file and manually inject the 
 # Step 7: Save as Standalone HTML with Embedded Font
 # ================================================================
 
-save_fox_chart <- function(chart, file_path = "fox_sentiment_calendar.html") {
+save_fox_chart <- function(chart, file_path = "interactive_calendar_fox.html") {
   # Save the widget as a self-contained HTML
   saveWidget(chart, file = file_path, selfcontained = TRUE)
 
