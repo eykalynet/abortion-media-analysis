@@ -1,577 +1,897 @@
 {
   "nodes": [
     {
-      "id": "1",
+      "topic": 1,
+      "topic_name": "Court Decisions & Restrictions",
+      "id": "T:1",
       "label": "Court Decisions & Restrictions",
       "group": "Topic",
       "color": "#6a040f",
-      "value": 40
+      "value": 40,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>Court Decisions & Restrictions<\/b><br>This is a <b>topic<\/b> from <b>Fox<\/b> during the <b>Post-Roe<\/b> period.<br>Hovering shows this node. Clicking a connected bigram reveals shared usage."
     },
     {
-      "id": "2",
+      "topic": 2,
+      "topic_name": "Pro-Life Messaging",
+      "id": "T:2",
       "label": "Pro-Life Messaging",
       "group": "Topic",
       "color": "#6a040f",
-      "value": 40
+      "value": 40,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>Pro-Life Messaging<\/b><br>This is a <b>topic<\/b> from <b>Fox<\/b> during the <b>Post-Roe<\/b> period.<br>Hovering shows this node. Clicking a connected bigram reveals shared usage."
     },
     {
-      "id": "3",
+      "topic": 3,
+      "topic_name": "Access & Enforcement",
+      "id": "T:3",
       "label": "Access & Enforcement",
       "group": "Topic",
       "color": "#6a040f",
-      "value": 40
+      "value": 40,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>Access & Enforcement<\/b><br>This is a <b>topic<\/b> from <b>Fox<\/b> during the <b>Post-Roe<\/b> period.<br>Hovering shows this node. Clicking a connected bigram reveals shared usage."
     },
     {
-      "id": "4",
+      "topic": 4,
+      "topic_name": "Political Rhetoric",
+      "id": "T:4",
       "label": "Political Rhetoric",
       "group": "Topic",
       "color": "#6a040f",
-      "value": 40
+      "value": 40,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>Political Rhetoric<\/b><br>This is a <b>topic<\/b> from <b>Fox<\/b> during the <b>Post-Roe<\/b> period.<br>Hovering shows this node. Clicking a connected bigram reveals shared usage."
     },
     {
-      "id": "5",
+      "topic": 5,
+      "topic_name": "Pregnancy Centers & Alternatives",
+      "id": "T:5",
       "label": "Pregnancy Centers & Alternatives",
       "group": "Topic",
       "color": "#6a040f",
-      "value": 40
+      "value": 40,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>Pregnancy Centers & Alternatives<\/b><br>This is a <b>topic<\/b> from <b>Fox<\/b> during the <b>Post-Roe<\/b> period.<br>Hovering shows this node. Clicking a connected bigram reveals shared usage."
     },
     {
-      "id": "supreme court",
+      "topic_name": "Court Decisions & Restrictions",
+      "id": "B:supreme court",
       "label": "supreme court",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>supreme court<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Court Decisions & Restrictions<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "supreme court"
     },
     {
-      "id": "pro life",
+      "topic_name": "Court Decisions & Restrictions",
+      "id": "B:pro life",
       "label": "pro life",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>pro life<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Court Decisions & Restrictions<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "pro life"
     },
     {
-      "id": "health care",
+      "topic_name": "Court Decisions & Restrictions",
+      "id": "B:health care",
       "label": "health care",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>health care<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Court Decisions & Restrictions<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "health care"
     },
     {
-      "id": "ban abortion",
+      "topic_name": "Court Decisions & Restrictions",
+      "id": "B:ban abortion",
       "label": "ban abortion",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>ban abortion<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Court Decisions & Restrictions<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "ban abortion"
     },
     {
-      "id": "abortion ban",
+      "topic_name": "Court Decisions & Restrictions",
+      "id": "B:abortion ban",
       "label": "abortion ban",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>abortion ban<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Court Decisions & Restrictions<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "abortion ban"
     },
     {
-      "id": "anti abortion",
+      "topic_name": "Court Decisions & Restrictions",
+      "id": "B:anti abortion",
       "label": "anti abortion",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>anti abortion<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Court Decisions & Restrictions<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "anti abortion"
     },
     {
-      "id": "abortion provider",
+      "topic_name": "Court Decisions & Restrictions",
+      "id": "B:abortion provider",
       "label": "abortion provider",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>abortion provider<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Court Decisions & Restrictions<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "abortion provider"
     },
     {
-      "id": "15 week",
+      "topic_name": "Court Decisions & Restrictions",
+      "id": "B:15 week",
       "label": "15 week",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>15 week<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Court Decisions & Restrictions<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "15 week"
     },
     {
-      "id": "protect abortion",
+      "topic_name": "Court Decisions & Restrictions",
+      "id": "B:protect abortion",
       "label": "protect abortion",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>protect abortion<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Court Decisions & Restrictions<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "protect abortion"
     },
     {
-      "id": "abortion clinic",
+      "topic_name": "Court Decisions & Restrictions",
+      "id": "B:abortion clinic",
       "label": "abortion clinic",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>abortion clinic<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Court Decisions & Restrictions<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "abortion clinic"
     },
     {
-      "id": "late term",
+      "topic_name": "Pro-Life Messaging",
+      "id": "B:late term",
       "label": "late term",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>late term<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Pro-Life Messaging<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "late term"
     },
     {
-      "id": "rape incest",
+      "topic_name": "Pro-Life Messaging",
+      "id": "B:rape incest",
       "label": "rape incest",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>rape incest<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Pro-Life Messaging<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "rape incest"
     },
     {
-      "id": "court decision",
+      "topic_name": "Pro-Life Messaging",
+      "id": "B:court decision",
       "label": "court decision",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>court decision<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Pro-Life Messaging<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "court decision"
     },
     {
-      "id": "south carolina",
+      "topic_name": "Pro-Life Messaging",
+      "id": "B:south carolina",
       "label": "south carolina",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>south carolina<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Pro-Life Messaging<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "south carolina"
     },
     {
-      "id": "abortion restriction",
+      "topic_name": "Pro-Life Messaging",
+      "id": "B:abortion restriction",
       "label": "abortion restriction",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>abortion restriction<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Pro-Life Messaging<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "abortion restriction"
     },
     {
-      "id": "abortion access",
+      "topic_name": "Access & Enforcement",
+      "id": "B:abortion access",
       "label": "abortion access",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>abortion access<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Access & Enforcement<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "abortion access"
     },
     {
-      "id": "pro choice",
+      "topic_name": "Access & Enforcement",
+      "id": "B:pro choice",
       "label": "pro choice",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>pro choice<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Access & Enforcement<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "pro choice"
     },
     {
-      "id": "biden administration",
+      "topic_name": "Access & Enforcement",
+      "id": "B:biden administration",
       "label": "biden administration",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>biden administration<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Access & Enforcement<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "biden administration"
     },
     {
-      "id": "president biden",
+      "topic_name": "Access & Enforcement",
+      "id": "B:president biden",
       "label": "president biden",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>president biden<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Access & Enforcement<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "president biden"
     },
     {
-      "id": "abortion law",
+      "topic_name": "Access & Enforcement",
+      "id": "B:abortion law",
       "label": "abortion law",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>abortion law<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Access & Enforcement<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "abortion law"
     },
     {
-      "id": "restrict abortion",
+      "topic_name": "Access & Enforcement",
+      "id": "B:restrict abortion",
       "label": "restrict abortion",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>restrict abortion<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Access & Enforcement<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "restrict abortion"
     },
     {
-      "id": "abortion pill",
+      "topic_name": "Political Rhetoric",
+      "id": "B:abortion pill",
       "label": "abortion pill",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>abortion pill<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Political Rhetoric<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "abortion pill"
     },
     {
-      "id": "vice president",
+      "topic_name": "Political Rhetoric",
+      "id": "B:vice president",
       "label": "vice president",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>vice president<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Political Rhetoric<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "vice president"
     },
     {
-      "id": "life movement",
+      "topic_name": "Political Rhetoric",
+      "id": "B:life movement",
       "label": "life movement",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>life movement<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Political Rhetoric<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "life movement"
     },
     {
-      "id": "reproductive health",
+      "topic_name": "Political Rhetoric",
+      "id": "B:reproductive health",
       "label": "reproductive health",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>reproductive health<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Political Rhetoric<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "reproductive health"
     },
     {
-      "id": "pregnancy center",
+      "topic_name": "Pregnancy Centers & Alternatives",
+      "id": "B:pregnancy center",
       "label": "pregnancy center",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>pregnancy center<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Pregnancy Centers & Alternatives<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "pregnancy center"
     },
     {
-      "id": "pro abortion",
+      "topic_name": "Pregnancy Centers & Alternatives",
+      "id": "B:pro abortion",
       "label": "pro abortion",
       "group": "Bigram",
       "color": "#9e2a2b",
-      "value": 20
+      "value": 20,
+      "shape": "box",
+      "shapeProperties": 10,
+      "font": {
+        "size": 16,
+        "face": "News Cycle",
+        "multi": "html"
+      },
+      "title": "<b>pro abortion<\/b><br>This is a <b>bigram<\/b> used in the topic <b>Pregnancy Centers & Alternatives<\/b>.<br>Appeared in <b>Fox<\/b> during the <b>Post-Roe<\/b> period.",
+      "term": "pro abortion"
     }
   ],
   "edges": [
     {
-      "from": "1",
-      "to": "supreme court",
+      "from": "T:1",
+      "to": "B:supreme court",
       "value": 0.0862,
       "width": 0.8622,
       "title": "β = 0.086"
     },
     {
-      "from": "1",
-      "to": "pro life",
+      "from": "T:1",
+      "to": "B:pro life",
       "value": 0.0335,
       "width": 0.3345,
       "title": "β = 0.033"
     },
     {
-      "from": "1",
-      "to": "health care",
+      "from": "T:1",
+      "to": "B:health care",
       "value": 0.0313,
       "width": 0.3125,
       "title": "β = 0.031"
     },
     {
-      "from": "1",
-      "to": "ban abortion",
+      "from": "T:1",
+      "to": "B:ban abortion",
       "value": 0.0273,
       "width": 0.2728,
       "title": "β = 0.027"
     },
     {
-      "from": "1",
-      "to": "abortion ban",
+      "from": "T:1",
+      "to": "B:abortion ban",
       "value": 0.0257,
       "width": 0.2575,
       "title": "β = 0.026"
     },
     {
-      "from": "1",
-      "to": "anti abortion",
+      "from": "T:1",
+      "to": "B:anti abortion",
       "value": 0.0215,
       "width": 0.2154,
       "title": "β = 0.022"
     },
     {
-      "from": "1",
-      "to": "abortion provider",
+      "from": "T:1",
+      "to": "B:abortion provider",
       "value": 0.0191,
       "width": 0.1915,
       "title": "β = 0.019"
     },
     {
-      "from": "1",
-      "to": "15 week",
+      "from": "T:1",
+      "to": "B:15 week",
       "value": 0.0175,
       "width": 0.1749,
       "title": "β = 0.017"
     },
     {
-      "from": "1",
-      "to": "protect abortion",
+      "from": "T:1",
+      "to": "B:protect abortion",
       "value": 0.0164,
       "width": 0.1643,
       "title": "β = 0.016"
     },
     {
-      "from": "1",
-      "to": "abortion clinic",
+      "from": "T:1",
+      "to": "B:abortion clinic",
       "value": 0.0158,
       "width": 0.1582,
       "title": "β = 0.016"
     },
     {
-      "from": "2",
-      "to": "supreme court",
+      "from": "T:2",
+      "to": "B:supreme court",
       "value": 0.0445,
       "width": 0.4454,
       "title": "β = 0.045"
     },
     {
-      "from": "2",
-      "to": "pro life",
+      "from": "T:2",
+      "to": "B:pro life",
       "value": 0.0398,
       "width": 0.3976,
       "title": "β = 0.04"
     },
     {
-      "from": "2",
-      "to": "abortion ban",
+      "from": "T:2",
+      "to": "B:abortion ban",
       "value": 0.033,
       "width": 0.3296,
       "title": "β = 0.033"
     },
     {
-      "from": "2",
-      "to": "late term",
+      "from": "T:2",
+      "to": "B:late term",
       "value": 0.0221,
       "width": 0.2212,
       "title": "β = 0.022"
     },
     {
-      "from": "2",
-      "to": "abortion clinic",
+      "from": "T:2",
+      "to": "B:abortion clinic",
       "value": 0.0188,
       "width": 0.1877,
       "title": "β = 0.019"
     },
     {
-      "from": "2",
-      "to": "anti abortion",
+      "from": "T:2",
+      "to": "B:anti abortion",
       "value": 0.0187,
       "width": 0.1866,
       "title": "β = 0.019"
     },
     {
-      "from": "2",
-      "to": "rape incest",
+      "from": "T:2",
+      "to": "B:rape incest",
       "value": 0.0168,
       "width": 0.1677,
       "title": "β = 0.017"
     },
     {
-      "from": "2",
-      "to": "court decision",
+      "from": "T:2",
+      "to": "B:court decision",
       "value": 0.0137,
       "width": 0.1367,
       "title": "β = 0.014"
     },
     {
-      "from": "2",
-      "to": "south carolina",
+      "from": "T:2",
+      "to": "B:south carolina",
       "value": 0.0134,
       "width": 0.1343,
       "title": "β = 0.013"
     },
     {
-      "from": "2",
-      "to": "abortion restriction",
+      "from": "T:2",
+      "to": "B:abortion restriction",
       "value": 0.0126,
       "width": 0.1258,
       "title": "β = 0.013"
     },
     {
-      "from": "3",
-      "to": "abortion access",
+      "from": "T:3",
+      "to": "B:abortion access",
       "value": 0.0301,
       "width": 0.3014,
       "title": "β = 0.03"
     },
     {
-      "from": "3",
-      "to": "abortion ban",
+      "from": "T:3",
+      "to": "B:abortion ban",
       "value": 0.0282,
       "width": 0.2823,
       "title": "β = 0.028"
     },
     {
-      "from": "3",
-      "to": "supreme court",
+      "from": "T:3",
+      "to": "B:supreme court",
       "value": 0.0246,
       "width": 0.246,
       "title": "β = 0.025"
     },
     {
-      "from": "3",
-      "to": "pro life",
+      "from": "T:3",
+      "to": "B:pro life",
       "value": 0.0207,
       "width": 0.2068,
       "title": "β = 0.021"
     },
     {
-      "from": "3",
-      "to": "health care",
+      "from": "T:3",
+      "to": "B:health care",
       "value": 0.0177,
       "width": 0.1775,
       "title": "β = 0.018"
     },
     {
-      "from": "3",
-      "to": "pro choice",
+      "from": "T:3",
+      "to": "B:pro choice",
       "value": 0.015,
       "width": 0.1503,
       "title": "β = 0.015"
     },
     {
-      "from": "3",
-      "to": "biden administration",
+      "from": "T:3",
+      "to": "B:biden administration",
       "value": 0.014,
       "width": 0.1399,
       "title": "β = 0.014"
     },
     {
-      "from": "3",
-      "to": "president biden",
+      "from": "T:3",
+      "to": "B:president biden",
       "value": 0.0138,
       "width": 0.1383,
       "title": "β = 0.014"
     },
     {
-      "from": "3",
-      "to": "abortion law",
+      "from": "T:3",
+      "to": "B:abortion law",
       "value": 0.0138,
       "width": 0.1377,
       "title": "β = 0.014"
     },
     {
-      "from": "3",
-      "to": "restrict abortion",
+      "from": "T:3",
+      "to": "B:restrict abortion",
       "value": 0.0137,
       "width": 0.137,
       "title": "β = 0.014"
     },
     {
-      "from": "4",
-      "to": "pro life",
+      "from": "T:4",
+      "to": "B:pro life",
       "value": 0.0797,
       "width": 0.797,
       "title": "β = 0.08"
     },
     {
-      "from": "4",
-      "to": "supreme court",
+      "from": "T:4",
+      "to": "B:supreme court",
       "value": 0.0741,
       "width": 0.7414,
       "title": "β = 0.074"
     },
     {
-      "from": "4",
-      "to": "abortion pill",
+      "from": "T:4",
+      "to": "B:abortion pill",
       "value": 0.0353,
       "width": 0.3526,
       "title": "β = 0.035"
     },
     {
-      "from": "4",
-      "to": "health care",
+      "from": "T:4",
+      "to": "B:health care",
       "value": 0.0323,
       "width": 0.3228,
       "title": "β = 0.032"
     },
     {
-      "from": "4",
-      "to": "vice president",
+      "from": "T:4",
+      "to": "B:vice president",
       "value": 0.0174,
       "width": 0.1738,
       "title": "β = 0.017"
     },
     {
-      "from": "4",
-      "to": "abortion clinic",
+      "from": "T:4",
+      "to": "B:abortion clinic",
       "value": 0.0166,
       "width": 0.1657,
       "title": "β = 0.017"
     },
     {
-      "from": "4",
-      "to": "15 week",
+      "from": "T:4",
+      "to": "B:15 week",
       "value": 0.0157,
       "width": 0.1565,
       "title": "β = 0.016"
     },
     {
-      "from": "4",
-      "to": "life movement",
+      "from": "T:4",
+      "to": "B:life movement",
       "value": 0.0144,
       "width": 0.1436,
       "title": "β = 0.014"
     },
     {
-      "from": "4",
-      "to": "reproductive health",
+      "from": "T:4",
+      "to": "B:reproductive health",
       "value": 0.0141,
       "width": 0.1408,
       "title": "β = 0.014"
     },
     {
-      "from": "4",
-      "to": "biden administration",
+      "from": "T:4",
+      "to": "B:biden administration",
       "value": 0.0132,
       "width": 0.1323,
       "title": "β = 0.013"
     },
     {
-      "from": "5",
-      "to": "pro life",
+      "from": "T:5",
+      "to": "B:pro life",
       "value": 0.1155,
       "width": 1.1547,
       "title": "β = 0.115"
     },
     {
-      "from": "5",
-      "to": "supreme court",
+      "from": "T:5",
+      "to": "B:supreme court",
       "value": 0.0683,
       "width": 0.6834,
       "title": "β = 0.068"
     },
     {
-      "from": "5",
-      "to": "pregnancy center",
+      "from": "T:5",
+      "to": "B:pregnancy center",
       "value": 0.0334,
       "width": 0.334,
       "title": "β = 0.033"
     },
     {
-      "from": "5",
-      "to": "abortion ban",
+      "from": "T:5",
+      "to": "B:abortion ban",
       "value": 0.0207,
       "width": 0.2071,
       "title": "β = 0.021"
     },
     {
-      "from": "5",
-      "to": "pro abortion",
+      "from": "T:5",
+      "to": "B:pro abortion",
       "value": 0.0192,
       "width": 0.1918,
       "title": "β = 0.019"
     },
     {
-      "from": "5",
-      "to": "abortion access",
+      "from": "T:5",
+      "to": "B:abortion access",
       "value": 0.0184,
       "width": 0.1837,
       "title": "β = 0.018"
     },
     {
-      "from": "5",
-      "to": "court decision",
+      "from": "T:5",
+      "to": "B:court decision",
       "value": 0.018,
       "width": 0.1796,
       "title": "β = 0.018"
     },
     {
-      "from": "5",
-      "to": "ban abortion",
+      "from": "T:5",
+      "to": "B:ban abortion",
       "value": 0.017,
       "width": 0.1703,
       "title": "β = 0.017"
     },
     {
-      "from": "5",
-      "to": "pro choice",
+      "from": "T:5",
+      "to": "B:pro choice",
       "value": 0.015,
       "width": 0.1503,
       "title": "β = 0.015"
     },
     {
-      "from": "5",
-      "to": "abortion pill",
+      "from": "T:5",
+      "to": "B:abortion pill",
       "value": 0.0125,
       "width": 0.1252,
       "title": "β = 0.013"

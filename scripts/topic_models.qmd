@@ -33,6 +33,10 @@ library(textstem)       # Lemmatization
 library(readr)         
 library(purrr)
 library(jsonlite)
+
+font_add_google("News Cycle", "News Cycle")
+showtext_auto()
+register_gfont("News Cycle")
 ```
 
 ## 1. Reading in the Data
@@ -314,6 +318,7 @@ While our topic modeling and visualization were initially developed within R, ou
 Since ECharts is built for the web, it expects data to be in standard JSON format. Therefore, we exported each topic–bigram network as a `.json` file using `jsonlite`, with nodes representing topics and bigrams, and edges weighted by the topic–word probability.
 
 ```{r}
+#| label: step-10
 
 # =================================================================
 # Step 10: Generate Data for Networks
@@ -322,6 +327,7 @@ Since ECharts is built for the web, it expects data to be in standard JSON forma
 get_visnetwork_data <- function(df, outlet_input, period_input) {
   df <- df |> filter(outlet == outlet_input, period == period_input)
 
+  # Define colors by outlet and period
   topic_color <- case_when(
     outlet_input == "Fox" & period_input == "Pre-Roe"  ~ "#c35b5b",
     outlet_input == "Fox" & period_input == "Post-Roe" ~ "#6a040f",
@@ -338,19 +344,52 @@ get_visnetwork_data <- function(df, outlet_input, period_input) {
     TRUE ~ "#999999"
   )
 
-  topics <- df |> 
-    distinct(id = as.character(topic), label = topic_name) |> 
-    mutate(group = "Topic", color = topic_color, value = 40)
+  # Create topic nodes with unique prefixed IDs
+  topics <- df |>
+    distinct(topic, topic_name) |>
+    mutate(
+      id = paste0("T:", topic),
+      label = topic_name,
+      group = "Topic",
+      color = topic_color,
+      value = 40,
+      shape = "box",
+      shapeProperties = list(borderRadius = 10),
+      font = replicate(n(), list(size = 16, face = "News Cycle", multi = "html"), simplify = FALSE),
+      title = paste0(
+        "<b>", label, "</b><br>",
+        "This is a <b>topic</b> from <b>", outlet_input, "</b> during the <b>", period_input, "</b> period.<br>",
+        "Hovering shows this node. Clicking a connected bigram reveals shared usage."
+      )
+    )
 
-  bigrams <- df |> 
-    distinct(id = as.character(term), label = term) |> 
-    mutate(group = "Bigram", color = bigram_color, value = 20)
+  # Create bigram nodes with unique prefixed IDs
+  bigrams <- df |>
+    distinct(term, topic_name) |>
+    mutate(
+      id = paste0("B:", term),
+      label = term,
+      group = "Bigram",
+      color = bigram_color,
+      value = 20,
+      shape = "box",
+      shapeProperties = list(borderRadius = 10),
+      font = replicate(n(), list(size = 16, face = "News Cycle", multi = "html"), simplify = FALSE),
+      title = paste0(
+        "<b>", label, "</b><br>",
+        "This is a <b>bigram</b> used in the topic <b>", topic_name, "</b>.<br>",
+        "Appeared in <b>", outlet_input, "</b> during the <b>", period_input, "</b> period."
+      )
+    )
 
-  nodes <- bind_rows(topics, bigrams)
+  # Combine nodes safely
+  nodes <- bind_rows(topics, bigrams) |>
+    distinct(id, .keep_all = TRUE)
 
+  # Create edges with prefix-matching IDs
   edges <- df |> transmute(
-    from = as.character(topic),   # fixed
-    to = as.character(term),      # fixed
+    from = paste0("T:", topic),
+    to = paste0("B:", term),
     value = beta,
     width = beta * 10,
     title = paste0("β = ", round(beta, 3))
@@ -361,9 +400,23 @@ get_visnetwork_data <- function(df, outlet_input, period_input) {
 
 save_visnetwork_json <- function(df, outlet_input, period_input) {
   net <- get_visnetwork_data(df, outlet_input, period_input)
-  filename <- paste0("network_", tolower(outlet_input), "_", tolower(gsub("-", "", period_input)), ".json")
-  write_json(net, path = file.path("../data/wrangled/networks", filename), pretty = TRUE, auto_unbox = TRUE)
+
+  # Clean and consistent filename
+  filename <- paste0(
+    "network_", 
+    tolower(outlet_input), "_", 
+    tolower(gsub("-", "", period_input)), 
+    ".json"
+  )
+
+  jsonlite::write_json(
+    net,
+    path = file.path("../data/wrangled/networks", filename),
+    pretty = TRUE,
+    auto_unbox = TRUE
+  )
 }
+
 
 # Re-export all 4 networks
 save_visnetwork_json(all_topics_named, "Fox", "Pre-Roe")
