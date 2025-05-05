@@ -39,15 +39,15 @@ This chunk loads and processes Fox News article data to compute a daily sentimen
 #| label: step-1
 
 # ================================================================
-# Step 1: Load and Preprocess NYT Sentiment Data
+# Step 1: Load and Preprocess Fox News Sentiment Data
 # ================================================================
 
-# Load the wrangled New York Times dataset 
-nyt <- read_csv("../data/wrangled/nyt_news_data_wrangled.csv")
-nyt <- as.data.table(nyt)  # Convert to data.table for faster manipulation
+# Load the wrangled Fox News dataset 
+fox <- read_csv("../data/wrangled/fox_news_data_wrangled.csv")
+fox <- as.data.table(fox)  # Convert to data.table for faster manipulation
 
 # Tokenize article text into individual words and assign a unique article ID
-article_words <- nyt |>
+article_words <- fox |>
   select(pub_date, text_clean) |>       # Keep only date and cleaned text
   mutate(article_id = row_number()) |>  # Assign unique ID to each article
   unnest_tokens(word, text_clean)       # Tokenize text into unigrams
@@ -58,12 +58,15 @@ afinn <- get_sentiments("afinn")
 
 # Aggregate sentiment per article by summing token sentiment scores
 article_scores <- article_words |>
-  inner_join(afinn, by = "word") |>     # Join sentiment values for matched words
+  inner_join(afinn, by = "word") |>     # Join sentiment values for
+                                        # matched words
   group_by(article_id, pub_date) |>     # Group by article and date
-  summarise(article_sentiment = sum(value), .groups = "drop")  # Sum sentiment scores
+  summarise(article_sentiment = sum(value), .groups = "drop")  
+                                        # Sum sentiment scores
 
-# Average sentiment scores per day across all articles published on that day
-nyt_sentiment <- article_scores |>
+# Average sentiment scores per day across all articles published 
+# on that day
+fox_sentiment <- article_scores |>
   mutate(pub_day = as.Date(pub_date)) |> # Convert datetime to date
   group_by(pub_day) |>                   # Group by day
   summarise(sentiment_score = mean(article_sentiment), .groups = "drop") |>  # Average sentiment
