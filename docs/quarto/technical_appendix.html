@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2025-05-05">
+<meta name="dcterms.date" content="2025-05-06">
 
 <title>Technical Appendix – MEE</title>
 <style>
@@ -170,6 +170,7 @@ window.Quarto = {
    
   <ul>
   <li><a href="#sentiment-calendar" id="toc-sentiment-calendar" class="nav-link active" data-scroll-target="#sentiment-calendar">Sentiment Calendar</a></li>
+  <li><a href="#topic-modeling-and-network-visualizations" id="toc-topic-modeling-and-network-visualizations" class="nav-link" data-scroll-target="#topic-modeling-and-network-visualizations">Topic Modeling and Network Visualizations</a></li>
   </ul>
 </nav>
     </div>
@@ -189,7 +190,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Last updated</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 5, 2025</p>
+      <p class="date">May 6, 2025</p>
     </div>
   </div>
   
@@ -217,13 +218,29 @@ s_{\text{July 2}} = -2 + \frac{1}{2}(4 - (-2)) = 1
 <p>This method is widely used for visual smoothing in time series displays when gaps are not analytically meaningful <span class="citation" data-cites="shumway2017 zeileis2005">(<a href="#ref-shumway2017" role="doc-biblioref">Shumway and Stoffer 2017</a>; <a href="#ref-zeileis2005" role="doc-biblioref">Zeileis and Grothendieck 2005</a>)</span>. We did not use interpolation for any modeling steps but only for visual continuity in <code>geom_tile_interactive()</code> rendering.</p>
 <p>Remaining missing values at the edges (i.e., consecutive <code>NA</code>s at the start or end) were conservatively replaced with 0, which we interpret as a neutral baseline rather than evidence of balanced tone.</p>
 <p>As a disclaimer, the number of days from 2020 to 2024 totals 1,826. Our dataset includes over 3,100 articles, and because many days have multiple articles, the temporal coverage is dense. Thus, we are confident that linear interpolation did not substantially distort underlying sentiment trends.</p>
-<p>We also acknowledge that linear interpolation is a relatively simple method and may not fully explain structural gaps in temporal coverage or non-linear shifts in sentiment dynamics. Ideally, future work would explore more principled approaches from the field of missing data theory, such as time-aware imputation with uncertainty quantification. Hopefully, we can revisit this aspect of our project after taking STAT404: <em>Data Not Found: An Introduction to Missing Data Methodology</em>, taught by our wonderful STAT231: Data Science instructor herself, Prof.&nbsp;Katharine Correia, when it is next offered!</p>
+<p>We also acknowledge that linear interpolation is a relatively simple method and may not fully explain structural gaps in temporal coverage or non-linear shifts in sentiment dynamics. Ideally, future work would explore more principled approaches from the field of missing data theory, such as time-aware imputation with uncertainty quantification. Hopefully, we can revisit this aspect of our project after taking <a href="https://www.amherst.edu/academiclife/departments/courses/2425F/STAT/STAT-404-2425F">STAT404: <em>Data Not Found: An Introduction to Missing Data Methodology</em></a> taught by our wonderful STAT231: Data Science instructor herself, Prof.&nbsp;Katharine Correia, when it is next offered!</p>
+</section>
+<section id="topic-modeling-and-network-visualizations" class="level2">
+<h2 class="anchored" data-anchor-id="topic-modeling-and-network-visualizations">Topic Modeling and Network Visualizations</h2>
+<p>Latent Dirichlet Allocation (LDA) is a generative probabilistic model used to detect latent thematic structures in large text corpora. The term <em>latent</em> refers to the fact that the topics inferred by LDA are not directly observable, but are hidden variables inferred from the co-occurrence patterns in the observed data (i.e., words). LDA assumes that each document <span class="math inline">\(d\)</span> is associated with a topic distribution <span class="math inline">\(\theta_d \sim \text{Dirichlet}(\alpha)\)</span>, and each topic <span class="math inline">\(k\)</span> is associated with a word distribution <span class="math inline">\(\phi_k \sim \text{Dirichlet}(\beta)\)</span>. For every word <span class="math inline">\(w_{d,n}\)</span> in document <span class="math inline">\(d\)</span>, a topic <span class="math inline">\(z_{d,n}\)</span> is first drawn from <span class="math inline">\(\theta_d\)</span>, and a word is then sampled from the corresponding topic’s distribution:</p>
+<p><span class="math display">\[
+w_{d,n} \sim \text{Multinomial}(\phi_{z_{d,n}})
+\]</span></p>
+<p>In this formulation, <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> are hyperparameters for the Dirichlet priors: <span class="math inline">\(\alpha\)</span> controls the sparsity of topics within a document, and <span class="math inline">\(\beta\)</span> controls the sparsity of words within a topic.</p>
+<p>The Dirichlet distribution is a multivariate generalization of the Beta distribution. It generates a probability vector of non-negative real numbers that sum to one. Essentially, a distribution over categories. For instance, if a document is composed of three topics, a sample from a Dirichlet distribution might be <span class="math inline">\((0.7, 0.2, 0.1)\)</span>, indicating the document is 70% about Topic 1, 20% about Topic 2, and 10% about Topic 3. Smaller values of <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> (e.g., <span class="math inline">\(&lt; 1\)</span>) yield sparse distributions, where documents concentrate on a few topics and topics on a few words. Larger values (e.g., <span class="math inline">\(&gt; 1\)</span>) yield more uniform distributions. These priors allow LDA to reflect the assumption that documents are usually “about a few things.”</p>
+<p>We experimented with values of <span class="math inline">\(k\)</span> ranging from 4 to 12, but due to computational limitations and the exploratory nature of our analysis, we ultimately selected <span class="math inline">\(k = 5\)</span>. This choice also aligns with other media framing studies using LDA in political discourse contexts, such as <span class="citation" data-cites="roberts2014structural">(<a href="#ref-roberts2014structural" role="doc-biblioref">Roberts et al. 2014</a>)</span>, which allows us to balance interpretability with thematic resolution.</p>
+<p>After fitting, we extracted topic–term probabilities, denoted <span class="math inline">\(\beta_{k,w} = P(w \mid z = k)\)</span>, using tidytext::tidy(). These represent the probability of word <span class="math inline">\(w\)</span> appearing in topic <span class="math inline">\(k\)</span>, and should not be confused with the Dirichlet prior <span class="math inline">\(\beta\)</span> used in model initialization. We retained terms with <span class="math inline">\(\beta_{k,w} &gt; 0.015\)</span>, to focus on high-association terms, and manually labeled each topic based on its top-ranked terms. For example, a topic dominated by “heartbeat,” “ban,” and “unborn” was labeled Pro-Life Messaging.</p>
+<p>To further examine framing differences, we visualized topic structures as bipartite networks using <code>igraph</code> and <code>visNetwork</code>. Nodes represented topics and bigrams, and edges were weighted by <span class="math inline">\(\beta_{k,w}\)</span>. Topic nodes were styled by outlet and time period, using box shapes and consistent color palettes, and interactivity allowed users to trace how themes emerged and diverged across time. Furthermore, one can see that shareed bigrams appeared across multiple topic nodes, which shows recurring rhetorical devices and contested framings that spanned ideological divides.</p>
+<p>While LDA is foundational in topic modeling, it is limited by the bag-of-words assumption and fixed topic structures. We look forward to revisiting these questions with more flexible methods, such as dynamic topic models and contextual embeddings, once <a href="https://www.amherst.edu/academiclife/departments/courses/2324S/STAT/STAT-325-2324S">STAT325: Text Analytics</a> is next offered by Prof.&nbsp;Nicholas Horton!</p>
 
 
 
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-roberts2014structural" class="csl-entry" role="listitem">
+Roberts, M. E., Stewart, B. M., Tingley, D., Lucas, C., Leder-Luis, J., Gadarian, S. K., Albertson, B., and Rand, D. G. (2014), <span>“Structural topic models for open-ended survey responses,”</span> <em>American Journal of Political Science</em>, 58, 1064–1082. <a href="https://doi.org/10.1111/ajps.12103">https://doi.org/10.1111/ajps.12103</a>.
+</div>
 <div id="ref-shumway2017" class="csl-entry" role="listitem">
 Shumway, R. H., and Stoffer, D. S. (2017), <em>Time series analysis and its applications: With r examples</em>, Springer.
 </div>
