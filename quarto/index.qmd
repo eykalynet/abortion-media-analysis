@@ -57,6 +57,20 @@ library(ggiraph)
 library(gdtools)
 library(gfonts)
 library(textmineR)
+library(sf)
+library(leaflet)
+library(viridis)
+library(ggspatial)
+library(mapproj)
+library(maps)
+library(mapdata)
+library(oz)
+library(rnaturalearth)
+library(urbnmapr)
+library(ggplot2)
+library(stringr)
+library(fivethirtyeight)
+library(plotly)
 
 # Load cleaned datasets
 nyt <- read_csv("../data/wrangled/nyt_news_data_wrangled.csv")
@@ -589,5 +603,101 @@ around health care, law, religion, and personal trauma in equal measure.
 ### NYT – Post-Roe
 
 <iframe src="../echarts/network_nyt_postroe.html" width="100%" height="500px" style="border: none;"></iframe>
+
+:::
+
+
+# Aditional Information About Abortion Legistation
+From 
+
+::: panel-tabset
+
+### Abortion Bans Map
+
+```{r}
+#| label: map plot 1
+#| fig.height: 3.5
+#| warning: false
+#| message: false 
+
+data_bans <- read.csv("/Users/emilieward/Documents/GitHub/blog-MEE/data/Guttmatcher_institute_data/abortion_bans_data.csv", header = TRUE)
+
+state_map_coord <- maps::map("state", plot = FALSE, fill = TRUE) |>
+  st_as_sf()
+
+bans_full <- left_join(state_map_coord, data_bans, by = "ID") |> 
+  mutate(Gestational_Duration = if_else(is.na(Gestational_Duration), "no data", Gestational_Duration))
+
+
+
+# map_plot1 <- bans_full %>%
+#   mutate(
+#     ID = str_to_title(ID),
+#     Gestational_Duration = str_to_title(Gestational_Duration),
+#     specifics = ifelse( specifics == "X", "", specifics)) |> 
+#   mutate(specifics = if_else(specifics == "Viability", "Abortion Ban After Viability (22~24 weeks)", specifics)) 
+  
+
+pal <- colorFactor(
+  palette = c("#C7E9C0", "#74C476", "#238B45", "#00441B", "grey80"),
+  domain = bans_full$Gestational_Duration
+)
+
+leaflet(bans_full) |>
+  addTiles() |>
+  addPolygons(
+    fillColor = ~pal(Gestational_Duration),
+    color = "white",
+    weight = 1,
+    popup = ~paste(
+      "<strong>State:</strong>", ID, "<br>",
+      "<strong>Ban Type:</strong>", Gestational_Duration, "<br>",
+      "<strong>Details:</strong>", specifics
+    )
+  )
+
+```
+
+### Abortion Exceptions Map
+
+```{r, echo = FALSE}
+#| label: map plot 2
+#| fig.height: 3.5
+#| warning: false
+#| message: false 
+
+
+data_exceptions <- read.csv("/Users/emilieward/Documents/GitHub/blog-MEE/data/Guttmatcher_institute_data/abortion_exceptions_data.csv", header = TRUE)
+
+state_map_coord <- maps::map("state", plot = FALSE, fill = TRUE) |>
+  st_as_sf()
+
+exceptions_full <- left_join(state_map_coord, data_exceptions, by = "ID")
+
+exceptions_full <- exceptions_full|>
+  mutate(ID = str_to_title(ID)) |> 
+  mutate(number_of_exceptions = if_else(is.na(number_of_exceptions), 0, number_of_exceptions))
+
+pal <- colorFactor(
+  palette = c("#C7E9C0", "#74C476", "#238B45", "#00441B", "grey80"),
+  domain = exceptions_full$number_of_exceptions
+)
+
+
+leaflet(exceptions_full) |>
+  addTiles() |>
+  addPolygons(
+    fillColor = ~pal(number_of_exceptions),
+    color = "white",
+    weight = 1,
+    popup = ~paste(
+      "<strong>State:</strong>", ID, "<br>",
+      "<strong>Number of Exceptions:</strong>", number_of_exceptions, "<br>",
+      "<strong>Exceptions:</strong><br>", exception_list
+    )
+  )
+
+```
+
 
 :::

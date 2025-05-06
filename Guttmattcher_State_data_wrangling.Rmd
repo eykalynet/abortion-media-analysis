@@ -17,7 +17,7 @@ library(maps)
 library(mapdata)
 library(oz)
 library(rnaturalearth)
-install.packages("urbnmapr")
+# install.packages("urbnmapr")
 library(urbnmapr)
 library(dplyr)
 library(tidyr)
@@ -94,13 +94,14 @@ g
 
 ```{r}
 #| label: Interactive map 1
+
 bans_full <- bans_full %>%
   mutate(
     ID = str_to_title(ID),
     Gestational_Duration = str_to_title(Gestational_Duration),
-    specifics = ifelse( specifics == "X", "No additional details", specifics))
-
-
+    specifics = ifelse( specifics == "X", "", specifics)) |> 
+  mutate(specifics = if_else(specifics == "Viability", "Abortion Ban After Viability (22~24 weeks)", specifics)) 
+  
 
 pal <- colorFactor(
   palette = c("#C7E9C0", "#74C476", "#238B45", "#00441B", "grey80"),
@@ -119,6 +120,8 @@ leaflet(bans_full) |>
       "<strong>Details:</strong>", specifics
     )
   )
+
+write_csv(bans_full, "data/Guttmatcher_institute_data/abortion_bans_data.csv")
 
 ```
 
@@ -154,6 +157,8 @@ data_exceptions <- data2 |>
 
 
 exceptions_full <- full_join(state_map_coord, data_exceptions, by = "ID")
+write_csv(exceptions_full, "data/Guttmatcher_institute_data/abortion_exceptions_data.csv")
+
 ```
 
 ## 6. Graphing the Map 
