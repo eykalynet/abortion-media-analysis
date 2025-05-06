@@ -71,6 +71,8 @@ library(ggplot2)
 library(stringr)
 library(fivethirtyeight)
 library(plotly)
+library(maps)
+library(ggpattern)
 
 # Load cleaned datasets
 nyt <- read_csv("../data/wrangled/nyt_news_data_wrangled.csv")
@@ -612,79 +614,134 @@ The [Guttmatcher Insitute](https://www.guttmacher.org/) helps to relay up to dat
 #| warning: false
 #| message: false 
 
-data_bans <- read.csv("../data/Guttmatcher_institute_data/abortion_bans_data.csv", header = TRUE)
-
-state_map_coord <- maps::map("state", plot = FALSE, fill = TRUE) |>
-  st_as_sf()
-
-bans_full <- full_join(state_map_coord, data_bans, by = "ID")
-
-bans_full <- bans_full %>%
+# Load and clean abortion bans data
+data_bans <- read.csv("../data/Guttmatcher_institute_data/abortion_bans_data.csv") |>
   mutate(
-    ID = str_to_title(ID),
-    Gestational_Duration = str_to_title(Gestational_Duration),
-    specifics = ifelse( specifics == "X", "no additional information", specifics)) |>
-  mutate(specifics = if_else(specifics == "Viability", "Abortion Ban After Viability (22~24 weeks)", specifics))
+    ID = str_to_lower(ID) |> str_trim() |> str_replace_all("\\*", ""),
+    specifics = case_when(
+      specifics == "X" ~ "no additional information",
+      specifics == "Viability" ~ "Abortion Ban After Viability (22–24 weeks)",
+      TRUE ~ specifics
+    ),
+    Gestational_Duration = str_to_title(Gestational_Duration)
+  )
 
+# Load and clean map
+state_map_coord <- map("state", plot = FALSE, fill = TRUE) |>
+  st_as_sf() |>
+  mutate(ID = str_to_lower(ID) |> str_trim())
 
-pal <- colorFactor(
-  palette = c("#fbb0b5", "#f58a92", "#ea5a64", "#b3001b", "grey80"),
-  domain = bans_full$Gestational_Duration
-)
-
-leaflet(bans_full) |>
-  addTiles() |>
-  addPolygons(
-    fillColor = ~pal(Gestational_Duration),
-    color = "white",
-    weight = 1,
-    popup = ~paste(
-      "<strong>State:</strong>", ID, "<br>",
-      "<strong>Ban Type:</strong>", Gestational_Duration, "<br>",
-      "<strong>Details:</strong>", specifics
+# Join
+bans_full <- full_join(state_map_coord, data_bans, by = "ID") |>
+  mutate(
+    fill_category = if_else(is.na(Gestational_Duration), "No Data", Gestational_Duration),
+    alpha_val = if_else(is.na(Gestational_Duration), 0.4, 1),
+    tooltip = paste0(
+      "<b>State:</b> ", str_to_title(ID), "<br>",
+      "<b>Ban Type:</b> ", coalesce(Gestational_Duration, "No data"), "<br>",
+      "<b>Details:</b> ", coalesce(specifics, "No data")
     )
   )
 
+# Fill palette
+fill_colors <- c(
+  "Total Ban" = "#b3001b",
+  "After 18 Weeks" = "#ea5a64",
+  "Under 18 Weeks" = "#f58a92",
+  "No Ban" = "grey80",
+  "No Data" = "grey90"
+)
+
+# Plot
+ggiraph_map <- ggplot(bans_full) +
+  geom_sf_interactive(
+    aes(
+      fill = fill_category,
+      tooltip = tooltip,
+      data_id = ID,
+      alpha = alpha_val
+    ),
+    color = "white",
+    size = 0.3
+  ) +
+  scale_fill_manual(values = fill_colors, name = "Ban Type") +
+  scale_alpha_continuous(range = c(0.4, 1), guide = "none") +
+  theme_void(base_family = "News Cycle") +
+  theme(
+    legend.position = "bottom",
+    text = element_text(family = "News Cycle"),
+    plot.title = element_text(hjust = 0.5, size = 18)
+  ) +
+  labs(title = "U.S. Abortion Bans by State")
+
+# Render
+girafe(ggobj = ggiraph_map, options = list(
+  opts_tooltip(css = "background-color:white;color:black;border:1px solid black;padding:5px;border-radius:5px;"),
+  opts_hover(css = "fill-opacity:0.8;stroke:black;stroke-width:1.5px;")
+))
 ```
 
-### Abortion Exceptions Map
-```{r, echo = FALSE}
+```{r}
 #| label: map plot 2
 #| fig.height: 3.5
 #| warning: false
 #| message: false 
 
+### Abortion Exceptions Map
 
-data_exceptions <- read.csv("../data/Guttmatcher_institute_data/abortion_exceptions_data.csv", header = TRUE)
+# Load and clean exception data
+data_exceptions <- read.csv("../data/Guttmatcher_institute_data/abortion_exceptions_data.csv") |>
+  mutate(ID = str_to_lower(ID) |> str_trim())
 
-state_map_coord <- maps::map("state", plot = FALSE, fill = TRUE) |>
-  st_as_sf()
+# Load and clean state geometries
+state_map_coord <- map("state", plot = FALSE, fill = TRUE) |>
+  st_as_sf() |>
+  mutate(ID = str_to_lower(ID) |> str_trim())
 
-exceptions_full <- left_join(state_map_coord, data_exceptions, by = "ID")
-
-exceptions_full <- exceptions_full|>
-  mutate(ID = str_to_title(ID)) |> 
-  mutate(number_of_exceptions = if_else(is.na(number_of_exceptions), 0, number_of_exceptions))
-
-pal <- colorFactor(
-  palette = c("#fbb0b5", "#f58a92", "#ea5a64", "#b3001b", "grey80"),
-  domain = exceptions_full$number_of_exceptions
-)
-
-
-leaflet(exceptions_full) |>
-  addTiles() |>
-  addPolygons(
-    fillColor = ~pal(number_of_exceptions),
-    color = "white",
-    weight = 1,
-    popup = ~paste(
-      "<strong>State:</strong>", ID, "<br>",
-      "<strong>Number of Exceptions:</strong>", number_of_exceptions, "<br>",
-      "<strong>Exceptions:</strong><br>", exception_list
+# Join and finalize data
+exceptions_full <- left_join(state_map_coord, data_exceptions, by = "ID") |>
+  mutate(
+    ID = str_to_title(ID),
+    number_of_exceptions = if_else(is.na(number_of_exceptions), 0, number_of_exceptions),
+    tooltip = paste0(
+      "<b>State:</b> ", ID, "<br>",
+      "<b>Number of Exceptions:</b> ", number_of_exceptions, "<br>",
+      "<b>Exceptions:</b><br>", coalesce(exception_list, "No data")
     )
   )
 
+# Define a blue color palette (5 steps)
+blue_shades <- c("#cce5f6", "#99cbee", "#66addc", "#2a7eb8", "#084594")
+
+# Plot
+ggiraph_map_exceptions <- ggplot(exceptions_full) +
+  geom_sf_interactive(
+    aes(
+      fill = number_of_exceptions,
+      tooltip = tooltip,
+      data_id = ID
+    ),
+    color = "white",
+    size = 0.3
+  ) +
+  scale_fill_gradientn(
+    colors = blue_shades,
+    name = "Number of Exceptions",
+    breaks = pretty(range(exceptions_full$number_of_exceptions), n = 5)
+  ) +
+  theme_void(base_family = "News Cycle") +
+  theme(
+    legend.position = "bottom",
+    text = element_text(family = "News Cycle"),
+    plot.title = element_text(hjust = 0.5, size = 18)
+  ) +
+  labs(title = "Abortion Exceptions by State")
+
+# Render interactive map
+girafe(ggobj = ggiraph_map_exceptions, options = list(
+  opts_tooltip(css = "background-color:white;color:black;border:1px solid black;padding:5px;border-radius:5px;"),
+  opts_hover(css = "fill-opacity:0.8;stroke:black;stroke-width:1.5px;")
+))
 ```
 
 :::
