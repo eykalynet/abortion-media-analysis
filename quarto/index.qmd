@@ -612,7 +612,7 @@ bans_full <- bans_full %>%
 
 
 pal <- colorFactor(
-  palette = c("#C7E9C0", "#74C476", "#238B45", "#00441B", "grey80"),
+  palette = c("#fbb0b5", "#f58a92", "#ea5a64", "#b3001b", "grey80"),
   domain = bans_full$Gestational_Duration
 )
 
@@ -651,7 +651,7 @@ exceptions_full <- exceptions_full|>
   mutate(number_of_exceptions = if_else(is.na(number_of_exceptions), 0, number_of_exceptions))
 
 pal <- colorFactor(
-  palette = c("#C7E9C0", "#74C476", "#238B45", "#00441B", "grey80"),
+  palette = c("#fbb0b5", "#f58a92", "#ea5a64", "#b3001b", "grey80"),
   domain = exceptions_full$number_of_exceptions
 )
 
