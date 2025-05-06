@@ -570,21 +570,17 @@ after for both the NYT and Fox News.
 
 ::: panel-tabset
 
-### Fox – Pre-Roe
+### Network of Fox News Topics, Pre-Roe
+<iframe src="../echarts/network_fox_preroe.html" width="100%" height="750px" style="border: none;"></iframe>
 
-<iframe src="../echarts/network_fox_preroe.html" width="100%" height="500px" style="border: none;"></iframe>
+### Network of Fox News Topics, Post-Roe
+<iframe src="../echarts/network_fox_postroe.html" width="100%" height="750px" style="border: none;"></iframe>
 
-### Fox – Post-Roe
+### Network of The New York Times Topics, Pre-Roe
+<iframe src="../echarts/network_nyt_preroe.html" width="100%" height="750px" style="border: none;"></iframe>
 
-<iframe src="../echarts/network_fox_postroe.html" width="100%" height="500px" style="border: none;"></iframe>
-
-### NYT – Pre-Roe
-
-<iframe src="../echarts/network_nyt_preroe.html" width="100%" height="500px" style="border: none;"></iframe>
-
-### NYT – Post-Roe
-
-<iframe src="../echarts/network_nyt_postroe.html" width="100%" height="500px" style="border: none;"></iframe>
+### Network of The New York Times Topics, Post-Roe
+<iframe src="../echarts/network_nyt_postroe.html" width="100%" height="750px" style="border: none;"></iframe>
 
 :::
 
@@ -682,6 +678,7 @@ girafe(ggobj = ggiraph_map, options = list(
   opts_hover(css = "fill-opacity:0.8;stroke:black;stroke-width:1.5px;")
 ))
 ```
+### Abortion Exceptions Map
 
 ```{r}
 #| label: map plot 2
@@ -689,7 +686,6 @@ girafe(ggobj = ggiraph_map, options = list(
 #| warning: false
 #| message: false 
 
-### Abortion Exceptions Map
 
 # Load and clean exception data
 data_exceptions <- read.csv("../data/Guttmatcher_institute_data/abortion_exceptions_data.csv") |>
