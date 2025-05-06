@@ -163,6 +163,8 @@ political leanings—Fox News is widely recognized as a conservative
 outlet, while The New York Times is identified as liberal-leaning
 [@pew2014; @mitchell2020].
 
+![Image](images/photo1.png)
+
 We complement this analysis with geographic policy data from the
 [Guttmacher Institute](https://www.guttmacher.org), a leading research
 organization on reproductive health. Using tools such as sentiment
