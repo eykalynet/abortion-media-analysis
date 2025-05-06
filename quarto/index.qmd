@@ -596,7 +596,7 @@ The [Guttmatcher Insitute](https://www.guttmacher.org/) helps to relay up to dat
 #| warning: false
 #| message: false 
 
-data_bans <- read.csv("/Users/emilieward/Documents/GitHub/blog-MEE/data/Guttmatcher_institute_data/abortion_bans_data.csv", header = TRUE)
+data_bans <- read.csv("../data/Guttmatcher_institute_data/abortion_bans_data.csv", header = TRUE)
 
 state_map_coord <- maps::map("state", plot = FALSE, fill = TRUE) |>
   st_as_sf()
@@ -639,7 +639,7 @@ leaflet(bans_full) |>
 #| message: false 
 
 
-data_exceptions <- read.csv("/Users/emilieward/Documents/GitHub/blog-MEE/data/Guttmatcher_institute_data/abortion_exceptions_data.csv", header = TRUE)
+data_exceptions <- read.csv("../data/Guttmatcher_institute_data/abortion_exceptions_data.csv", header = TRUE)
 
 state_map_coord <- maps::map("state", plot = FALSE, fill = TRUE) |>
   st_as_sf()
