@@ -11,6 +11,7 @@ project:
 # https://quarto.org/docs/websites/website-navigation.html
 website:
   title: "Abortion News Coverage Before and After Roe v. Wade"
+  favicon: quarto/images/logo.png
   navbar:
     left:
       - href: quarto/index.qmd # Must be included as index.qmd
