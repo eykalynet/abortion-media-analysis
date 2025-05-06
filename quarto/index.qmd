@@ -554,56 +554,181 @@ This wider thematic spread reflects the surge in *media attention* and
 around health care, law, religion, and personal trauma in equal measure.
 
 # The Knots and Threads of Discourse
-While looking at the top bigrams helps us understand the key terms for both Fox 
-New and NYT articles, we can further investigate the context with which these 
-terms are used. We used a Latent Dirichlet Allocation (LDA) probability model to 
-identify key topics and themes. We explore the connections between these themes 
-through bi-gram networks displayed below.
 
-For further analysis understanding of our analysis algorithm, refer to our 
-*technical appendix: Topic Modeling and Network Visualizations*. 
+While identifying top bigrams reveals frequently used terms, it does
+little to clarify the **deeper relationships between ideas** or how
+discourse evolves over time. To capture the **semantic structure** of
+abortion coverage in *Fox News*, we applied a **Latent Dirichlet
+Allocation (LDA)** topic model to extract dominant themes and clustered
+terms around them using a **bigram co-occurrence network**. This method
+allows us to visualize how terms are grouped and how they relate to one
+another within and across topics.
 
-Continuing with our analysis of changes pre and post the overturning of 
-*Roe v. Wade*, we look at the connections in bigrams and topics before and 
-after for both the NYT and Fox News. 
+For a full description of our modeling process and visualization
+methods, see the [Technical Appendix](technical_appendix.qmd).
 
+Continuing our analysis of changes before and after the overturning of
+*Roe v. Wade*, we compare topic and bigram networks across the two
+outlets during both periods.
+
+Below, we present two topic networks generated from *Fox News* articles:
+one **before** the Supreme Court's decision in *Dobbs v. Jackson Women’s
+Health Organization* (which overturned *Roe v. Wade*), and one **after**
+the ruling.
 
 ::: panel-tabset
-
 ### Network of Fox News Topics, Pre-Roe
-<iframe src="../echarts/network_fox_preroe.html" width="100%" height="750px" style="border: none;"></iframe>
+
+<iframe src="../echarts/network_fox_preroe.html" width="100%" height="750px" style="border: none;">
+
+</iframe>
 
 ### Network of Fox News Topics, Post-Roe
-<iframe src="../echarts/network_fox_postroe.html" width="100%" height="750px" style="border: none;"></iframe>
 
-### Network of The New York Times Topics, Pre-Roe
-<iframe src="../echarts/network_nyt_preroe.html" width="100%" height="750px" style="border: none;"></iframe>
+<iframe src="../echarts/network_fox_postroe.html" width="100%" height="750px" style="border: none;">
 
-### Network of The New York Times Topics, Post-Roe
-<iframe src="../echarts/network_nyt_postroe.html" width="100%" height="750px" style="border: none;"></iframe>
-
+</iframe>
 :::
 
-In Fox News articles, there are legal focal points centering the *Supreme Court* and *federal debate*, but also a high concentration of *faith* driven focus points and *moral arguments*. Moral argument, is the center to many pro-choice/pro-life articles, suggesting that the contention for or against abortion rights in Fox News centers around a moral argument. There is a heavy connection for pro-life to moral arguments, hence demonstrating pro-life as a main topic for discourse in fox news. 
+In the **pre-Roe network**, moral and religious framing occupied the
+center of discourse. The largest topic hub, labeled *Moral Arguments*,
+connects with terms such as *pro life*, *pro choice*, *abortion access*,
+and *supreme court*, which suggests that abortion was portrayed as a
+question of ethical conviction and individual responsibility. Religious
+language appears throughout this network, with terms like *holy
+communion*, *faith & institutions*, and *texas law* feeding into a
+cluster that combines legal governance with religious values. At the
+same time, judicial terminology, i.e., *court decision*, *ban abortion*,
+*abortion law*, i.e., organizes around nodes such as *Federal Debate &
+Drafts* and *Clinic Laws & Enforcement*, which emphasize the legal
+contestation of abortion rights. Interestingly, terms like *president
+trump* and *health care* sit somewhat outside the network's core but
+remain tied to the moral and legal debate. This network reveals that
+prior to the *Dobbs* ruling, *Fox News* framed abortion primarily as a
+clash between moral order and legal authority because of religious and
+ethical codes occupying a central role in how narratives were
+constructed.
 
-In post-roe Fox News articles, we see a similar focus on the supreme court and pro-life, with the pro-life messaging and pregnancy centers and alternatives as additional focal points. Key terms such as abortion pill, abortion access, pregnancy centers, and more suggest that Fox News is focused on the conditions and experiences of pregnancies and abortions for women in the time of abortion bans. Even political rhetoric has focal points about abortion clinics and abortion pills rather than broader socio-polical implications for women's rights and health. 
+Consequently, in the **post-Roe network**, the structure of *Fox News*
+discourse shifts in form and focus. Moral arguments remain present, but
+they are now in in a landscape of policy enforcement and rhetorical
+messaging. New thematic hubs appear, including *Pro-Life Messaging*,
+*Political Rhetoric*, and *Pregnancy Centers & Alternatives*. The first
+of these, *Pro-Life Messaging*, is tightly connected to emotionally
+charged terms like *anti abortion*, *abortion restriction*, *rape
+incest*, and *late term*, which suggests a more targeted effort to frame
+abortion around specific scenarios and moral outrage. Political actors
+and institutions take on a more visible role than before: *president
+biden*, *vice president*, and *biden administration* now appear
+alongside *supreme court* and *court decision* in the central cluster,
+which show heightened politicization of the issue. Meanwhile, *Pregnancy
+Centers & Alternatives* draws together terms such as *abortion clinic*,
+*abortion access*, *abortion pill*, and *pro abortion*, signals a new
+focus on the mechanisms of reproductive healthcare and the alternatives
+promoted in states with abortion bans. The presence of language like
+*life movement* and *reproductive health* further shows that the
+discourse expanded from ideological stances to debates over service
+provision, enforcement, and identity.
 
-Pro-life messaging as part of the core of Fox News text, depicts the partisan nature of abortion and the skewed perspective of the media. Pro-life and anti abortion rhetoric are key focal points in Fox news pro-life messaging, while this would require further investigation we can see more prominent rhetoric for pro-life in Fox news, rather than the unbiased standard media should be set to. 
+Having examined the thematic structure of *Fox News*’ abortion coverage,
+we now pivot to **The New York Times**, whose approach to the topic
+differs both in language and in conceptual emphasis. Using the same
+Latent Dirichlet Allocation (LDA) modeling process, we extracted topic
+labels from *New York Times* articles and mapped their co-occurring
+bigrams into topic networks.
 
-In the pre-roe period NYT’s coverage centered on legal processes and political strategy, with strong clusters around Judicial Appointments, Courtroom & Legal Landscape, and White House & Party Messaging. The network highlights the lead-up to the ruling, focusing on Supreme Court dynamics, key legal battles, and partisan framing. There was also a significant amount of coverage around Healthcare and Public Access including nodes such as abortion provider, women’s health, and health care. This shows that the NYT was paying early attention to healthcare access even before the ruling came down. 
+In the **pre-Roe network**, *The New York Times* centers its coverage on
+institutional power and procedural framing. The largest hub, *White
+House & Party Messaging*, is densely connected to terms such as
+*president biden*, *vice president*, *democratic party*, *republican
+party*, and *support abortion*. This reflects a narrative in partisan
+strategy and executive messaging, especially from the Democratic
+establishment. Nearby, the *Judicial Appointments* cluster includes key
+terms like *judge barrett*, *justice thomas*, *ruth bader*, and *law
+school*, which could suggest a framing that foregrounds long-term shifts
+in the federal judiciary and their implications for reproductive rights.
+The presence of *draft opinion*, *federal court*, and *chief justice*
+reinforces the emphasis on legal architecture and decision-making power.
+Notably, topics like *Healthcare & Public Access* and *Legislative
+Pushback* overlap with terms such as *abortion ban*, *medication
+abortion*, *birth control*, and *texas law*. This signals attention to
+both clinical outcomes and state-level resistance. This network
+highlights *The New York Times*’ commitment to covering abortion through
+both the dual of governance and rights.
 
-In the post-roe period, NYT’s coverage is highly political. Key hubs still include Pro-Life & Court Battles, Political Institutions & Response and Anti-Abortion Campaigns, with dense connections to figures like Donald Trump, Kamala Harris, and Joe Biden. While there is a strengthened presence of healthcare topics, the framing overall seems to reflect and emphasize the political aspect of abortion.
-
-
-
-
-# Cartographies of Care and Control
-After predominantly studying media, there in an overwhelming discussion about the supreme court case and the highly politicized nature of current legislation. While disusing the social and legal impacts of Roe v Wade is important, being aware of the legislation separate from narratives of mainstream media is equally as important. 
-
-The [Guttmatcher Insitute](https://www.guttmacher.org/) helps to relay up to date information about legislation on abortion and abortion rights on a state wide level. We further explore and displayed the data from the website to better inform and see trends in data.  
+Afterwards, during the **post-Roe network**, the thematic structure
+tightens, and the discourse becomes more explicitly political and
+issue-specific. At the center is *Pro-Life & Court Battles*, connected
+to terms like *abortion ban*, *pro life*, *supreme court*, *court’s
+decision*, and *anti abortion*. This central node reflects the paper’s
+continued attention to judicial dynamics but also marks a shift toward
+the active strategies and campaigns shaping reproductive policy.
+Adjacent to this is *Medication Abortion Access*, linking *medication
+abortion*, *abortion care*, *abortion pill*, and *abortion access*,
+which is a clear signal of increased focus on pharmaceutical options in
+the wake of clinic closures and legal restrictions. Another prominent
+cluster, *Political Institutions & Reproductive Health*, merges
+legislative and executive figures—*kamala harris*, *democratic party*,
+*president biden*, *white house*—with healthcare-related terms such as
+*health care*, *abortion provider*, and *reproductive health*.
+Interestingly, *Opinion & Media Figures* emerges as a thematic addition
+in this network, which features voices such as *ezra klein*, *donald
+trump*, *larry kramer*, and *jd vance*. These additions suggest a media
+ecosystem in which individual commentators shape the terms of debate.
+The presence of *project 2025*, *ballot measure*, and *pregnant woman*
+within *Anti-Abortion Campaigns* shows how the post-Roe narrative
+expanded to include grassroots activism and electoral politics, not just
+institutional decisions.
 
 ::: panel-tabset
+### Network of The New York Times Topics, Pre-Roe
 
+<iframe src="../echarts/network_nyt_preroe.html" width="100%" height="750px" style="border: none;">
+
+</iframe>
+
+### Network of The New York Times Topics, Post-Roe
+
+<iframe src="../echarts/network_nyt_postroe.html" width="100%" height="750px" style="border: none;">
+
+</iframe>
+:::
+
+Across both *Fox News* and *The New York Times*, the overturning of *Roe
+v. Wade* triggered shifts in how abortion was framed, but the nature of
+those shifts differed significantly between the two outlets. *Fox News*
+coverage evolved from morally anchored narratives to more targeted
+messaging and political mobilization, often emphasizing anti-abortion
+rhetoric, pro-life identity, and campaign-style language. In contrast,
+*The New York Times* consistently centered institutional structures,
+which are courts, parties, and healthcare systems, while expanding its
+focus after Roe to include pharmaceutical access, and public figures. We
+could therefore see that the networks reflect two distinct approaches to
+abortion discourse: one grounded in ideological advocacy and cultural
+signaling, the other in institutional analysis and procedural
+accountability.
+
+# Cartographies of Care and Control
+
+After focusing primarily on media discourse, it became clear that much
+of the conversation around abortion is shaped by the Supreme Court and
+the increasingly politicized nature of legislation. Our topic networks
+frequently referenced specific states and court rulings which points to
+a geography of reproductive governance that extends beyond rhetoric.
+While discussing the social and legal impacts of *Roe v. Wade* through
+media coverage is crucial, it is equally important to examine abortion
+legislation itself, separate from the narratives that shape its public
+perception.
+
+To better understand this legal landscape, we turned to the [Guttmacher
+Institute](https://www.guttmacher.org/), which provides comprehensive
+and up-to-date data on abortion laws and policies across all 50 U.S.
+states. Using their data, we visualized the geographic distribution of
+restrictions, exceptions, and protective laws in order to identify
+legislative trends. These maps complement our media analysis by showing
+how legal realities are unevenly distributed across the country.
+
+::: panel-tabset
 ### Abortion Bans Map
 
 ```{r}
@@ -678,6 +803,7 @@ girafe(ggobj = ggiraph_map, options = list(
   opts_hover(css = "fill-opacity:0.8;stroke:black;stroke-width:1.5px;")
 ))
 ```
+
 ### Abortion Exceptions Map
 
 ```{r}
@@ -741,10 +867,51 @@ girafe(ggobj = ggiraph_map_exceptions, options = list(
   opts_hover(css = "fill-opacity:0.8;stroke:black;stroke-width:1.5px;")
 ))
 ```
-
 :::
 
-In the *Abortion Bans Map* we see a different bans based on gestational duration throughout the United States. Southern states in the dark green such *Texas*, *Mississippi*, and more, have the larges *total ban* on abortion in the state. Other states have more complex legislation, such as *Arizona* and *New York* with abortion ban after viability. 
+In our bigram and topic network models, **Texas consistently emerged as
+the most frequently mentioned state, if not the only state mentioned by
+name**, which shows its role in both media discourse and legislative
+action. Its repeated presence in coverage from both *Fox News* and *The
+New York Times* mirrors how Texas operates as both a policy bellwether
+and a rhetorical symbol. It is a place where the politics of abortion
+are especially contested and consequential.
 
-The *Abortion Exception Map* further describes the what risks to the mother or the fetus acts is an exception to the ban in different states. Reasons range from *threats to the maternal life* to *pregnacies resulted from rape or incest*. While states like Colorado and New Mexico Appear to have no exceptions to their bans, by using the two maps together, these states have no abortion ban to begin with. 
+This prominence is mirrored in the legal data as well. In the *Abortion
+Bans Map*, we see varying bans across the United States based on
+gestational duration. Southern states shaded in dark green, such as
+*Texas* (as expected), *Mississippi*, and *Louisiana*, have implemented
+**total bans**, which prohibit abortion in nearly all cases. Other
+states have more complex legislation. *Arizona* and *New York*, for
+example, allow abortion up to the point of fetal viability.
 
+The *Abortion Exceptions Map* further illustrates how different states
+define exceptions to their bans. These range from **threats to the
+pregnant person’s life** to pregnancies resulting from **rape or
+incest**. While some states list multiple exceptions, others allow only
+one, or none at all. At first glance, states like *Colorado* and *New
+Mexico* appear to lack exceptions, but when cross-referenced with the
+bans map, it becomes clear that these states do not have abortion bans
+in place to begin with, and therefore do not require exception clauses.
+
+Other notable patterns also emerge: states like *Florida* and *Georgia*,
+while restrictive, permit a higher number of exceptions. Meanwhile, much
+of the West Coast and Northeast ensures broader access without relying
+on exceptions at all. And throughout all of this, *Texas* remains
+central. Not only as a legal outlier with one of the strictest bans in
+the nation, but also as a dominant narrative force in national media.
+
+# Conclusion
+
+Our analysis reveals how abortion in post-*Roe* America is shaped by
+both media narratives and legal realities. *Fox News* and *The New York
+Times* differ sharply in tone, framing, and focus: one leaning into
+moral and political messaging, the other emphasizing institutional
+processes and rights-based discourse. Topic networks and sentiment
+trends show how these narratives evolve in response to legal shifts,
+with **Texas** standing out as a central figure in both media and law.
+Mapping state-level bans and exceptions further highlights the uneven
+and often contradictory geography of reproductive care. Together, our
+findings show that abortion is not just a legal issue or a media topics,
+but is a contested terrain of discourse, power, and access, playing out
+differently across headlines, states, and lives.
