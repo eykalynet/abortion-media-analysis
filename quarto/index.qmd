@@ -551,7 +551,7 @@ This wider thematic spread reflects the surge in *media attention* and
 [*Roe v. Wade*](https://www.oyez.org/cases/1971/70-18)—capturing debates
 around health care, law, religion, and personal trauma in equal measure.
 
-# The Knots and Threads of Abortion Discourse
+# The Knots and Threads of Discourse
 While looking at the top bigrams helps us understand the key terms for both Fox 
 New and NYT articles, we can further investigate the context with which these 
 terms are used. We used a Latent Dirichlet Allocation (LDA) probability model to 
@@ -599,7 +599,7 @@ In the post-roe period, NYT’s coverage is highly political. Key hubs still inc
 
 
 
-# Aditional Information About Abortion Legistation
+# Cartographies of Care and Control
 After predominantly studying media, there in an overwhelming discussion about the supreme court case and the highly politicized nature of current legislation. While disusing the social and legal impacts of Roe v Wade is important, being aware of the legislation separate from narratives of mainstream media is equally as important. 
 
 The [Guttmatcher Insitute](https://www.guttmacher.org/) helps to relay up to date information about legislation on abortion and abortion rights on a state wide level. We further explore and displayed the data from the website to better inform and see trends in data.  
