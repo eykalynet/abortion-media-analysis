@@ -1,7 +1,33 @@
 ---
 title: "Technical Appendix"
+bibliography: bib/library.bib
+csl: bib/american-statistical-association.csl
 ---
 
-### Appendix
+This appendix outlines the technical methodology and implementation details behind each visualization and model used in the blog "Before (and After) Roe v. Wade: A Content Analysis of Conservative and Liberal Media on Abortion Legislation in the United States, 2020–2024."
 
-This section is intentionally left black for now! 
+The visualizations and models presented in the main blog aim to capture shifting narratives around abortion in the media landscape between 2020 and 2024. However, designing these visual outputs required several additional data wrangling steps and modeling decisions not immediately evident in the main text. This appendix documents those internal decisions to ensure reproducibility.
+
+## Sentiment Calendar
+
+The sentiment calendar was created to visualize fluctuations in the emotional tone of abortion-related articles across time in a way that captures both daily granularity and broader temporal rhythms. However, several practical challenges emerged. First, articles were published irregularly, with clusters during major events and long stretches without coverage. Second, not every day yielded enough data for reliable sentiment calculation. These gaps, if left untreated, would create abrupt holes in the calendar heatmap and obscure patterns of intensity and tone. Therefore, we introduced a structured calendar sequence spanning from January 1, 2020 to December 31, 2024 and implemented a light-touch imputation process strictly for visualization purposes. For days with no articles, sentiment scores were missing (i.e., `NA`). To preserve visual continuity in the calendar heatmap without injecting false sentiment, we applied linear interpolation using the `zoo::na.approx()` function.
+
+Mathematically, linear interpolation estimates the missing sentiment value $s_t$ at time $t$ between two known values $s_{t_1}$ and $s_{t_2}$ as:
+
+$$
+s_t = s_{t_1} + \frac{t - t_1}{t_2 - t_1} (s_{t_2} - s_{t_1})
+$$
+
+This ensures that gaps are filled based on the slope between the two nearest known points. For example, if the sentiment on July 1 is $-2$ and on July 3 is $4$, then:
+
+$$
+s_{\text{July 2}} = -2 + \frac{1}{2}(4 - (-2)) = 1
+$$
+
+This method is widely used for visual smoothing in time series displays when gaps are not analytically meaningful [@shumway2017; @zeileis2005]. We did not use interpolation for any modeling steps but only for visual continuity in `geom_tile_interactive()` rendering.
+
+Remaining missing values at the edges (i.e., consecutive `NA`s at the start or end) were conservatively replaced with 0, which we interpret as a neutral baseline rather than evidence of balanced tone.
+
+As a disclaimer, the number of days from 2020 to 2024 totals 1,826. Our dataset includes over 3,100 articles, and because many days have multiple articles, the temporal coverage is dense. Thus, we are confident that linear interpolation did not substantially distort underlying sentiment trends.
+
+We also acknowledge that linear interpolation is a relatively simple method and may not fully explain structural gaps in temporal coverage or non-linear shifts in sentiment dynamics. Ideally, future work would explore more principled approaches from the field of missing data theory, such as time-aware imputation with uncertainty quantification. Hopefully, we can revisit this aspect of our project after taking STAT404: *Data Not Found: An Introduction to Missing Data Methodology*, taught by our wonderful STAT231: Data Science instructor herself, Prof. Katharine Correia, when it is next offered!
