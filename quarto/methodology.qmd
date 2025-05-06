@@ -39,3 +39,8 @@ While our dataset is limited to just two outlets and is not intended to represen
 ### Future Work  
 Given the scope and limitations of this project, several potential improvements come to mind. Future projects could include additional news sources such as, but not limited to, regional papers, cable news transcripts, and digital-native platforms to increase breadth and representativeness. We are also interested in experimenting with alternative sentiment models and topic modeling techniques that better analyze rhetorical nuance and evolving language use. 
 
+### Libraries and Tools
+
+This project used a wide range of R packages including `tidytext` [@tidytext], `dplyr` [@dplyr], `ggplot2` [@ggplot2], `stringr` [@stringr], `readr` [@readr], `tidyr` [@tidyr], `forcats` [@forcats], and `broom` [@broom]. For network analysis, we relied on `igraph` [@igraph], `ggraph` [@ggraph], `echarts4r` [@echarts4r], and `visNetwork` [@visNetwork]. Geospatial visualizations were created using `leaflet` [@leaflet] and `sf` [@sf], and for topic modeling we used `textmineR` [@textmineR] and `topicmodels` [@blei2003latent].
+
+We also thank the Computer Science community, especially Thu Hoang '28 and Ryan Ji '26, for generously assisting with the web scraping components of the project.

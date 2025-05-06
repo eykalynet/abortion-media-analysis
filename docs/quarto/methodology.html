@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2025-05-01">
+<meta name="dcterms.date" content="2025-05-06">
 
 <title>Methodology – MEE</title>
 <style>
@@ -21,7 +21,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -125,6 +145,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#data-analysis" id="toc-data-analysis" class="nav-link" data-scroll-target="#data-analysis">Data Analysis</a></li>
   <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
   <li><a href="#future-work" id="toc-future-work" class="nav-link" data-scroll-target="#future-work">Future Work</a></li>
+  <li><a href="#libraries-and-tools" id="toc-libraries-and-tools" class="nav-link" data-scroll-target="#libraries-and-tools">Libraries and Tools</a></li>
   </ul>
 </nav>
     </div>
@@ -144,7 +165,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Last updated</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 1, 2025</p>
+      <p class="date">May 6, 2025</p>
     </div>
   </div>
   
@@ -186,11 +207,66 @@ ul.task-list li input[type="checkbox"] {
 <section id="future-work" class="level3">
 <h3 class="anchored" data-anchor-id="future-work">Future Work</h3>
 <p>Given the scope and limitations of this project, several potential improvements come to mind. Future projects could include additional news sources such as, but not limited to, regional papers, cable news transcripts, and digital-native platforms to increase breadth and representativeness. We are also interested in experimenting with alternative sentiment models and topic modeling techniques that better analyze rhetorical nuance and evolving language use.</p>
+</section>
+<section id="libraries-and-tools" class="level3">
+<h3 class="anchored" data-anchor-id="libraries-and-tools">Libraries and Tools</h3>
+<p>This project used a wide range of R packages including <code>tidytext</code> <span class="citation" data-cites="tidytext">(<a href="#ref-tidytext" role="doc-biblioref">Silge and Robinson 2023</a>)</span>, <code>dplyr</code> <span class="citation" data-cites="dplyr">(<a href="#ref-dplyr" role="doc-biblioref">Wickham et al. 2023a</a>)</span>, <code>ggplot2</code> <span class="citation" data-cites="ggplot2">(<a href="#ref-ggplot2" role="doc-biblioref">Wickham 2023a</a>)</span>, <code>stringr</code> <span class="citation" data-cites="stringr">(<a href="#ref-stringr" role="doc-biblioref">Wickham 2023b</a>)</span>, <code>readr</code> <span class="citation" data-cites="readr">(<a href="#ref-readr" role="doc-biblioref">Wickham et al. 2023b</a>)</span>, <code>tidyr</code> <span class="citation" data-cites="tidyr">(<a href="#ref-tidyr" role="doc-biblioref">Wickham and Henry 2023</a>)</span>, <code>forcats</code> <span class="citation" data-cites="forcats">(<a href="#ref-forcats" role="doc-biblioref">Wickham 2023c</a>)</span>, and <code>broom</code> <span class="citation" data-cites="broom">(<a href="#ref-broom" role="doc-biblioref">Robinson and Hayes 2023</a>)</span>. For network analysis, we relied on <code>igraph</code> <span class="citation" data-cites="igraph">(<a href="#ref-igraph" role="doc-biblioref">Csárdi and Nepusz 2006</a>)</span>, <code>ggraph</code> <span class="citation" data-cites="ggraph">(<a href="#ref-ggraph" role="doc-biblioref">Pedersen 2023</a>)</span>, <code>echarts4r</code> <span class="citation" data-cites="echarts4r">(<a href="#ref-echarts4r" role="doc-biblioref">Coene 2023</a>)</span>, and <code>visNetwork</code> <span class="citation" data-cites="visNetwork">(<a href="#ref-visNetwork" role="doc-biblioref">Thieurmel and Nguyen 2023</a>)</span>. Geospatial visualizations were created using <code>leaflet</code> <span class="citation" data-cites="leaflet">(<a href="#ref-leaflet" role="doc-biblioref">Cheng 2023</a>)</span> and <code>sf</code> <span class="citation" data-cites="sf">(<a href="#ref-sf" role="doc-biblioref">Pebesma 2023</a>)</span>, and for topic modeling we used <code>textmineR</code> <span class="citation" data-cites="textmineR">(<a href="#ref-textmineR" role="doc-biblioref">Jones 2023</a>)</span> and <code>topicmodels</code> <span class="citation" data-cites="blei2003latent">(<a href="#ref-blei2003latent" role="doc-biblioref">Blei et al. 2003</a>)</span>.</p>
+<p>We also thank the Computer Science community, especially Thu Hoang ’28 and Ryan Ji ’26, for generously assisting with the web scraping components of the project.</p>
+
 
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-blei2003latent" class="csl-entry" role="listitem">
+Blei, D. M., Ng, A. Y., and Jordan, M. I. (2003), <span>“Latent dirichlet allocation,”</span> <em>Journal of Machine Learning Research</em>, 3, 993–1022.
+</div>
+<div id="ref-leaflet" class="csl-entry" role="listitem">
+Cheng, J. (2023), <em><a href="https://CRAN.R-project.org/package=leaflet">Leaflet: Create interactive web maps with the JavaScript ’leaflet’ library</a></em>.
+</div>
+<div id="ref-echarts4r" class="csl-entry" role="listitem">
+Coene, J. (2023), <em><a href="https://CRAN.R-project.org/package=echarts4r">echarts4r: Create interactive graphs with ’ECharts JavaScript’ library</a></em>.
+</div>
+<div id="ref-igraph" class="csl-entry" role="listitem">
+Csárdi, G., and Nepusz, T. (2006), <em><a href="https://igraph.org">Igraph: Network analysis and visualization</a></em>.
+</div>
+<div id="ref-textmineR" class="csl-entry" role="listitem">
+Jones, T. (2023), <em><a href="https://CRAN.R-project.org/package=textmineR">textmineR: Functions for text mining and topic modeling</a></em>.
+</div>
+<div id="ref-sf" class="csl-entry" role="listitem">
+Pebesma, E. (2023), <em><a href="https://CRAN.R-project.org/package=sf">Sf: Simple features for r</a></em>.
+</div>
+<div id="ref-ggraph" class="csl-entry" role="listitem">
+Pedersen, T. L. (2023), <em><a href="https://CRAN.R-project.org/package=ggraph">Ggraph: An implementation of grammar of graphics for graphs and networks</a></em>.
+</div>
+<div id="ref-broom" class="csl-entry" role="listitem">
+Robinson, D., and Hayes, A. (2023), <em><a href="https://CRAN.R-project.org/package=broom">Broom: Convert statistical objects into tidy tibbles</a></em>.
+</div>
+<div id="ref-tidytext" class="csl-entry" role="listitem">
+Silge, J., and Robinson, D. (2023), <em><a href="https://CRAN.R-project.org/package=tidytext">Tidytext: Text mining using ’dplyr’, ’ggplot2’, and other tidy tools</a></em>.
+</div>
+<div id="ref-visNetwork" class="csl-entry" role="listitem">
+Thieurmel, B., and Nguyen, T. T. (2023), <em><a href="https://CRAN.R-project.org/package=visNetwork">visNetwork: Network visualization using ’vis.js’ library</a></em>.
+</div>
+<div id="ref-ggplot2" class="csl-entry" role="listitem">
+Wickham, H. (2023a), <em><a href="https://CRAN.R-project.org/package=ggplot2">ggplot2: Create elegant data visualisations using the grammar of graphics</a></em>.
+</div>
+<div id="ref-stringr" class="csl-entry" role="listitem">
+Wickham, H. (2023b), <em><a href="https://CRAN.R-project.org/package=stringr">Stringr: Simple, consistent wrappers for common string operations</a></em>.
+</div>
+<div id="ref-forcats" class="csl-entry" role="listitem">
+Wickham, H. (2023c), <em><a href="https://CRAN.R-project.org/package=forcats">Forcats: Tools for working with categorical variables (factors)</a></em>.
+</div>
+<div id="ref-dplyr" class="csl-entry" role="listitem">
+Wickham, H., Francois, R., Henry, L., and Müller, K. (2023a), <em><a href="https://CRAN.R-project.org/package=dplyr">Dplyr: A grammar of data manipulation</a></em>.
+</div>
+<div id="ref-tidyr" class="csl-entry" role="listitem">
+Wickham, H., and Henry, L. (2023), <em><a href="https://CRAN.R-project.org/package=tidyr">Tidyr: Tidy messy data</a></em>.
+</div>
+<div id="ref-readr" class="csl-entry" role="listitem">
+Wickham, H., Hester, J., and Bryan, J. (2023b), <em><a href="https://CRAN.R-project.org/package=readr">Readr: Read rectangular text data</a></em>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
