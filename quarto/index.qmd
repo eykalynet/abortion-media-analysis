@@ -561,7 +561,7 @@ health*, and social institutions impacted by abortion laws, **2021**
 marks a shift toward individual experiences and situations of pregnancy,
 mothers, and children.
 
-During **May 2022** and \*\*June 2022\* the [*Dobbs v. Jackson Women's
+During **May 2022** and **June 2022** the [*Dobbs v. Jackson Women's
 Health Organization*
 decision](https://www.supremecourt.gov/opinions/21pdf/19-1392_6j37.pdf)
 is at the forefront of media with a large spike in *supreme court*,
@@ -585,6 +585,14 @@ This wider thematic spread reflects the surge in *media attention* and
 around health care, law, religion, and personal trauma in equal measure.
 
 # The Knots and Threads of Abortion Discourse
+While looking at the top bigrams helps us understand the key terms for 
+both Fox New and NYT articles, we can further investigate the context with
+which these terms are used. Below is a network of bigrams connected through 
+the use of two bi-grams in the same article. 
+
+Continuing with our analysis of changes pre and post the overturning of
+*Roe v. Wade*, we look at the connections in bigrams and topics before and after
+for both the NYT and Fox News. 
 
 ::: panel-tabset
 
@@ -606,6 +614,9 @@ around health care, law, religion, and personal trauma in equal measure.
 
 :::
 
+In Fox News articles, there are legal focal points centering the *Supreme Court* and *federal debate*, but also a high concentration of *faith* diven focs points and *moral arguments*. Moral argument, is the center to many pro-choice/pro-life articles, suggesting that the contention for or against abortion rights in Fox News centers around a moral argument. The is a heavy connection for pro-life to moral arguments, hence demonstrate pro-life as a main topic for discourse in fox news. 
+
+In post-roe Fox News articles, we se a similar focus on the supreme court and pro-life, with the additional pro-life messaging and 
 
 # Aditional Information About Abortion Legistation
 After predominantly studying media, there in an overwhelming discussion about the supreme court case the the highly politicized nature of the legislation It is, while disusing the social and legal impacts of Roe v Wade is important, being aware of the legislation separate from narratives of mainstream media is equally as important. 
