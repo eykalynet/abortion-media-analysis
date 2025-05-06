@@ -87,41 +87,6 @@ articles <- bind_rows(
 ```
 
 ```{r}
-#| label: initial-tokens
-#| include: false
-
-# Tokenize text into individual words
-tokens <- bind_rows(
-  nyt |> mutate(outlet = "NYT"),
-  fox |> mutate(outlet = "Fox")
-) |>
-  unnest_tokens(word, text) |>
-  anti_join(stop_words)  # Remove standard English stop words first
-
-# Additional stop words
-custom_stopwords <- tibble(word = c(
-  "said", "ms", "mr", "mrs",
-  "fox", "news", "nyt", "new", "york", "times",
-  "u.s", "one", "two", "also", "would", "including", "don’t", "that’s", "it’s", "wrote", "told",
-  "roe"
-))
-```
-
-```{r}
-#| label: clean-tokens
-#| include: false
-
-# Tokenize and remove both standard and custom stop words
-tokens2 <- bind_rows(
-  nyt |> mutate(outlet = "NYT"),
-  fox |> mutate(outlet = "Fox")
-) |>
-  unnest_tokens(word, text) |>
-  anti_join(stop_words) |>         # Remove standard English stop words
-  anti_join(custom_stopwords)      # Remove custom filler/irrelevant words
-```
-
-```{r}
 #| label: monthly-data
 #| include: false
 
@@ -133,8 +98,6 @@ monthly_data <- articles |>
   mutate(cumulative_n = cumsum(monthly_n)) |> 
   ungroup() |>
   mutate(outlet = factor(outlet, levels = c("Fox News", "The New York Times")))
-
-
 ```
 
 ```{r}
