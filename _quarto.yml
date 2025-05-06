@@ -23,7 +23,8 @@ website:
       - href: quarto/technical_appendix.qmd
         text: "Technical Appendix"
         icon: pc-display-horizontal
-        
+  image: quarto/images/cover.png
+  open-graph: true   
         
 format:
   html:
