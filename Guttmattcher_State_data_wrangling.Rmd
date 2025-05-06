@@ -56,7 +56,7 @@ data_bans <- data1 |>
   mutate(ID = tolower(ID))
   
 
-
+write_csv(data_bans, "data/Guttmatcher_institute_data/abortion_bans_data.csv")
 ```
 
 ## 3. Adding mapr data
@@ -121,8 +121,6 @@ leaflet(bans_full) |>
     )
   )
 
-write_csv(bans_full, "data/Guttmatcher_institute_data/abortion_bans_data.csv")
-
 ```
 
 
@@ -154,17 +152,11 @@ data_exceptions <- data2 |>
   mutate(ID = tolower(ID))
 
 
-
-
-exceptions_full <- full_join(state_map_coord, data_exceptions, by = "ID")
-write_csv(exceptions_full, "data/Guttmatcher_institute_data/abortion_exceptions_data.csv")
-
 ```
 
 ## 6. Graphing the Map 
 
 ```{r}
-
 
 g <- ggplot(exceptions_full) +
   geom_sf(aes(fill = number_of_exceptions )) +
@@ -181,24 +173,30 @@ g
 
 ```
 
-```{r}
+```{r, message=FALSE, warning=FALSE, results='hide}
+
 exceptions_summary <- data_exceptions |>
+  filter(ID != "total")|>
+  mutate(ID = if_else(ID = "maine*", "maine", ID)) |> 
   group_by(ID) |>
   summarise(
     number_of_exceptions = first(number_of_exceptions),
     exception_list = paste0("- ", Exception_Type, collapse = "<br>")
   )
 
+
+write_csv(exceptions_summary, "data/Guttmatcher_institute_data/abortion_exceptions_data.csv")
+
 exceptions_full <- full_join(state_map_coord, exceptions_summary, by = "ID")
 
+
 exceptions_full |>
-  mutate(ID = str_to_title(ID))
+  mutate(ID = str_to_title(ID)) 
 
 pal <- colorFactor(
   palette = c("#C7E9C0", "#74C476", "#238B45", "#00441B", "grey80"),
   domain = exceptions_full$number_of_exceptions
 )
-
 
 leaflet(exceptions_full) |>
   addTiles() |>

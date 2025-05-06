@@ -548,14 +548,19 @@ This wider thematic spread reflects the surge in *media attention* and
 around health care, law, religion, and personal trauma in equal measure.
 
 # The Knots and Threads of Abortion Discourse
-While looking at the top bigrams helps us understand the key terms for 
-both Fox New and NYT articles, we can further investigate the context with
-which these terms are used. Below is a network of bigrams connected through 
-the use of two bi-grams in the same article. 
+While looking at the top bigrams helps us understand the key terms for both Fox 
+New and NYT articles, we can further investigate the context with which these 
+terms are used. We used a Latent Dirichlet Allocation (LDA) probability model to 
+identify key topics and themes. We explore the connections between these themes 
+through bi-gram networks displayed below.
 
-Continuing with our analysis of changes pre and post the overturning of
-*Roe v. Wade*, we look at the connections in bigrams and topics before and after
-for both the NYT and Fox News. 
+For further analysis understanding of our analysis algorithm, refer to our 
+*technical appendix: Topic Modeling and Network Visualizations*. 
+
+Continuing with our analysis of changes pre and post the overturning of 
+*Roe v. Wade*, we look at the connections in bigrams and topics before and 
+after for both the NYT and Fox News. 
+
 
 ::: panel-tabset
 
@@ -577,12 +582,18 @@ for both the NYT and Fox News.
 
 :::
 
-In Fox News articles, there are legal focal points centering the *Supreme Court* and *federal debate*, but also a high concentration of *faith* diven focs points and *moral arguments*. Moral argument, is the center to many pro-choice/pro-life articles, suggesting that the contention for or against abortion rights in Fox News centers around a moral argument. The is a heavy connection for pro-life to moral arguments, hence demonstrate pro-life as a main topic for discourse in fox news. 
+In Fox News articles, there are legal focal points centering the *Supreme Court* and *federal debate*, but also a high concentration of *faith* driven focus points and *moral arguments*. Moral argument, is the center to many pro-choice/pro-life articles, suggesting that the contention for or against abortion rights in Fox News centers around a moral argument. There is a heavy connection for pro-life to moral arguments, hence demonstrating pro-life as a main topic for discourse in fox news. 
 
-In post-roe Fox News articles, we se a similar focus on the supreme court and pro-life, with the additional pro-life messaging and 
+In post-roe Fox News articles, we see a similar focus on the supreme court and pro-life, with the pro-life messaging and pregnancy centers and alternatives as additional focal points. Key terms such as abortion pill, abortion access, pregnancy centers, and more suggest that Fox News is focused on the conditions and experiences of pregnancies and abortions for women in the time of abortion bans. Even political rhetoric has focal points about abortion clinics and abortion pills rather than broader socio-polical implications for women's rights and health. 
+
+Pro-life messaging as part of the core of Fox News text, depicts the partisan nature of abortion and the skewed perspective of the media. Pro-life and anti abortion rhetoric are key focal points in Fox news pro-life messaging, while this would require further investigation we can see more prominent rhetoric for pro-life in Fox news, rather than the unbiased standard media should be set to. 
+
+
+
+
 
 # Aditional Information About Abortion Legistation
-After predominantly studying media, there in an overwhelming discussion about the supreme court case the the highly politicized nature of the legislation It is, while disusing the social and legal impacts of Roe v Wade is important, being aware of the legislation separate from narratives of mainstream media is equally as important. 
+After predominantly studying media, there in an overwhelming discussion about the supreme court case and the highly politicized nature of current legislation. While disusing the social and legal impacts of Roe v Wade is important, being aware of the legislation separate from narratives of mainstream media is equally as important. 
 
 The [Guttmatcher Insitute](https://www.guttmacher.org/) helps to relay up to date information about legislation on abortion and abortion rights on a state wide level. We further explore and displayed the data from the website to better inform and see trends in data.  
 
@@ -676,3 +687,4 @@ leaflet(exceptions_full) |>
 In the *Abortion Bans Map* we see a different bans based on gestational duration throughout the United States. Southern states in the dark green such *Texas*, *Mississippi*, and more, have the larges *total ban* on abortion in the state. Other states have more complex legislation, such as *Arizona* and *New York* with abortion ban after viability. 
 
 The *Abortion Exception Map* further describes the what risks to the mother or the fetus acts is an exception to the ban in different states. Reasons range from *threats to the maternal life* to *pregnacies resulted from rape or incest*. While states like Colorado and New Mexico Appear to have no exceptions to their bans, by using the two maps together, these states have no abortion ban to begin with. 
+
