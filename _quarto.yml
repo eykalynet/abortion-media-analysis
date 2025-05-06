@@ -10,7 +10,7 @@ project:
 # Can customize this section with options from the following page:
 # https://quarto.org/docs/websites/website-navigation.html
 website:
-  title: "MEE"
+  title: "Abortion News Coverage Before and After Roe v. Wade"
   navbar:
     left:
       - href: quarto/index.qmd # Must be included as index.qmd
