@@ -610,7 +610,7 @@ around health care, law, religion, and personal trauma in equal measure.
 # Aditional Information About Abortion Legistation
 After predominantly studying media, there in an overwhelming discussion about the supreme court case the the highly politicized nature of the legislation It is, while disusing the social and legal impacts of Roe v Wade is important, being aware of the legislation separate from narratives of mainstream media is equally as important. 
 
-The [Guttmatcher Insitute](https://www.guttmacher.org/) helps to relay up to date information about legislation on abortion and abortion rights on a state wide level. After exploring 
+The [Guttmatcher Insitute](https://www.guttmacher.org/) helps to relay up to date information about legislation on abortion and abortion rights on a state wide level. We further explore and displayed the data from the website to better inform and see trends in data.  
 
 ::: panel-tabset
 
@@ -633,7 +633,7 @@ bans_full <- bans_full %>%
   mutate(
     ID = str_to_title(ID),
     Gestational_Duration = str_to_title(Gestational_Duration),
-    specifics = ifelse( specifics == "X", "", specifics)) |>
+    specifics = ifelse( specifics == "X", "no additional information", specifics)) |>
   mutate(specifics = if_else(specifics == "Viability", "Abortion Ban After Viability (22~24 weeks)", specifics))
 
 
@@ -697,5 +697,8 @@ leaflet(exceptions_full) |>
 
 ```
 
-
 :::
+
+In the *Abortion Bans Map* we see a different bans based on gestational duration throughout the United States. Southern states in the dark green such *Texas*, *Mississippi*, and more, have the larges *total ban* on abortion in the state. Other states have more complex legislation, such as *Arizona* and *New York* with abortion ban after viability. 
+
+The *Abortion Exception Map* further describes the what risks to the mother or the fetus acts is an exception to the ban in different states. Reasons range from *threats to the maternal life* to *pregnacies resulted from rape or incest*. While states like Colorado and New Mexico Appear to have no exceptions to their bans, by using the two maps together, these states have no abortion ban to begin with. 
