@@ -126,6 +126,8 @@ showtext_auto()
 gdtools::register_gfont("News Cycle")
 ```
 
+![Cover image](images/cover.png)
+
 ## Introduction
 
 Long a topic of debate across law, medicine, gender, and religion,
