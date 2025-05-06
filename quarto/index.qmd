@@ -588,6 +588,9 @@ In post-roe Fox News articles, we see a similar focus on the supreme court and p
 
 Pro-life messaging as part of the core of Fox News text, depicts the partisan nature of abortion and the skewed perspective of the media. Pro-life and anti abortion rhetoric are key focal points in Fox news pro-life messaging, while this would require further investigation we can see more prominent rhetoric for pro-life in Fox news, rather than the unbiased standard media should be set to. 
 
+In the pre-roe period NYT’s coverage centered on legal processes and political strategy, with strong clusters around Judicial Appointments, Courtroom & Legal Landscape, and White House & Party Messaging. The network highlights the lead-up to the ruling, focusing on Supreme Court dynamics, key legal battles, and partisan framing. There was also a significant amount of coverage around Healthcare and Public Access including nodes such as abortion provider, women’s health, and health care. This shows that the NYT was paying early attention to healthcare access even before the ruling came down. 
+
+In the post-roe period, NYT’s coverage is highly political. Key hubs still include Pro-Life & Court Battles, Political Institutions & Response and Anti-Abortion Campaigns, with dense connections to figures like Donald Trump, Kamala Harris, and Joe Biden. While there is a strengthened presence of healthcare topics, the framing overall seems to reflect and emphasize the political aspect of abortion.
 
 
 
